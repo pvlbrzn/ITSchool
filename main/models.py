@@ -68,8 +68,7 @@ class Course(models.Model):
                                       verbose_name='Преподаватели')
     students = models.ManyToManyField(Student, related_name='courses',
                                       verbose_name='Студенты')
-    # lessons = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name='courses',
-    #                            verbose_name='Занятия')
+
 
     def is_active(self) -> bool:
         """
@@ -85,3 +84,57 @@ class Course(models.Model):
         verbose_name = 'Курс'
         verbose_name_plural = 'Курсы'
         ordering = ['title', 'price']
+
+
+class Lesson(models.Model):
+    title = models.CharField(max_length=150, verbose_name='Тема занятия')
+    content = models.TextField(verbose_name='Содержание')
+    teacher = models.ForeignKey(Teacher, related_name='lessons', on_delete=models.SET_NULL,
+                                null=True, verbose_name='Преподаватель')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE,
+                               related_name='lessons', verbose_name='Курс')
+
+    def __str__(self):
+        return f'{self.title} ({self.course.title})'
+
+    class Meta:
+        verbose_name = 'Занятие'
+        verbose_name_plural = 'Занятия'
+        ordering = ['title']
+
+
+class Payment(models.Model):
+    amount = models.DecimalField(max_digits=8, decimal_places=2, verbose_name='Сумма оплаты')
+    payment_date = models.DateTimeField(default=timezone.now, verbose_name='Дата оплаты')
+    is_successful = models.BooleanField(default=True, verbose_name='Оплата прошла успешно?')
+    payment_method = models.CharField(max_length=50, blank=True, null=True,
+                                      verbose_name='Метод оплаты')
+    comment = models.TextField(blank=True, null=True, verbose_name='Комментарий')
+    student = models.ForeignKey(Student, on_delete=models.CASCADE,
+                                related_name='payments', verbose_name='Студент')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE,
+                               related_name='payments', verbose_name='Курс')
+
+    def __str__(self):
+        return f'{self.student} → {self.course} ({self.amount}р.)'
+
+    class Meta:
+        verbose_name = 'Оплата'
+        verbose_name_plural = 'Оплаты'
+        ordering = ['-payment_date']
+
+
+class Blog(models.Model):
+    title = models.CharField(max_length=200, verbose_name='Заголовок')
+    content = models.TextField(verbose_name='Содержание')
+    date = models.DateField(default=timezone.now, verbose_name='Дата публикации')
+    author = models.CharField(max_length=20, verbose_name='Автор')
+    image = models.ImageField(upload_to='', verbose_name='Изображение')
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = 'Блог'
+        verbose_name_plural = 'Блоги'
+        ordering = ['title']
