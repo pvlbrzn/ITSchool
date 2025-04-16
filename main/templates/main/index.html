@@ -78,10 +78,12 @@
          <div class="col-lg-3 col-md-4">
             <div class="tp-feature__item before-color-1 mb-30">
                <div class="tp-feature__icon">
-                  <img src="main/img/icons/design-icon.png" alt="">
+                  <img src="{% static 'main/img/icons/design-icon.png' %}" alt="">
                </div>
-               <h3 class="tp-feature__title"><a href="course.html">Design</a></h3>
-               <p>400+ Course</p>
+               <h3 class="tp-feature__title"> {{ course.title }} </h3>
+               <p> {{ course.price }} </p>
+               <p> {{ course.skill }} </p>
+               <a href="{% url 'course-detail' course.id %}" class="btn"> Подробнее</a>
             </div>
          </div>
          {% endfor %}
@@ -149,9 +151,9 @@
       <div class="row align-items-center">
          <div class="col-lg-6">
             <div class="tp-section__title-wrapper mb-40">
-               <h3 class="tp-section__title mb-15">Our Popular Courses.</h3>
-               <p>Lorem ipsum dolor sit amet, consectetur aliqua adipiscing
-                  elit, sed do eiumod tempor.</p>
+               <h3 class="tp-section__title mb-15">Наши популярные курсы</h3>
+               <p>За 8 лет мы выпустили более 12 000 айтишников,
+                  которые успешно начали свой путь в международных IT компаниях.</p>
             </div>
          </div>
          <div class="col-lg-6">
@@ -160,22 +162,22 @@
                   <li class="nav-item" role="presentation">
                      <button class="nav-link active" id="pills-all-tab" data-bs-toggle="pill"
                         data-bs-target="#pills-all" type="button" role="tab" aria-controls="pills-all"
-                        aria-selected="true">All</button>
+                        aria-selected="true">Все</button>
                   </li>
                   <li class="nav-item" role="presentation">
                      <button class="nav-link" id="pills-design-tab" data-bs-toggle="pill"
                         data-bs-target="#pills-design" type="button" role="tab" aria-controls="pills-design"
-                        aria-selected="false">Popularity</button>
+                        aria-selected="false">Популярные</button>
                   </li>
                   <li class="nav-item" role="presentation">
                      <button class="nav-link" id="pills-popularity-tab" data-bs-toggle="pill"
                         data-bs-target="#pills-popularity" type="button" role="tab"
-                        aria-controls="pills-popularity" aria-selected="false">Design</button>
+                        aria-controls="pills-popularity" aria-selected="false">Front-end</button>
                   </li>
                   <li class="nav-item" role="presentation">
                      <button class="nav-link" id="pills-featured-tab" data-bs-toggle="pill"
                         data-bs-target="#pills-featured" type="button" role="tab" aria-controls="pills-featured"
-                        aria-selected="false">Featured</button>
+                        aria-selected="false">Back-end</button>
                   </li>
                </ul>
             </div>
@@ -185,11 +187,12 @@
          <div class="tab-content" id="pills-tabContent">
             <div class="tab-pane fade show active" id="pills-all" role="tabpanel" aria-labelledby="pills-all-tab">
                <div class="row">
+                  {% for course in courses %}
                   <div class="col-lg-4 col-md-6">
                      <div class="tp-courses__item mb-30">
                         <div class="tp-courses__thumb w-img fix p-relative">
-                           <img src="main/img/courses/courses-2.jpg" alt="">
-                           <span class="tp-courses__cat cat-color-2"><a href="#">Development</a></span>
+                           <img src="{% static 'main/img/courses/courses-2.jpg' %}" alt="">
+                           <span class="tp-courses__cat cat-color-2"><a href="#"> {{ course.skill }} </a></span>
                         </div>
                         <div class="tp-courses__content">
                            <div class="tp-courses__meta">
@@ -197,715 +200,19 @@
                               <span><i class="icon_heart_alt"></i>1800</span>
                               <span><i class="fa-light fa-user"></i>325</span>
                            </div>
-                           <h3 class="tp-courses__title"><a href="course-details.html">Everything You Need to Know
-                                 About Business.</a></h3>
-                           <div class="tp-courses__avata">
-                              <img src="main/img/courses/avata/course-avata-2.jpg" alt="">
-                              <span><a href="#">David Bruse</a></span>
-                           </div>
+                           <h3 class="tp-courses__title"><a href="{% url 'course-detail' course.id %}">{{ course.title }}</a></h3>
                            <div class="tp-courses__price d-flex justify-content-between">
                               <div class="tp-courses__time">
-                                 <span><i class="fa-light fa-clock"></i>16 Week</span>
+                                 <span><i class="fa-light fa-clock"></i> {{ course.duration }} мес. </span>
                               </div>
                               <div class="tp-courses__value">
-                                 <span>$49.65</span>
+                                 <span> {{ course.price }} BYN</span>
                               </div>
                            </div>
                         </div>
                      </div>
                   </div>
-
-                  <div class="col-lg-4 col-md-6">
-                     <div class="tp-courses__item mb-30">
-                        <div class="tp-courses__thumb w-img fix p-relative">
-                           <img src="main/img/courses/courses-1.jpg" alt="">
-                           <span class="tp-courses__cat cat-color-1"><a href="#">Web Design</a></span>
-                        </div>
-                        <div class="tp-courses__content">
-                           <div class="tp-courses__meta">
-                              <span class="tp-ratting"><i class="icon_star_alt"></i> 4.5 (110)</span>
-                              <span><i class="icon_heart_alt"></i>1200</span>
-                              <span><i class="fa-light fa-user"></i>155</span>
-                           </div>
-                           <h3 class="tp-courses__title"><a href="course-details.html">The Most Complete Design-
-                                 Thinking Course</a></h3>
-                           <div class="tp-courses__avata">
-                              <img src="main/img/courses/avata/course-avata-1.jpg" alt="">
-                              <span><a href="#">Jennifer Powell</a></span>
-                           </div>
-                           <div class="tp-courses__price d-flex justify-content-between">
-                              <div class="tp-courses__time">
-                                 <span><i class="fa-light fa-clock"></i>7 Week</span>
-                              </div>
-                              <div class="tp-courses__value">
-                                 <span>$39.65</span>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-                  <div class="col-lg-4 col-md-6">
-                     <div class="tp-courses__item mb-30">
-                        <div class="tp-courses__thumb w-img fix p-relative">
-                           <img src="main/img/courses/courses-4.jpg" alt="">
-                           <span class="tp-courses__cat cat-color-4"><a href="#">Art & Design</a></span>
-                        </div>
-                        <div class="tp-courses__content">
-                           <div class="tp-courses__meta">
-                              <span class="tp-ratting"><i class="icon_star_alt"></i> 4.5 (60)</span>
-                              <span><i class="icon_heart_alt"></i>400</span>
-                              <span><i class="fa-light fa-user"></i>135</span>
-                           </div>
-                           <h3 class="tp-courses__title"><a href="course-details.html">AWS Certified Solutions Architect
-                                 Associate.</a></h3>
-                           <div class="tp-courses__avata">
-                              <img src="main/img/courses/avata/course-avata-4.jpg" alt="">
-                              <span><a href="#">Peter Sidle</a></span>
-                           </div>
-                           <div class="tp-courses__price d-flex justify-content-between">
-                              <div class="tp-courses__time">
-                                 <span><i class="fa-light fa-clock"></i>14 Week</span>
-                              </div>
-                              <div class="tp-courses__value">
-                                 <span>Free</span>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-                  <div class="col-lg-4 col-md-6">
-                     <div class="tp-courses__item mb-30">
-                        <div class="tp-courses__thumb w-img fix p-relative">
-                           <img src="main/img/courses/courses-3.jpg" alt="">
-                           <span class="tp-courses__cat cat-color-3"><a href="#">Mechanical</a></span>
-                        </div>
-                        <div class="tp-courses__content">
-                           <div class="tp-courses__meta">
-                              <span class="tp-ratting"><i class="icon_star_alt"></i> 4.5 (88)</span>
-                              <span><i class="icon_heart_alt"></i>200</span>
-                              <span><i class="fa-light fa-user"></i>165</span>
-                           </div>
-                           <h3 class="tp-courses__title"><a href="course-details.html">Statistics Data Scince and
-                                 Business Analysis</a></h3>
-                           <div class="tp-courses__avata">
-                              <img src="main/img/courses/avata/course-avata-3.jpg" alt="">
-                              <span><a href="#">Natasha Pawel</a></span>
-                           </div>
-                           <div class="tp-courses__price d-flex justify-content-between">
-                              <div class="tp-courses__time">
-                                 <span><i class="fa-light fa-clock"></i>10 Week</span>
-                              </div>
-                              <div class="tp-courses__value">
-                                 <span>$69.65</span>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-
-                  <div class="col-lg-4 col-md-6">
-                     <div class="tp-courses__item mb-30">
-                        <div class="tp-courses__thumb w-img fix p-relative">
-                           <img src="main/img/courses/courses-5.jpg" alt="">
-                           <span class="tp-courses__cat cat-color-5"><a href="#">Marketing</a></span>
-                        </div>
-                        <div class="tp-courses__content">
-                           <div class="tp-courses__meta">
-                              <span class="tp-ratting"><i class="icon_star_alt"></i> 4.5 (100)</span>
-                              <span><i class="icon_heart_alt"></i>800</span>
-                              <span><i class="fa-light fa-user"></i>365</span>
-                           </div>
-                           <h3 class="tp-courses__title"><a href="course-details.html">Learn Essentials of User Interface
-                                 Design in Figma.</a></h3>
-                           <div class="tp-courses__avata">
-                              <img src="main/img/courses/avata/course-avata-5.jpg" alt="">
-                              <span><a href="#">Mary Vaun</a></span>
-                           </div>
-                           <div class="tp-courses__price d-flex justify-content-between">
-                              <div class="tp-courses__time">
-                                 <span><i class="fa-light fa-clock"></i>16 Week</span>
-                              </div>
-                              <div class="tp-courses__value">
-                                 <span>Free</span>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-
-
-                  <div class="col-lg-4 col-md-6">
-                     <div class="tp-courses__item mb-30">
-                        <div class="tp-courses__thumb w-img fix p-relative">
-                           <img src="main/img/courses/courses-6.jpg" alt="">
-                           <span class="tp-courses__cat cat-color-6"><a href="#">Audio & Music</a></span>
-                        </div>
-                        <div class="tp-courses__content">
-                           <div class="tp-courses__meta">
-                              <span class="tp-ratting"><i class="icon_star_alt"></i> 4.5 (100)</span>
-                              <span><i class="icon_heart_alt"></i>18,400</span>
-                              <span><i class="fa-light fa-user"></i>365</span>
-                           </div>
-                           <h3 class="tp-courses__title"><a href="course-details.html">Become a UI/UX Designer
-                                 Everything You need</a></h3>
-                           <div class="tp-courses__avata">
-                              <img src="main/img/courses/avata/course-avata-6.jpg" alt="">
-                              <span><a href="#">Auston Ager</a></span>
-                           </div>
-                           <div class="tp-courses__price d-flex justify-content-between">
-                              <div class="tp-courses__time">
-                                 <span><i class="fa-light fa-clock"></i>10 Week</span>
-                              </div>
-                              <div class="tp-courses__value">
-                                 <span>$59.65</span>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-            </div>
-            <div class="tab-pane fade" id="pills-design" role="tabpanel" aria-labelledby="pills-design-tab">
-               <div class="row">
-                  <div class="col-lg-4 col-md-6">
-                     <div class="tp-courses__item mb-30">
-                        <div class="tp-courses__thumb w-img fix p-relative">
-                           <img src="main/img/courses/courses-4.jpg" alt="">
-                           <span class="tp-courses__cat cat-color-4"><a href="#">Art & Design</a></span>
-                        </div>
-                        <div class="tp-courses__content">
-                           <div class="tp-courses__meta">
-                              <span class="tp-ratting"><i class="icon_star_alt"></i> 4.5 (60)</span>
-                              <span><i class="icon_heart_alt"></i>400</span>
-                              <span><i class="fa-light fa-user"></i>135</span>
-                           </div>
-                           <h3 class="tp-courses__title"><a href="course-details.html">AWS Certified Solutions Architect
-                                 Associate.</a></h3>
-                           <div class="tp-courses__avata">
-                              <img src="main/img/courses/avata/course-avata-4.jpg" alt="">
-                              <span><a href="#">Peter Sidle</a></span>
-                           </div>
-                           <div class="tp-courses__price d-flex justify-content-between">
-                              <div class="tp-courses__time">
-                                 <span><i class="fa-light fa-clock"></i>14 Week</span>
-                              </div>
-                              <div class="tp-courses__value">
-                                 <span>Free</span>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-                  <div class="col-lg-4 col-md-6">
-                     <div class="tp-courses__item mb-30">
-                        <div class="tp-courses__thumb w-img fix p-relative">
-                           <img src="main/img/courses/courses-5.jpg" alt="">
-                           <span class="tp-courses__cat cat-color-5"><a href="#">Marketing</a></span>
-                        </div>
-                        <div class="tp-courses__content">
-                           <div class="tp-courses__meta">
-                              <span class="tp-ratting"><i class="icon_star_alt"></i> 4.5 (100)</span>
-                              <span><i class="icon_heart_alt"></i>800</span>
-                              <span><i class="fa-light fa-user"></i>365</span>
-                           </div>
-                           <h3 class="tp-courses__title"><a href="course-details.html">Learn Essentials of User Interface
-                                 Design in Figma.</a></h3>
-                           <div class="tp-courses__avata">
-                              <img src="main/img/courses/avata/course-avata-5.jpg" alt="">
-                              <span><a href="#">Mary Vaun</a></span>
-                           </div>
-                           <div class="tp-courses__price d-flex justify-content-between">
-                              <div class="tp-courses__time">
-                                 <span><i class="fa-light fa-clock"></i>16 Week</span>
-                              </div>
-                              <div class="tp-courses__value">
-                                 <span>Free</span>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-                  <div class="col-lg-4 col-md-6">
-                     <div class="tp-courses__item mb-30">
-                        <div class="tp-courses__thumb w-img fix p-relative">
-                           <img src="main/img/courses/courses-3.jpg" alt="">
-                           <span class="tp-courses__cat cat-color-3"><a href="#">Mechanical</a></span>
-                        </div>
-                        <div class="tp-courses__content">
-                           <div class="tp-courses__meta">
-                              <span class="tp-ratting"><i class="icon_star_alt"></i> 4.5 (88)</span>
-                              <span><i class="icon_heart_alt"></i>200</span>
-                              <span><i class="fa-light fa-user"></i>165</span>
-                           </div>
-                           <h3 class="tp-courses__title"><a href="course-details.html">Statistics Data Scince and
-                                 Business Analysis</a></h3>
-                           <div class="tp-courses__avata">
-                              <img src="main/img/courses/avata/course-avata-3.jpg" alt="">
-                              <span><a href="#">Natasha Pawel</a></span>
-                           </div>
-                           <div class="tp-courses__price d-flex justify-content-between">
-                              <div class="tp-courses__time">
-                                 <span><i class="fa-light fa-clock"></i>10 Week</span>
-                              </div>
-                              <div class="tp-courses__value">
-                                 <span>$69.65</span>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-                  <div class="col-lg-4 col-md-6">
-                     <div class="tp-courses__item mb-30">
-                        <div class="tp-courses__thumb w-img fix p-relative">
-                           <img src="main/img/courses/courses-2.jpg" alt="">
-                           <span class="tp-courses__cat cat-color-2"><a href="#">Development</a></span>
-                        </div>
-                        <div class="tp-courses__content">
-                           <div class="tp-courses__meta">
-                              <span class="tp-ratting"><i class="icon_star_alt"></i> 4.5 (100)</span>
-                              <span><i class="icon_heart_alt"></i>1800</span>
-                              <span><i class="fa-light fa-user"></i>325</span>
-                           </div>
-                           <h3 class="tp-courses__title"><a href="course-details.html">Everything You Need to Know
-                                 About Business.</a></h3>
-                           <div class="tp-courses__avata">
-                              <img src="main/img/courses/avata/course-avata-2.jpg" alt="">
-                              <span><a href="#">David Bruse</a></span>
-                           </div>
-                           <div class="tp-courses__price d-flex justify-content-between">
-                              <div class="tp-courses__time">
-                                 <span><i class="fa-light fa-clock"></i>16 Week</span>
-                              </div>
-                              <div class="tp-courses__value">
-                                 <span>$49.65</span>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-                  <div class="col-lg-4 col-md-6">
-                     <div class="tp-courses__item mb-30">
-                        <div class="tp-courses__thumb w-img fix p-relative">
-                           <img src="main/img/courses/courses-1.jpg" alt="">
-                           <span class="tp-courses__cat cat-color-1"><a href="#">Web Design</a></span>
-                        </div>
-                        <div class="tp-courses__content">
-                           <div class="tp-courses__meta">
-                              <span class="tp-ratting"><i class="icon_star_alt"></i> 4.5 (110)</span>
-                              <span><i class="icon_heart_alt"></i>1200</span>
-                              <span><i class="fa-light fa-user"></i>155</span>
-                           </div>
-                           <h3 class="tp-courses__title"><a href="course-details.html">The Most Complete Design-
-                                 Thinking Course</a></h3>
-                           <div class="tp-courses__avata">
-                              <img src="main/img/courses/avata/course-avata-1.jpg" alt="">
-                              <span><a href="#">Jennifer Powell</a></span>
-                           </div>
-                           <div class="tp-courses__price d-flex justify-content-between">
-                              <div class="tp-courses__time">
-                                 <span><i class="fa-light fa-clock"></i>7 Week</span>
-                              </div>
-                              <div class="tp-courses__value">
-                                 <span>$39.65</span>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-                  <div class="col-lg-4 col-md-6">
-                     <div class="tp-courses__item mb-30">
-                        <div class="tp-courses__thumb w-img fix p-relative">
-                           <img src="main/img/courses/courses-6.jpg" alt="">
-                           <span class="tp-courses__cat cat-color-6"><a href="#">Audio & Music</a></span>
-                        </div>
-                        <div class="tp-courses__content">
-                           <div class="tp-courses__meta">
-                              <span class="tp-ratting"><i class="icon_star_alt"></i> 4.5 (100)</span>
-                              <span><i class="icon_heart_alt"></i>18,400</span>
-                              <span><i class="fa-light fa-user"></i>365</span>
-                           </div>
-                           <h3 class="tp-courses__title"><a href="course-details.html">Become a UI/UX Designer
-                                 Everything You need</a></h3>
-                           <div class="tp-courses__avata">
-                              <img src="main/img/courses/avata/course-avata-6.jpg" alt="">
-                              <span><a href="#">Auston Ager</a></span>
-                           </div>
-                           <div class="tp-courses__price d-flex justify-content-between">
-                              <div class="tp-courses__time">
-                                 <span><i class="fa-light fa-clock"></i>10 Week</span>
-                              </div>
-                              <div class="tp-courses__value">
-                                 <span>$59.65</span>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-            </div>
-            <div class="tab-pane fade" id="pills-popularity" role="tabpanel"
-               aria-labelledby="pills-popularity-tab">
-               <div class="row">
-                  <div class="col-lg-4 col-md-6">
-                     <div class="tp-courses__item mb-30">
-                        <div class="tp-courses__thumb w-img fix p-relative">
-                           <img src="main/img/courses/courses-1.jpg" alt="">
-                           <span class="tp-courses__cat cat-color-1"><a href="#">Web Design</a></span>
-                        </div>
-                        <div class="tp-courses__content">
-                           <div class="tp-courses__meta">
-                              <span class="tp-ratting"><i class="icon_star_alt"></i> 4.5 (110)</span>
-                              <span><i class="icon_heart_alt"></i>1200</span>
-                              <span><i class="fa-light fa-user"></i>155</span>
-                           </div>
-                           <h3 class="tp-courses__title"><a href="course-details.html">The Most Complete Design-
-                                 Thinking Course</a></h3>
-                           <div class="tp-courses__avata">
-                              <img src="main/img/courses/avata/course-avata-1.jpg" alt="">
-                              <span><a href="#">Jennifer Powell</a></span>
-                           </div>
-                           <div class="tp-courses__price d-flex justify-content-between">
-                              <div class="tp-courses__time">
-                                 <span><i class="fa-light fa-clock"></i>7 Week</span>
-                              </div>
-                              <div class="tp-courses__value">
-                                 <span>$39.65</span>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-                  <div class="col-lg-4 col-md-6">
-                     <div class="tp-courses__item mb-30">
-                        <div class="tp-courses__thumb w-img fix p-relative">
-                           <img src="main/img/courses/courses-2.jpg" alt="">
-                           <span class="tp-courses__cat cat-color-2"><a href="#">Development</a></span>
-                        </div>
-                        <div class="tp-courses__content">
-                           <div class="tp-courses__meta">
-                              <span class="tp-ratting"><i class="icon_star_alt"></i> 4.5 (100)</span>
-                              <span><i class="icon_heart_alt"></i>1800</span>
-                              <span><i class="fa-light fa-user"></i>325</span>
-                           </div>
-                           <h3 class="tp-courses__title"><a href="course-details.html">Everything You Need to Know
-                                 About Business.</a></h3>
-                           <div class="tp-courses__avata">
-                              <img src="main/img/courses/avata/course-avata-2.jpg" alt="">
-                              <span><a href="#">David Bruse</a></span>
-                           </div>
-                           <div class="tp-courses__price d-flex justify-content-between">
-                              <div class="tp-courses__time">
-                                 <span><i class="fa-light fa-clock"></i>16 Week</span>
-                              </div>
-                              <div class="tp-courses__value">
-                                 <span>$49.65</span>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-
-
-                  <div class="col-lg-4 col-md-6">
-                     <div class="tp-courses__item mb-30">
-                        <div class="tp-courses__thumb w-img fix p-relative">
-                           <img src="main/img/courses/courses-4.jpg" alt="">
-                           <span class="tp-courses__cat cat-color-4"><a href="#">Art & Design</a></span>
-                        </div>
-                        <div class="tp-courses__content">
-                           <div class="tp-courses__meta">
-                              <span class="tp-ratting"><i class="icon_star_alt"></i> 4.5 (60)</span>
-                              <span><i class="icon_heart_alt"></i>400</span>
-                              <span><i class="fa-light fa-user"></i>135</span>
-                           </div>
-                           <h3 class="tp-courses__title"><a href="course-details.html">AWS Certified Solutions Architect
-                                 Associate.</a></h3>
-                           <div class="tp-courses__avata">
-                              <img src="main/img/courses/avata/course-avata-4.jpg" alt="">
-                              <span><a href="#">Peter Sidle</a></span>
-                           </div>
-                           <div class="tp-courses__price d-flex justify-content-between">
-                              <div class="tp-courses__time">
-                                 <span><i class="fa-light fa-clock"></i>14 Week</span>
-                              </div>
-                              <div class="tp-courses__value">
-                                 <span>Free</span>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-                  <div class="col-lg-4 col-md-6">
-                     <div class="tp-courses__item mb-30">
-                        <div class="tp-courses__thumb w-img fix p-relative">
-                           <img src="main/img/courses/courses-3.jpg" alt="">
-                           <span class="tp-courses__cat cat-color-3"><a href="#">Mechanical</a></span>
-                        </div>
-                        <div class="tp-courses__content">
-                           <div class="tp-courses__meta">
-                              <span class="tp-ratting"><i class="icon_star_alt"></i> 4.5 (88)</span>
-                              <span><i class="icon_heart_alt"></i>200</span>
-                              <span><i class="fa-light fa-user"></i>165</span>
-                           </div>
-                           <h3 class="tp-courses__title"><a href="course-details.html">Statistics Data Scince and
-                                 Business Analysis</a></h3>
-                           <div class="tp-courses__avata">
-                              <img src="main/img/courses/avata/course-avata-3.jpg" alt="">
-                              <span><a href="#">Natasha Pawel</a></span>
-                           </div>
-                           <div class="tp-courses__price d-flex justify-content-between">
-                              <div class="tp-courses__time">
-                                 <span><i class="fa-light fa-clock"></i>10 Week</span>
-                              </div>
-                              <div class="tp-courses__value">
-                                 <span>$69.65</span>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-
-                  <div class="col-lg-4 col-md-6">
-                     <div class="tp-courses__item mb-30">
-                        <div class="tp-courses__thumb w-img fix p-relative">
-                           <img src="main/img/courses/courses-5.jpg" alt="">
-                           <span class="tp-courses__cat cat-color-5"><a href="#">Marketing</a></span>
-                        </div>
-                        <div class="tp-courses__content">
-                           <div class="tp-courses__meta">
-                              <span class="tp-ratting"><i class="icon_star_alt"></i> 4.5 (100)</span>
-                              <span><i class="icon_heart_alt"></i>800</span>
-                              <span><i class="fa-light fa-user"></i>365</span>
-                           </div>
-                           <h3 class="tp-courses__title"><a href="course-details.html">Learn Essentials of User Interface
-                                 Design in Figma.</a></h3>
-                           <div class="tp-courses__avata">
-                              <img src="main/img/courses/avata/course-avata-5.jpg" alt="">
-                              <span><a href="#">Mary Vaun</a></span>
-                           </div>
-                           <div class="tp-courses__price d-flex justify-content-between">
-                              <div class="tp-courses__time">
-                                 <span><i class="fa-light fa-clock"></i>16 Week</span>
-                              </div>
-                              <div class="tp-courses__value">
-                                 <span>Free</span>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-
-
-                  <div class="col-lg-4 col-md-6">
-                     <div class="tp-courses__item mb-30">
-                        <div class="tp-courses__thumb w-img fix p-relative">
-                           <img src="main/img/courses/courses-6.jpg" alt="">
-                           <span class="tp-courses__cat cat-color-6"><a href="#">Audio & Music</a></span>
-                        </div>
-                        <div class="tp-courses__content">
-                           <div class="tp-courses__meta">
-                              <span class="tp-ratting"><i class="icon_star_alt"></i> 4.5 (100)</span>
-                              <span><i class="icon_heart_alt"></i>18,400</span>
-                              <span><i class="fa-light fa-user"></i>365</span>
-                           </div>
-                           <h3 class="tp-courses__title"><a href="course-details.html">Become a UI/UX Designer
-                                 Everything You need</a></h3>
-                           <div class="tp-courses__avata">
-                              <img src="main/img/courses/avata/course-avata-6.jpg" alt="">
-                              <span><a href="#">Auston Ager</a></span>
-                           </div>
-                           <div class="tp-courses__price d-flex justify-content-between">
-                              <div class="tp-courses__time">
-                                 <span><i class="fa-light fa-clock"></i>10 Week</span>
-                              </div>
-                              <div class="tp-courses__value">
-                                 <span>$59.65</span>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-            </div>
-            <div class="tab-pane fade" id="pills-featured" role="tabpanel" aria-labelledby="pills-featured-tab">
-               <div class="row">
-                  <div class="col-lg-4 col-md-6">
-                     <div class="tp-courses__item mb-30">
-                        <div class="tp-courses__thumb w-img fix p-relative">
-                           <img src="main/img/courses/courses-5.jpg" alt="">
-                           <span class="tp-courses__cat cat-color-5"><a href="#">Marketing</a></span>
-                        </div>
-                        <div class="tp-courses__content">
-                           <div class="tp-courses__meta">
-                              <span class="tp-ratting"><i class="icon_star_alt"></i> 4.5 (100)</span>
-                              <span><i class="icon_heart_alt"></i>800</span>
-                              <span><i class="fa-light fa-user"></i>365</span>
-                           </div>
-                           <h3 class="tp-courses__title"><a href="course-details.html">Learn Essentials of User Interface
-                                 Design in Figma.</a></h3>
-                           <div class="tp-courses__avata">
-                              <img src="main/img/courses/avata/course-avata-5.jpg" alt="">
-                              <span><a href="#">Mary Vaun</a></span>
-                           </div>
-                           <div class="tp-courses__price d-flex justify-content-between">
-                              <div class="tp-courses__time">
-                                 <span><i class="fa-light fa-clock"></i>16 Week</span>
-                              </div>
-                              <div class="tp-courses__value">
-                                 <span>Free</span>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-                  <div class="col-lg-4 col-md-6">
-                     <div class="tp-courses__item mb-30">
-                        <div class="tp-courses__thumb w-img fix p-relative">
-                           <img src="main/img/courses/courses-2.jpg" alt="">
-                           <span class="tp-courses__cat cat-color-2"><a href="#">Development</a></span>
-                        </div>
-                        <div class="tp-courses__content">
-                           <div class="tp-courses__meta">
-                              <span class="tp-ratting"><i class="icon_star_alt"></i> 4.5 (100)</span>
-                              <span><i class="icon_heart_alt"></i>1800</span>
-                              <span><i class="fa-light fa-user"></i>325</span>
-                           </div>
-                           <h3 class="tp-courses__title"><a href="course-details.html">Everything You Need to Know
-                                 About Business.</a></h3>
-                           <div class="tp-courses__avata">
-                              <img src="main/img/courses/avata/course-avata-2.jpg" alt="">
-                              <span><a href="#">David Bruse</a></span>
-                           </div>
-                           <div class="tp-courses__price d-flex justify-content-between">
-                              <div class="tp-courses__time">
-                                 <span><i class="fa-light fa-clock"></i>16 Week</span>
-                              </div>
-                              <div class="tp-courses__value">
-                                 <span>$49.65</span>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-                  <div class="col-lg-4 col-md-6">
-                     <div class="tp-courses__item mb-30">
-                        <div class="tp-courses__thumb w-img fix p-relative">
-                           <img src="main/img/courses/courses-6.jpg" alt="">
-                           <span class="tp-courses__cat cat-color-6"><a href="#">Audio & Music</a></span>
-                        </div>
-                        <div class="tp-courses__content">
-                           <div class="tp-courses__meta">
-                              <span class="tp-ratting"><i class="icon_star_alt"></i> 4.5 (100)</span>
-                              <span><i class="icon_heart_alt"></i>18,400</span>
-                              <span><i class="fa-light fa-user"></i>365</span>
-                           </div>
-                           <h3 class="tp-courses__title"><a href="course-details.html">Become a UI/UX Designer
-                                 Everything You need</a></h3>
-                           <div class="tp-courses__avata">
-                              <img src="main/img/courses/avata/course-avata-6.jpg" alt="">
-                              <span><a href="#">Auston Ager</a></span>
-                           </div>
-                           <div class="tp-courses__price d-flex justify-content-between">
-                              <div class="tp-courses__time">
-                                 <span><i class="fa-light fa-clock"></i>10 Week</span>
-                              </div>
-                              <div class="tp-courses__value">
-                                 <span>$59.65</span>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-                  <div class="col-lg-4 col-md-6">
-                     <div class="tp-courses__item mb-30">
-                        <div class="tp-courses__thumb w-img fix p-relative">
-                           <img src="main/img/courses/courses-4.jpg" alt="">
-                           <span class="tp-courses__cat cat-color-4"><a href="#">Art & Design</a></span>
-                        </div>
-                        <div class="tp-courses__content">
-                           <div class="tp-courses__meta">
-                              <span class="tp-ratting"><i class="icon_star_alt"></i> 4.5 (60)</span>
-                              <span><i class="icon_heart_alt"></i>400</span>
-                              <span><i class="fa-light fa-user"></i>135</span>
-                           </div>
-                           <h3 class="tp-courses__title"><a href="course-details.html">AWS Certified Solutions Architect
-                                 Associate.</a></h3>
-                           <div class="tp-courses__avata">
-                              <img src="main/img/courses/avata/course-avata-4.jpg" alt="">
-                              <span><a href="#">Peter Sidle</a></span>
-                           </div>
-                           <div class="tp-courses__price d-flex justify-content-between">
-                              <div class="tp-courses__time">
-                                 <span><i class="fa-light fa-clock"></i>14 Week</span>
-                              </div>
-                              <div class="tp-courses__value">
-                                 <span>Free</span>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-                  <div class="col-lg-4 col-md-6">
-                     <div class="tp-courses__item mb-30">
-                        <div class="tp-courses__thumb w-img fix p-relative">
-                           <img src="main/img/courses/courses-1.jpg" alt="">
-                           <span class="tp-courses__cat cat-color-1"><a href="#">Web Design</a></span>
-                        </div>
-                        <div class="tp-courses__content">
-                           <div class="tp-courses__meta">
-                              <span class="tp-ratting"><i class="icon_star_alt"></i> 4.5 (110)</span>
-                              <span><i class="icon_heart_alt"></i>1200</span>
-                              <span><i class="fa-light fa-user"></i>155</span>
-                           </div>
-                           <h3 class="tp-courses__title"><a href="course-details.html">The Most Complete Design-
-                                 Thinking Course</a></h3>
-                           <div class="tp-courses__avata">
-                              <img src="main/img/courses/avata/course-avata-1.jpg" alt="">
-                              <span><a href="#">Jennifer Powell</a></span>
-                           </div>
-                           <div class="tp-courses__price d-flex justify-content-between">
-                              <div class="tp-courses__time">
-                                 <span><i class="fa-light fa-clock"></i>7 Week</span>
-                              </div>
-                              <div class="tp-courses__value">
-                                 <span>$39.65</span>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-
-                  <div class="col-lg-4 col-md-6">
-                     <div class="tp-courses__item mb-30">
-                        <div class="tp-courses__thumb w-img fix p-relative">
-                           <img src="main/img/courses/courses-3.jpg" alt="">
-                           <span class="tp-courses__cat cat-color-3"><a href="#">Mechanical</a></span>
-                        </div>
-                        <div class="tp-courses__content">
-                           <div class="tp-courses__meta">
-                              <span class="tp-ratting"><i class="icon_star_alt"></i> 4.5 (88)</span>
-                              <span><i class="icon_heart_alt"></i>200</span>
-                              <span><i class="fa-light fa-user"></i>165</span>
-                           </div>
-                           <h3 class="tp-courses__title"><a href="course-details.html">Statistics Data Scince and
-                                 Business Analysis</a></h3>
-                           <div class="tp-courses__avata">
-                              <img src="main/img/courses/avata/course-avata-3.jpg" alt="">
-                              <span><a href="#">Natasha Pawel</a></span>
-                           </div>
-                           <div class="tp-courses__price d-flex justify-content-between">
-                              <div class="tp-courses__time">
-                                 <span><i class="fa-light fa-clock"></i>10 Week</span>
-                              </div>
-                              <div class="tp-courses__value">
-                                 <span>$69.65</span>
-                              </div>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-
-
+                  {% endfor %}
                </div>
             </div>
          </div>
@@ -914,303 +221,83 @@
 </div>
 <!-- course end  -->
 
-<!-- event start-->
+<!-- blog start-->
 <div class="tp-event__section pt-120 pb-90 p-relative">
    <div class="tp-event__shape">
       <div class="event-1">
-         <img src="main/img/icons/event-line-1.png" alt="">
+         <img src="{% static 'main/img/icons/event-line-1.png' %}" alt="">
       </div>
       <div class="event-2">
-         <img src="main/img/icons/event-circle.png" alt="">
+         <img src="{% static 'main/img/icons/event-circle.png' %}" alt="">
       </div>
    </div>
    <div class="container">
       <div class="row">
          <div class="col-lg-12">
             <div class="tp-section__title-wrapper mb-40 text-center">
-               <h3 class="tp-section__title mb-15">Upcoming Events</h3>
-               <p>You can relay on our amazing features list and also our customer services <br> will be great
-                  experience for you without doubt.</p>
+               <h3 class="tp-section__title mb-15">Последнее из блога</h3>
             </div>
          </div>
       </div>
       <div class="tp-event__wrapper">
          <div class="row">
+            {% for blog in blogs %}
             <div class="col-lg-3 col-md-6">
                <div class="tp-event__item mb-30">
                   <div class="tp-event__thumb w-img fix">
-                     <img src="main/img/event/event-thumb-1.jpg" alt="">
+                     <img src="{{ blog.image }}" alt="">
                   </div>
                   <div class="tp-event__content">
                      <div class="tp-event__meta mb-10">
-                        <span class="event-date"><i class="fa-solid fa-circle-small"></i> February 13, 2022</span>
-                        <span class="event-cat"><i class="fa-solid fa-circle-small"></i> Marketing</span>
+                        <span class="event-date"><i class="fa-solid fa-circle-small"></i> {{ blog.date }}</span>
                      </div>
-                     <h3 class="tp-event__title mb-30"><a href="event-details.html">Learn By Doing A Real
-                        World Projects.</a></h3>
-                     <a href="event-details.html" class="more-btn">Read More <i class="fa-regular fa-arrow-right"></i></a>
+                     <h3 class="tp-event__title mb-30"><a href="#"> {{ blog.title }}</a></h3>
+                     <p>{{ blog.content }}</p>>
+                     <a href="#" class="more-btn">Read More <i class="fa-regular fa-arrow-right"></i></a>
                   </div>
-
                </div>
             </div>
-            <div class="col-lg-3 col-md-6">
-               <div class="tp-event__item mb-30">
-                  <div class="tp-event__thumb w-img fix">
-                     <img src="main/img/event/event-thumb-2.jpg" alt="">
-                  </div>
-                  <div class="tp-event__content">
-                     <div class="tp-event__meta mb-10">
-                        <span class="event-date"><i class="fa-solid fa-circle-small"></i> February 13, 2022</span>
-                        <span class="event-cat"><i class="fa-solid fa-circle-small"></i> Marketing</span>
-                     </div>
-                     <h3 class="tp-event__title mb-30"><a href="event-details.html">Find The Right Learning
-                           for your Group.</a></h3>
-                     <a href="event-details.html" class="more-btn">Read More <i class="fa-regular fa-arrow-right"></i></a>
-                  </div>
-
-               </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-               <div class="tp-event__item mb-30">
-                  <div class="tp-event__thumb w-img fix">
-                     <img src="main/img/event/event-thumb-3.jpg" alt="">
-                  </div>
-                  <div class="tp-event__content">
-                     <div class="tp-event__meta mb-10">
-                        <span class="event-date"><i class="fa-solid fa-circle-small"></i> February 13, 2022</span>
-                        <span class="event-cat"><i class="fa-solid fa-circle-small"></i> Marketing</span>
-                     </div>
-                     <h3 class="tp-event__title mb-30"><a href="event-details.html">While the lovely valley
-                           team work today.</a></h3>
-                     <a href="event-details.html" class="more-btn">Read More <i class="fa-regular fa-arrow-right"></i></a>
-                  </div>
-
-               </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-               <div class="tp-event__item mb-30">
-                  <div class="tp-event__thumb w-img fix">
-                     <img src="main/img/event/event-thumb-4.jpg" alt="">
-                  </div>
-                  <div class="tp-event__content">
-                     <div class="tp-event__meta mb-10">
-                        <span class="event-date"><i class="fa-solid fa-circle-small"></i> February 13, 2022</span>
-                        <span class="event-cat"><i class="fa-solid fa-circle-small"></i> Marketing</span>
-                     </div>
-                     <h3 class="tp-event__title mb-30"><a href="event-details.html">Strategic Social Media Marketing Policy.</a>
-                     </h3>
-                     <a href="event-details.html" class="more-btn">Read More <i class="fa-regular fa-arrow-right"></i></a>
-                  </div>
-
-               </div>
-            </div>
+            {% endfor %}
          </div>
       </div>
    </div>
 </div>
-<!-- evant end -->
+<!-- blog end -->
 
-<!-- testimonial start  -->
-<div class="tp-testimonial__section pb-120">
-   <div class="container">
-      <div class="grey-bg pb-150 pt-60 tp-testimonial__bg">
-         <div class="row">
-            <div class="col-lg-12">
-               <div class="tp-section__title-wrapper mb-40 text-center">
-                  <h3 class="tp-section__title mb-15">What our clients Say <br>
-                     About us</h3>
-                  <p>Etiam Porttitor risus massa nec condiment gravida nibh.</p>
-               </div>
-            </div>
-         </div>
-         <div class="tp-testimonial__wrapper p-relative">
-            <div class="row justify-content-center">
-
-               <div class="col-lg-10">
-                  <div class="tp-testimonial__slider">
-                     <div class="tp-testimonial__box d-md-flex white-bg align-items-center">
-                        <img src="main/img/testimonial/testimonial-thumb.jpg" alt="">
-                        <div class="tp-testimonial__review">
-                           <span class="tp-testimonial__quote"><i class="fa-solid fa-quote-left"></i></span>
-                           <p>Engage with our profeessional realestaeyeagants sell buy or <br> rent your home auweGet
-                              emails directly areain falls box andery <br> ithe. Quis ipsum suspendisse ultrices
-                              gravida.</p>
-                           <h3>Maria Zokatti</h3>
-                           <span>CEO, Psdboss</span>
-                        </div>
-                     </div>
-                     <div class="tp-testimonial__box d-md-flex white-bg align-items-center">
-                        <img src="main/img/testimonial/testimonial-thumb-2.jpg" alt="">
-                        <div class="tp-testimonial__review">
-                           <span class="tp-testimonial__quote"><i class="fa-solid fa-quote-left"></i></span>
-                           <p>Your company is truly upstanding and is behind its product 100%. <br> I STRONGLY
-                              recommend education to EVERYONE interested <br> in running a successful online business
-                           </p>
-                           <h3>Judy N</h3>
-                           <span>CEO, Psdboss</span>
-                        </div>
-                     </div>
-                     <div class="tp-testimonial__box d-md-flex white-bg align-items-center">
-                        <img src="main/img/testimonial/testimonial-thumb-3.jpg" alt="">
-                        <div class="tp-testimonial__review">
-                           <span class="tp-testimonial__quote"><i class="fa-solid fa-quote-left"></i></span>
-                           <p>Just what I was looking for. Best. Product. Ever! Education is great. Education is
-                              the most valuable business resource <br> we have EVER purchased.</p>
-                           <h3>Gabbey A.</h3>
-                           <span>CEO, Psdboss</span>
-                        </div>
-                     </div>
-                     <div class="tp-testimonial__box d-md-flex white-bg align-items-center">
-                        <img src="main/img/testimonial/testimonial-thumb-4.jpg" alt="">
-                        <div class="tp-testimonial__review">
-                           <span class="tp-testimonial__quote"><i class="fa-solid fa-quote-left"></i></span>
-                           <p>I would also like to say thank you to all your staff. It's the perfect <br> solution for
-                              our business. Education is the most valuable <br> business resource we have EVER
-                              purchased.</p>
-                           <h3>Olive Yew.</h3>
-                           <span>CEO, Psdboss</span>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-            </div>
-            <div class="row">
-               <div class="tp-testimonial__dots pt-50"></div>
-               <div class="tp-testimonial__arrows"></div>
-            </div>
-         </div>
-      </div>
-   </div>
-</div>
-<!-- tesimoial end  -->
-
-<!-- team start  -->
+<!-- teachers start  -->
 <div class="tp-team__section pb-130">
    <div class="container">
       <div class="row">
          <div class="tp-section__title-wrapper mb-40 text-center">
-            <h3 class="tp-section__title mb-15">Become A Instruction <br>
-               Instructor.</h3>
-            <p>Etiam porttitor risus massa nec condiment gravida.</p>
+            <h3 class="tp-section__title mb-15">Преподаватели - практики</h3>
+            <p>Учись у лучших. Каждый день наши преподаватели работают в IT компаниях и кодят,
+               господи, как же они кодят! А по вечерам спешат делиться своими бесценными
+               знаниями и навыками с тобой.</p>
          </div>
       </div>
       <div class="tp-team__wrapper mb-30">
          <div class="row">
+            {% for teacher in teachers %}
             <div class="col-lg-3 col-md-6">
                <div class="tp-team__member fix mb-30">
                   <div class="tp-team__img w-img tp-team__overlay p-relative">
-                     <a href="instructor-details.html">
-                        <img src="main/img/team/team-1.1.jpg" alt="">
+                     <a href="{% url 'teachers_list' %}">
+                        <img src="{% static 'main/img/courses/courses-2.jpg' %}" alt="">
                      </a>
                      <div class="tp-team__info text-center">
-                        <h3 class="tp-team__name">Andra Flatcher</h3>
-                        <span>Teacher MBA</span>
-                     </div>
-                     <div class="tp-team__social">
-                        <span><a href="#"><i class="fab fa-facebook-f"></i></a></span>
-                        <span><a href="#"><i class="fab fa-youtube"></i></a></span>
-                        <span><a href="#"><i class="fab fa-linkedin"></i></a></span>
+                        <h3 class="tp-team__name">{{ teacher.first_name }}</h3>
+                        <span>{{ teacher.stack }}</span>
+                        <span>{{ teacher.courses.skill }}</span>
                      </div>
                   </div>
                </div>
             </div>
-            <div class="col-lg-3 col-md-6">
-               <div class="tp-team__member fix mb-30">
-                  <div class="tp-team__img w-img tp-team__overlay p-relative">
-                     <a href="instructor-details.html">
-                     <img src="main/img/team/team-1.2.jpg" alt="">
-                     </a>
-                     <div class="tp-team__info text-center">
-                        <h3 class="tp-team__name">Morgan Key</h3>
-                        <span>Teacher MBA</span>
-                     </div>
-                     <div class="tp-team__social">
-                        <span><a href="#"><i class="fab fa-facebook-f"></i></a></span>
-                        <span><a href="#"><i class="fab fa-youtube"></i></a></span>
-                        <span><a href="#"><i class="fab fa-linkedin"></i></a></span>
-                     </div>
-                  </div>
-               </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-               <div class="tp-team__member fix mb-30">
-                  <div class="tp-team__img w-img tp-team__overlay p-relative">
-                     <a href="instructor-details.html">
-                     <img src="main/img/team/team-1.3.jpg" alt="">
-                     </a>
-                     <div class="tp-team__info text-center">
-                        <h3 class="tp-team__name">Andra Flatcher</h3>
-                        <span>Course Mentor</span>
-                     </div>
-                     <div class="tp-team__social">
-                        <span><a href="#"><i class="fab fa-facebook-f"></i></a></span>
-                        <span><a href="#"><i class="fab fa-youtube"></i></a></span>
-                        <span><a href="#"><i class="fab fa-linkedin"></i></a></span>
-                     </div>
-                  </div>
-               </div>
-            </div>
-            <div class="col-lg-3 col-md-6">
-               <div class="tp-team__member fix mb-30">
-                  <div class="tp-team__img w-img tp-team__overlay p-relative">
-                     <a href="instructor-details.html">
-                     <img src="main/img/team/team-1.4.jpg" alt="">
-                     </a>
-                     <div class="tp-team__info text-center">
-                        <h3 class="tp-team__name">Andra Flatcher</h3>
-                        <span>Teacher MBA</span>
-                     </div>
-                     <div class="tp-team__social">
-                        <span><a href="#"><i class="fab fa-facebook-f"></i></a></span>
-                        <span><a href="#"><i class="fab fa-youtube"></i></a></span>
-                        <span><a href="#"><i class="fab fa-linkedin"></i></a></span>
-                     </div>
-                  </div>
-               </div>
-            </div>
-         </div>
-      </div>
-      <div class="row">
-         <div class="col-lg-12">
-            <div class="tp-hero__btn-wrappper text-center">
-               <a href="instructor-2.html" class="tp-border-btn br-0">
-                  <span>See all Team</span>
-                  <div class="transition"></div>
-               </a>
-            </div>
+            {% endfor %}
          </div>
       </div>
    </div>
 </div>
 <!-- team end  -->
-
-<!-- cta start-->
-<div class="tp-cta__section p-relative">
-   <div class="tp-cta__bg grey-bg">
-   </div>
-   <div class="container">
-      <div class="tp-cta-wrapper">
-         <div class="tp-box__shadow ">
-            <div class="tp-cta__box z-index-11 p-relative " data-background="main/img/bg/newsletter-bg-1.jpg">
-               <div class="row align-items-center">
-                  <div class="col-lg-9 col-md-8">
-                     <h3 class="tp-cta__title text-white">Want to study at Online <br> program ?</h3>
-                  </div>
-                  <div class="col-lg-3 col-md-4">
-                     <div class="tp-cta__btn-wrappper d-flex justify-content-md-end">
-                        <a href="contact.html" class="tp-white-btn">
-                           <span>Apply now</span>
-                           <div class="transition"></div>
-                        </a>
-                     </div>
-                  </div>
-               </div>
-            </div>
-         </div>
-      </div>
-   </div>
-</div>
-<!-- newsletter end -->
 
 </main>
 {% endblock %}

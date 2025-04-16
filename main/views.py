@@ -4,7 +4,8 @@ from . models import Course, Teacher
 
 def index(request):
     courses = Course.objects.all()
-    return render(request, 'main/index.html', {'courses': courses})
+    teachers = Teacher.objects.all()
+    return render(request, 'main/index.html', {'courses': courses, 'teachers': teachers})
 
 
 def courses(request):
