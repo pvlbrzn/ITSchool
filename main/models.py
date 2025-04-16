@@ -63,7 +63,7 @@ class Course(models.Model):
     end_date = models.DateField(verbose_name='Дата окончания')
     price = models.DecimalField(max_digits=8, decimal_places=2, verbose_name='Стоимость')
     language = models.CharField(max_length=20, choices=LANGUAGE_CHOICES, verbose_name='Язык')
-    type = models.CharField(max_length=20, choices=TYPE_CHOICES, verbose_name='Тип')
+    skill = models.CharField(max_length=20, choices=TYPE_CHOICES, verbose_name='Тип')
     teachers = models.ManyToManyField(Teacher, related_name='courses',
                                       verbose_name='Преподаватели')
     students = models.ManyToManyField(Student, related_name='courses',

@@ -5,8 +5,8 @@ from . models import Course, Teacher, Student, Lesson, Blog
 
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
-    list_display = ('title', 'description', 'language', 'type')
-    search_fields = ('title', 'language', 'type', 'start_date')
+    list_display = ('title', 'description', 'language', 'skill')
+    search_fields = ('title', 'language', 'skill', 'start_date')
     list_filter = ('price', )
 
 
