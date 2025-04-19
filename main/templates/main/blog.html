@@ -1,0 +1,96 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Блог{% endblock %}
+
+{% block content %}
+{% load static %}
+<main>
+   <!-- breadcrumb area start -->
+   <div class="breadcrumb__area include-bg pt-200 pb-150 breadcrumb__overlay"
+      data-background="{% static 'main/img/breadcrumb/breadcrumb-bg.png' %}">
+      <div class="container">
+         <div class="row">
+            <div class="col-xxl-12">
+               <div class="breadcrumb__content p-relative z-index-1">
+                  <div class="breadcrumb__list">
+                     <span><a href="{% url 'index' %}">Главная страница</a></span>
+                     <span class="dvdr"><i class="fa-regular fa-angle-right"></i></span>
+                     <span>Блог</span>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!-- breadcrumb area end -->
+
+   <!-- postbox area start -->
+   <div class="postbox__area pt-120 pb-120">
+      <div class="container">
+         <div class="row">
+            <div class="col-lg-12">
+               <div class="postbox__wrapper pr-30">
+                  {% for blog in blogs %}
+                  <article class="postbox__item format-image mb-50 transition-3">
+                     <div class="postbox__thumb w-img">
+                        <a href="{% url 'blog_details' blog.id %}">
+                           <img src="{{ blog.image }}" alt="">
+                        </a>
+                     </div>
+                     <div class="postbox__content">
+                        <div class="postbox__meta">
+                           <span><i class="far fa-calendar-check"></i> {{ blog.date }} </span>
+                           <span><i class="far fa-user"></i> {{ blog.author }} </span>
+                        </div>
+                        <h3 class="postbox__title">
+                           <a href="{% url 'blog_details' blog.id %}">{{ blog.title }}</a>
+                        </h3>
+                        <div class="postbox__text">
+                           <p>{{ blog.annotation}}</p>
+                        </div>
+                        <div class="postbox__read-more">
+                           <a href="{% url 'blog_details' blog.id %}" class="tp-btn"> <span>Читать полностью</span>
+                              <div class="transition"></div>
+                           </a>
+                        </div>
+                     </div>
+                  </article>
+                  {% endfor %}
+                  <div class="basic-pagination">
+                     <nav>
+                        <ul>
+                           {% if blogs.has_previous %}
+                           <li>
+                              <a href="?page={{ blogs.previous_page_number }}">
+                                 <i class="far fa-angle-left"></i>
+                              </a>
+                           </li>
+                           {% endif %}
+
+                           {% for num in blogs.paginator.page_range %}
+                              {% if blogs.number == num %}
+                                 <li><span class="current">{{ num }}</span></li>
+                              {% elif num > blogs.number|add:'-3' and num < blogs.number|add:'3' %}
+                                 <li><a href="?page={{ num }}">{{ num }}</a></li>
+                              {% endif %}
+                           {% endfor %}
+
+                           {% if blogs.has_next %}
+                           <li>
+                              <a href="?page={{ blogs.next_page_number }}">
+                                 <i class="far fa-angle-right"></i>
+                              </a>
+                           </li>
+                           {% endif %}
+                        </ul>
+                     </nav>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!-- postbox area end -->
+
+</main>
+{% endblock %}

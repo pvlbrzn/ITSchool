@@ -33,6 +33,6 @@ class LessonAdmin(admin.ModelAdmin):
 
 @admin.register(Blog)
 class BlogAdmin(admin.ModelAdmin):
-    list_display = ('title', 'content', 'date', 'author')
-    search_fields = ('title', 'date', 'author')
+    list_display = ('title', 'date', 'author')
+    search_fields = ('title', 'author')
     list_filter = ('title', 'date', 'author')

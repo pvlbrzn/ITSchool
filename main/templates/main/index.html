@@ -252,12 +252,18 @@
                         <span class="event-date"><i class="fa-solid fa-circle-small"></i> {{ blog.date }}</span>
                      </div>
                      <h3 class="tp-event__title mb-30"><a href="#"> {{ blog.title }}</a></h3>
-                     <p>{{ blog.content }}</p>>
-                     <a href="#" class="more-btn">Read More <i class="fa-regular fa-arrow-right"></i></a>
+                     <a href="{% url 'blog' %}" class="more-btn">Читать Блог <i class="fa-regular fa-arrow-right"></i></a>
                   </div>
                </div>
             </div>
             {% endfor %}
+            {% if user.is_staff %}
+            <!-- Форма для обновления фильмов -->
+           <form method="post" action="{% url 'run_parse' %}">
+               {% csrf_token %}
+               <button type="submit">Обновить посты</button>
+           </form>
+            {% endif %}
          </div>
       </div>
    </div>
