@@ -1,3 +1,5 @@
+import random
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.core.paginator import Paginator
@@ -9,6 +11,13 @@ from .services import parse_blog
 def index(request):
     courses = Course.objects.all()
     teachers = Teacher.objects.all()
+
+    for course in courses:
+        course.random_rating = round(random.uniform(3.7, 5.0), 1)
+        course.random_stars = random.randint(50, 150)
+        course.random_likes = random.randint(1500, 3000)
+        course.random_peoples = random.randint(300, 500)
+
     blogs = Blog.objects.order_by('-title')[:8]
     return render(request, 'main/index.html',
                   {'courses': courses, 'teachers': teachers, 'blogs': blogs})
@@ -27,6 +36,14 @@ def course_detail(request, course_id):
 def teachers_list(request):
     teachers = Teacher.objects.all()
     return render(request, 'main/teachers.html', {'teachers': teachers})
+
+
+def about(request):
+    return render(request, 'main/about-us.html')
+
+
+def contact(request):
+    return render(request, 'main/contact.html')
 
 
 def blog_list(request):
