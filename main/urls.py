@@ -1,6 +1,7 @@
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth import views as auth_views
 
 from . import views
 
@@ -14,4 +15,7 @@ urlpatterns = [
     path('blog/', views.blog_list, name='blog'),
     path('blog/<int:blog_id>/', views.blog_details, name='blog_details'),
     path('parse/', views.update_blog, name='run_parse'),
+    path('login/', auth_views.LoginView.as_view(
+        template_name='main/login.html'), name='login'),
+    path('after-login/', views.after_login_redirect, name='after_login'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

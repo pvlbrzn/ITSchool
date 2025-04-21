@@ -3,6 +3,7 @@ import random
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
 
 from . models import Course, Teacher, Blog
 from .services import parse_blog
@@ -70,3 +71,10 @@ def update_blog(request):
             messages.error(request, f"Ошибка при обновлении постов: {e}")  # Сообщение об ошибке
 
     return redirect('index')
+
+
+@login_required
+def after_login_redirect(request):
+    if request.user.is_staff:
+        return redirect('/admin/')
+    return redirect('/')

@@ -63,7 +63,7 @@ class Command(BaseCommand):
     def generate_courses(self, teachers, students, count):
         courses = []
         language_choices = [lang[0] for lang in Course.LANGUAGE_CHOICES]
-        skill_choices = [skill[0] for skill in Course.TYPE_CHOICES]
+        skill_choices = [skill[0] for skill in Course.SKILL_CHOICES]
 
         for _ in range(count):
             lang = random.choice(language_choices)
