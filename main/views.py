@@ -3,15 +3,15 @@ import random
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 
-from . models import Course, Teacher, Blog
-from .services import parse_blog
+from . models import Course, Blog, CustomUser
+from . services import parse_blog
 
 
 def index(request):
-    courses = Course.objects.all()
-    teachers = Teacher.objects.all()
+    teachers = CustomUser.objects.filter(role='teacher')
+    courses = Course.objects.order_by('title')[:8]
 
     for course in courses:
         course.random_rating = round(random.uniform(3.7, 5.0), 1)
@@ -21,7 +21,7 @@ def index(request):
 
     blogs = Blog.objects.order_by('-title')[:8]
     return render(request, 'main/index.html',
-                  {'courses': courses, 'teachers': teachers, 'blogs': blogs})
+                  {'teachers': teachers, 'courses': courses, 'blogs': blogs})
 
 
 def courses(request):
@@ -35,9 +35,8 @@ def course_detail(request, course_id):
 
 
 def teachers_list(request):
-    teachers = Teacher.objects.all()
+    teachers = CustomUser.objects.filter(role='teacher')
     return render(request, 'main/teachers.html', {'teachers': teachers})
-
 
 def about(request):
     return render(request, 'main/about-us.html')
@@ -78,3 +77,27 @@ def after_login_redirect(request):
     if request.user.is_staff:
         return redirect('/admin/')
     return redirect('/')
+
+
+def is_manager(user):
+    return CustomUser.is_superuser or CustomUser.groups.filter(name='managers').exists()
+
+
+@user_passes_test(is_manager)
+def manager(request):
+    users = CustomUser.objects.exclude(groups__name='teachers')
+    courses = Course.objects.all()
+
+    if request.method == 'POST':
+        user_id = request.POST.get('user')
+        course_id = request.POST.get('course')
+        user = CustomUser.objects.get(id=user_id)
+        course = Course.objects.get(id=course_id)
+        course.students.add(user)
+        return redirect('manage_users')
+
+    return render(request, 'main/manager-account.html', {
+        'users': users,
+        'courses': courses,
+    })
+
