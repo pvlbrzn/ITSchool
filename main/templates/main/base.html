@@ -68,7 +68,7 @@
                <div class="row align-items-center">
                   <div class="col-xxl-2 col-xl-2 col-lg-2 col-md-6 col-6">
                      <div class="logo has-border">
-                        <a href="index.html">
+                        <a href="{% url 'index' %}">
                            <img src="{% static 'main/img/logo/white-logo-2.png' %}" alt="logo">
                         </a>
                      </div>
@@ -81,17 +81,7 @@
                                  <a href="{% url 'index' %}">Главная страница</a>
                               </li>
                               <li>
-                                 <a href="{% url 'about' %}">О нас</a>
-                              </li>
-                              <li class="has-dropdown">
                                  <a href="course.html">Курсы</a>
-                                 <ul class="submenu">
-                                    <li><a href="{% url 'courses' %}">Курсы</a></li>
-                                    <li><a href="course.html">Courses Grid</a></li>
-                                    <li><a href="course-details.html">Course Details</a></li>
-                                    <li><a href="cart.html">Cart</a></li>
-                                    <li><a href="checkout.html">Checkout</a></li>
-                                 </ul>
                               </li>
                               <li>
                                  <a href="{% url 'blog' %}">Блог</a>
@@ -99,8 +89,12 @@
                               <li>
                                  <a href="{% url 'contact' %}">Контакты</a>
                               </li>
-                              <li>
-                                 <a href="{% url 'logout' %}">Выход</a>
+                              <li class="has-dropdown">
+                                 <a href="{% url 'about' %}">О нас</a>
+                                 <ul class="submenu">
+                                    <li><a href="#">Наши преподаватели</a></li>
+                                    <li><a href="#">FAQ</a></li>
+                                 </ul>
                               </li>
                            </ul>
                         </nav>
@@ -147,7 +141,7 @@
                <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-6">
                   <div class="footer__widget mb-50 footer-col-1">
                      <div class="footer__widget-logo mb-30">
-                       <a href="index.html"><img src="{% static 'main/img/logo/logo-1.png' %}" alt=""></a>
+                       <a href="{% url 'index' %}"><img src="{% static 'main/img/logo/logo-1.png' %}" alt=""></a>
                      </div>
                      <div class="footer__widget-content">
                         <p>Подписывайся и следи за
