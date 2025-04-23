@@ -13,6 +13,12 @@ def index(request):
     teachers = CustomUser.objects.filter(role='teacher')
     courses = Course.objects.order_by('title')[:8]
 
+    skill = request.GET.get('skill', 'all')
+    if skill == 'all':
+        courses = Course.objects.all()
+    else:
+        courses = Course.objects.filter(skill=skill)
+
     for course in courses:
         course.random_rating = round(random.uniform(3.7, 5.0), 1)
         course.random_stars = random.randint(50, 150)
@@ -21,7 +27,8 @@ def index(request):
 
     blogs = Blog.objects.order_by('-title')[:8]
     return render(request, 'main/index.html',
-                  {'teachers': teachers, 'courses': courses, 'blogs': blogs})
+                  {'teachers': teachers, 'courses': courses, 'blogs': blogs,
+                  'current_skill': skill})
 
 
 def courses(request):
@@ -37,6 +44,7 @@ def course_detail(request, course_id):
 def teachers_list(request):
     teachers = CustomUser.objects.filter(role='teacher')
     return render(request, 'main/teachers.html', {'teachers': teachers})
+
 
 def about(request):
     return render(request, 'main/about-us.html')
