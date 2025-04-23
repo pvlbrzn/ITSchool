@@ -1,0 +1,102 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Регистрация{% endblock %}
+
+{% block content %}
+<main>
+   <!-- breadcrumb area start -->
+   <div class="breadcrumb__area include-bg pt-200 pb-150 breadcrumb__overlay"
+        data-background="{% static 'main/img/breadcrumb/breadcrumb-bg.png' %}">
+      <div class="container">
+         <div class="row">
+            <div class="col-xxl-12">
+               <div class="breadcrumb__content p-relative z-index-1">
+                  <h3 class="breadcrumb__title">Регистрация</h3>
+                  <div class="breadcrumb__list">
+                     <span><a href="{% url 'index' %}">Главная страница</a></span>
+                     <span class="dvdr"><i class="fa-regular fa-angle-right"></i></span>
+                     <span>Регистрация</span>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!-- breadcrumb area end -->
+
+   <!-- sign up area start -->
+   <section class="signup__area po-rel-z1 pt-100 pb-145 p-relative fix">
+      <div class="sign__shape">
+         <img class="man-1" src="{% static 'main/img/icons/about-shapes.png' %}" alt="">
+         <img class="man-2" src="{% static 'main/img/icons/book-shape.png' %}" alt="">
+         <img class="circle" src="{% static 'main/img/icons/role-shape.png' %}" alt="">
+         <img class="zigzag" src="{% static 'main/img/icons/lines-shape.png' %}" alt="">
+      </div>
+      <div class="container">
+         <div class="row">
+            <div class="col-xxl-8 offset-xxl-2 col-xl-8 offset-xl-2">
+               <div class="tp-section__title-wrapper text-center mb-55">
+                  <h2 class="tp-section__title">Создать аккаунт</h2>
+                  <p>Подтверждаю, что готов начать путь в IT.</p>
+               </div>
+            </div>
+         </div>
+         <div class="row">
+            <div class="col-xxl-6 offset-xxl-3 col-xl-6 offset-xl-3 col-lg-8 offset-lg-2">
+               <div class="sign__wrapper white-bg">
+                  <div class="sign__header mb-35">
+                     <div class="sign__in text-center">
+                        <p><span>........</span> Или, <a href="{% url 'login' %}">войти</a> в аккаунт <span>........</span></p>
+                     </div>
+                  </div>
+                  <div class="sign__form">
+                     <form method="post">
+                        {% csrf_token %}
+
+                        {% for field in form %}
+                           <div class="sign__input-wrapper mb-25">
+                              <h5>{{ field.label }}</h5>
+                              <div class="sign__input">
+                                 {{ field }}
+                                 {% if field.name == 'username' %}
+                                 <i class="fal fa-user"></i>
+                                 {% elif field.name == 'first_name' %}
+                                 <i class="fal fa-user"></i>
+                                 {% elif field.name == 'last_name' %}
+                                 <i class="fal fa-user"></i>
+                                 {% elif field.name == 'email' %}
+                                 <i class="fal fa-envelope"></i>
+                                 {% elif 'password' in field.name %}
+                                 <i class="fal fa-lock"></i>
+                                 {% elif field.name == 'phone' %}
+                                 <i class="fal fa-phone"></i>
+                                 {% elif field.name == 'age' %}
+                                 <i class="fal fa-calendar"></i>
+                                 {% endif %}
+                              </div>
+                              {{ field.errors }}
+                           </div>
+                        {% endfor %}
+
+                        {% if form.non_field_errors %}
+                           <div class="text-danger mb-2">
+                              {{ form.non_field_errors }}
+                           </div>
+                        {% endif %}
+
+                        <button class="e-btn w-100"><span></span>Создать аккаунт</button>
+
+                        <div class="sign__new text-center mt-20">
+                           <p>Уже есть аккаунт ? <a href="{% url 'login' %}">Войти тут</a></p>
+                        </div>
+                     </form>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </section>
+   <!-- sign up area end -->
+</main>
+{% endblock %}

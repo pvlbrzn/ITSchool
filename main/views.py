@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 
 from . models import Course, Blog, CustomUser
 from . services import parse_blog
+from . forms import StudentRegistrationForm
 
 
 def index(request):
@@ -109,3 +110,13 @@ def manager(request):
         'courses': courses,
     })
 
+
+def register(request):
+    if request.method == 'POST':
+        form = StudentRegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login')  # Или на любую страницу после регистрации
+    else:
+        form = StudentRegistrationForm()
+    return render(request, 'main/registration.html', {'form': form})

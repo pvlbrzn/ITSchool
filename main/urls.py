@@ -19,5 +19,6 @@ urlpatterns = [
         template_name='main/login.html'), name='login'),
     path('after-login/', views.after_login_redirect, name='after_login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='main/logout.html'), name='logout'),
+    path('register/', views.register, name='register'),
     path('manager/', views.manager, name='manager'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
