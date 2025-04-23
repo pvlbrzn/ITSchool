@@ -166,19 +166,19 @@
                         aria-selected="true">Все</button>
                   </li>
                   <li class="nav-item" role="presentation">
-                     <button class="nav-link" id="pills-design-tab" data-bs-toggle="pill"
-                        data-bs-target="#pills-design" type="button" role="tab" aria-controls="pills-design"
-                        aria-selected="false">Популярные</button>
-                  </li>
-                  <li class="nav-item" role="presentation">
                      <button class="nav-link" id="pills-popularity-tab" data-bs-toggle="pill"
-                        data-bs-target="#pills-popularity" type="button" role="tab"
-                        aria-controls="pills-popularity" aria-selected="false">Front-end</button>
+                        data-bs-target="#pills-frontend" type="button" role="tab"
+                        aria-controls="pills-frontend" aria-selected="false">Frontend</button>
                   </li>
                   <li class="nav-item" role="presentation">
                      <button class="nav-link" id="pills-featured-tab" data-bs-toggle="pill"
-                        data-bs-target="#pills-featured" type="button" role="tab" aria-controls="pills-featured"
-                        aria-selected="false">Back-end</button>
+                        data-bs-target="#pills-backend" type="button" role="tab" aria-controls="pills-backend"
+                        aria-selected="false">Backend</button>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                     <button class="nav-link" id="pills-design-tab" data-bs-toggle="pill"
+                        data-bs-target="#pills-devops" type="button" role="tab" aria-controls="pills-devops"
+                        aria-selected="false">Devops</button>
                   </li>
                </ul>
             </div>
@@ -213,6 +213,102 @@
                         </div>
                      </div>
                   </div>
+                  {% endfor %}
+               </div>
+            </div>
+            <div class="tab-pane fade show active" id="pills-frontend" role="tabpanel" aria-labelledby="pills-all-tab">
+               <div class="row">
+                  {% for course in courses %}
+                     {% if course.skill == "frontend" %}
+                     <div class="col-lg-4 col-md-6">
+                        <div class="tp-courses__item mb-30">
+                           <div class="tp-courses__thumb w-img fix p-relative">
+                              <img src="{% static 'main/img/courses/courses-2.jpg' %}" alt="">
+                              <span class="tp-courses__cat cat-color-2"><a href="#"> {{ course.skill }} </a></span>
+                           </div>
+                           <div class="tp-courses__content">
+                              <div class="tp-courses__meta">
+                                 <span class="tp-ratting"><i class="icon_star_alt"></i>{{ course.random_rating }} ({{ course.random_stars }})</span>
+                                 <span><i class="icon_heart_alt"></i>{{ course.random_likes }}</span>
+                                 <span><i class="fa-light fa-user"></i>{{ course.random_peoples }}</span>
+                              </div>
+                              <h3 class="tp-courses__title"><a href="{% url 'course-detail' course.id %}">{{ course.title }}</a></h3>
+                              <div class="tp-courses__price d-flex justify-content-between">
+                                 <div class="tp-courses__time">
+                                    <span><i class="fa-light fa-clock"></i> {{ course.duration }} мес. </span>
+                                 </div>
+                                 <div class="tp-courses__value">
+                                    <span> {{ course.price }} BYN</span>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                     {% endif %}
+                  {% endfor %}
+               </div>
+            </div>
+            <div class="tab-pane fade show active" id="pills-backend" role="tabpanel" aria-labelledby="pills-all-tab">
+               <div class="row">
+                  {% for course in courses %}
+                     {% if course.skill == "backend" %}
+                     <div class="col-lg-4 col-md-6">
+                        <div class="tp-courses__item mb-30">
+                           <div class="tp-courses__thumb w-img fix p-relative">
+                              <img src="{% static 'main/img/courses/courses-2.jpg' %}" alt="">
+                              <span class="tp-courses__cat cat-color-2"><a href="#"> {{ course.skill }} </a></span>
+                           </div>
+                           <div class="tp-courses__content">
+                              <div class="tp-courses__meta">
+                                 <span class="tp-ratting"><i class="icon_star_alt"></i>{{ course.random_rating }} ({{ course.random_stars }})</span>
+                                 <span><i class="icon_heart_alt"></i>{{ course.random_likes }}</span>
+                                 <span><i class="fa-light fa-user"></i>{{ course.random_peoples }}</span>
+                              </div>
+                              <h3 class="tp-courses__title"><a href="{% url 'course-detail' course.id %}">{{ course.title }}</a></h3>
+                              <div class="tp-courses__price d-flex justify-content-between">
+                                 <div class="tp-courses__time">
+                                    <span><i class="fa-light fa-clock"></i> {{ course.duration }} мес. </span>
+                                 </div>
+                                 <div class="tp-courses__value">
+                                    <span> {{ course.price }} BYN</span>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                     {% endif %}
+                  {% endfor %}
+               </div>
+            </div>
+            <div class="tab-pane fade show active" id="pills-devops" role="tabpanel" aria-labelledby="pills-all-tab">
+               <div class="row">
+                  {% for course in courses %}
+                     {% if course.skill == "devops" %}
+                     <div class="col-lg-4 col-md-6">
+                        <div class="tp-courses__item mb-30">
+                           <div class="tp-courses__thumb w-img fix p-relative">
+                              <img src="{% static 'main/img/courses/courses-2.jpg' %}" alt="">
+                              <span class="tp-courses__cat cat-color-2"><a href="#"> {{ course.skill }} </a></span>
+                           </div>
+                           <div class="tp-courses__content">
+                              <div class="tp-courses__meta">
+                                 <span class="tp-ratting"><i class="icon_star_alt"></i>{{ course.random_rating }} ({{ course.random_stars }})</span>
+                                 <span><i class="icon_heart_alt"></i>{{ course.random_likes }}</span>
+                                 <span><i class="fa-light fa-user"></i>{{ course.random_peoples }}</span>
+                              </div>
+                              <h3 class="tp-courses__title"><a href="{% url 'course-detail' course.id %}">{{ course.title }}</a></h3>
+                              <div class="tp-courses__price d-flex justify-content-between">
+                                 <div class="tp-courses__time">
+                                    <span><i class="fa-light fa-clock"></i> {{ course.duration }} мес. </span>
+                                 </div>
+                                 <div class="tp-courses__value">
+                                    <span> {{ course.price }} BYN</span>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                     {% endif %}
                   {% endfor %}
                </div>
             </div>
