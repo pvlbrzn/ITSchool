@@ -1,6 +1,6 @@
 {% extends 'main/base.html' %}
 
-{% block title %}ITSchool{% endblock %}
+{% block title %}Вход в личный кабинет{% endblock %}
 
 {% block content %}
 {% load static %}
@@ -8,7 +8,7 @@
 
       <!-- breadcrumb area start -->
       <div class="breadcrumb__area include-bg pt-200 pb-150 breadcrumb__overlay"
-         data-background="main/img/breadcrumb/breadcrumb-bg.jpg">
+         data-background="{% static 'main/img/breadcrumb/breadcrumb-bg.png' %}">
          <div class="container">
             <div class="row">
                <div class="col-xxl-12">

@@ -1,40 +1,37 @@
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import AbstractUser
 
 
-class Teacher(models.Model):
-    first_name = models.CharField(max_length=30, verbose_name='Имя')
-    last_name = models.CharField(max_length=50, verbose_name='Фамилия')
-    patronymic = models.CharField(max_length=50, verbose_name='Отчество', blank=True, null=True)
-    bio = models.TextField(verbose_name='Биография', blank=True, null=True)
-    email = models.EmailField(verbose_name='Эл. почта', unique=True, db_index=True)
-    age = models.PositiveIntegerField(verbose_name='Возраст', help_text='в годах')
-    stack = models.CharField(max_length=200, blank=True,
-                             help_text="Языки через запятую (python, js)")
+class CustomUser(AbstractUser):
+    ROLE_CHOICES = (
+        ('student', 'Студент'),
+        ('teacher', 'Преподаватель'),
+        ('manager', 'Менеджер'),
+    )
+    role = models.CharField(
+        max_length=10,
+        choices=ROLE_CHOICES,
+        default='student',
+        verbose_name='Роль'
+    )
+
+    bio = models.TextField(blank=True, null=True, verbose_name='Биография')
+    age = models.PositiveIntegerField(blank=True, null=True, verbose_name='Возраст')
+    stack = models.CharField(max_length=200, blank=True, null=True, verbose_name='Стек технологий')  # для teacher
+    phone = models.CharField(max_length=20, blank=True, null=True, verbose_name='Номер телефона')    # для student
+
+    def is_student(self):
+        return self.role == 'student'
+
+    def is_teacher(self):
+        return self.role == 'teacher'
+
+    def is_manager(self):
+        return self.role == 'manager'
 
     def __str__(self):
-        return f"{self.last_name} {self.first_name}".strip()
-
-    class Meta:
-        verbose_name = 'Преподаватель'
-        verbose_name_plural = 'Преподаватели'
-        ordering = ['last_name', 'first_name']
-
-
-class Student(models.Model):
-    first_name = models.CharField(max_length=30, verbose_name='Имя')
-    last_name = models.CharField(max_length=50, verbose_name='Фамилия')
-    patronymic = models.CharField(max_length=50, verbose_name='Отчество', blank=True, null=True)
-    email = models.EmailField(verbose_name='Эл. почта', unique=True, db_index=True)
-    phone = models.CharField(max_length=20, verbose_name='Номер телефона', blank=True, null=True)
-
-    def __str__(self):
-        return f"{self.last_name} {self.first_name}".strip()
-
-    class Meta:
-        verbose_name = 'Студент'
-        verbose_name_plural = 'Студенты'
-        ordering = ['last_name', 'first_name']
+        return f"{self.username} ({self.get_role_display()})"
 
 
 class Course(models.Model):
@@ -64,10 +61,10 @@ class Course(models.Model):
     price = models.DecimalField(max_digits=8, decimal_places=2, verbose_name='Стоимость')
     language = models.CharField(max_length=20, choices=LANGUAGE_CHOICES, verbose_name='Язык')
     skill = models.CharField(max_length=20, choices=SKILL_CHOICES, verbose_name='Тип')
-    teachers = models.ManyToManyField(Teacher, related_name='courses',
-                                      verbose_name='Преподаватели')
-    students = models.ManyToManyField(Student, related_name='courses',
-                                      verbose_name='Студенты')
+    teachers = models.ManyToManyField('CustomUser', limit_choices_to={'role': 'teacher'},
+                                      related_name='courses_as_teacher', verbose_name='Преподаватели')
+    students = models.ManyToManyField('CustomUser', limit_choices_to={'role': 'student'},
+                                      related_name='courses_as_student', verbose_name='Студенты')
 
     def is_active(self) -> bool:
         """
@@ -88,8 +85,9 @@ class Course(models.Model):
 class Lesson(models.Model):
     title = models.CharField(max_length=150, verbose_name='Тема занятия')
     content = models.TextField(verbose_name='Содержание')
-    teacher = models.ForeignKey(Teacher, related_name='lessons', on_delete=models.SET_NULL,
-                                null=True, blank=True, verbose_name='Преподаватель')
+    teacher = models.ForeignKey('CustomUser', limit_choices_to={'role': 'teacher'},
+                                on_delete=models.SET_NULL, null=True, blank=True,
+                                related_name='lessons', verbose_name='Преподаватель')
     course = models.ForeignKey(Course, on_delete=models.CASCADE,
                                related_name='lessons', verbose_name='Курс')
 
@@ -109,8 +107,8 @@ class Payment(models.Model):
     payment_method = models.CharField(max_length=50, blank=True, null=True,
                                       verbose_name='Метод оплаты')
     comment = models.TextField(blank=True, null=True, verbose_name='Комментарий')
-    student = models.ForeignKey(Student, on_delete=models.CASCADE,
-                                related_name='payments', verbose_name='Студент')
+    student = models.ForeignKey('CustomUser', limit_choices_to={'role': 'student'},
+                                on_delete=models.CASCADE, related_name='payments', verbose_name='Студент')
     course = models.ForeignKey(Course, on_delete=models.CASCADE,
                                related_name='payments', verbose_name='Курс')
 

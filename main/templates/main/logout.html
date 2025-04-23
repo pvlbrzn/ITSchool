@@ -1,0 +1,53 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Вход в личный кабинет{% endblock %}
+
+{% block content %}
+{% load static %}
+<main>
+
+      <!-- breadcrumb area start -->
+      <div class="breadcrumb__area include-bg pt-200 pb-150 breadcrumb__overlay"
+         data-background="{% static 'main/img/breadcrumb/breadcrumb-bg.png' %}">
+         <div class="container">
+            <div class="row">
+               <div class="col-xxl-12">
+                  <div class="breadcrumb__content p-relative z-index-1">
+                     <h3 class="breadcrumb__title">Вход в личный кабинет</h3>
+                     <div class="breadcrumb__list">
+                        <span><a href="{% url 'index' %}">Главная страница</a></span>
+                        <span class="dvdr"><i class="fa-regular fa-angle-right"></i></span>
+                        <span>Войти</span>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <!-- breadcrumb area end -->
+
+      <!-- sign up area start -->
+      <div class="signup__area po-rel-z1 pt-100 pb-145 p-relative">
+         <div class="sign__shape">
+            <img class="man-1" src="{% static 'main/img/icons/about-shapes.png' %}" alt="">
+            <img class="man-2" src="{% static 'main/img/icons/book-shape.png' %}" alt="">
+            <img class="circle" src="{% static 'main/img/icons/role-shape.png' %}" alt="">
+            <img class="zigzag" src="{% static 'main/img/icons/lines-shape.png' %}" alt="">
+         </div>
+         <div class="container">
+            <div class="row">
+               <div class="col-xxl-8 offset-xxl-2 col-xl-8 offset-xl-2">
+                  <div class="tp-section__title-wrapper text-center mb-55">
+                     <h2 class="tp-section__title">Вы вышли из аккаунта.</h2>
+                     <p><a href="{% url 'login' %}">Войти заново.</a></p>
+                     <p><a href="#">Или зарегистрируйтесь здесь.</a></p>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <!-- sign up area end -->
+
+
+</main>
+{% endblock %}
