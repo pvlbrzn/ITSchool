@@ -1,0 +1,76 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Личный кабинет{% endblock %}
+
+{% block content %}
+{% load static %}
+<main>
+   <!-- breadcrumb area start -->
+   <div class="breadcrumb__area include-bg pt-200 pb-150 breadcrumb__overlay"
+      data-background="{% static 'main/img/breadcrumb/breadcrumb-bg-3.jpg' %}">
+      <div class="container">
+         <div class="row">
+            <div class="col-xxl-12">
+               <div class="breadcrumb__content p-relative z-index-1">
+                  <div class="breadcrumb__list">
+                     <span><a href="{% url 'index' %}">Главная страница</a></span>
+                     <span class="dvdr"><i class="fa-regular fa-angle-right"></i></span>
+                     <span>Личный кабинет</span>
+                     <hr>
+                     <span><a href="{% url 'logout' %}">ВЫХОД ИЗ АККАУНТА</a></span>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!-- breadcrumb area end -->
+
+   <!-- postbox area start -->
+   <div class="postbox__area pt-120 pb-120">
+      <div class="container">
+         <h2>Добро пожаловать, {{ request.user.first_name }}!</h2>
+         <h4>Уровень аккаунта - {{ user_role }} </h4>
+         <hr>
+         <h5>Ваши курсы:</h5>
+         {% if courses %}
+            <ul class="list-group">
+               {% for course in courses %}
+                  <a href="{% url 'courses' %}">
+                     <li class="list-group-item">
+                        <strong>{{ course.title }}</strong> — {{ course.language|title }} / {{ course.skill|title }}<br>
+                        {{ course.description}}<br>
+                        {% if course.teachers.count == 0 %}
+                           <p>Преподаватель пока не назначен</p>
+                        {% elif course.teachers.count == 1 %}
+                           <p>Преподаватель —
+                              {% for teacher in course.teachers.all %}
+                                 {{ teacher.first_name }} {{ teacher.last_name }}
+                              {% endfor %}
+                           </p>
+                        {% else %}
+                           <p>Преподаватели —
+                              {% for teacher in course.teachers.all %}
+                                 {{ teacher.first_name }} {{ teacher.last_name }}{% if not forloop.last %}, {% endif %}
+                              {% endfor %}
+                           </p>
+                        {% endif %}<br>
+                        С {{ course.start_date }} по {{ course.end_date }}<br>
+                        {% if course.is_active %}<span class="text-success">Активен</span>{% else %}<span class="text-muted">Завершён</span>{% endif %}
+                     </li>
+                  </a>
+               {% endfor %}
+            </ul>
+         {% else %}
+            <p>У вас пока нет курсов.</p>
+            <a href="{% url 'courses' %}" class="tp-btn br-0">
+               <span>Выбрать курс</span>
+               <div class="transition"></div>
+            </a>
+         {% endif %}
+      </div>
+   </div>
+   <!-- postbox area end -->
+
+</main>
+{% endblock %}

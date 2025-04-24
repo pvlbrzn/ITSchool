@@ -55,29 +55,39 @@
                         {% csrf_token %}
 
                         {% for field in form %}
-                           <div class="sign__input-wrapper mb-25">
-                              <h5>{{ field.label }}</h5>
-                              <div class="sign__input">
-                                 {{ field }}
-                                 {% if field.name == 'username' %}
-                                 <i class="fal fa-user"></i>
-                                 {% elif field.name == 'first_name' %}
-                                 <i class="fal fa-user"></i>
-                                 {% elif field.name == 'last_name' %}
-                                 <i class="fal fa-user"></i>
-                                 {% elif field.name == 'email' %}
-                                 <i class="fal fa-envelope"></i>
-                                 {% elif 'password' in field.name %}
-                                 <i class="fal fa-lock"></i>
-                                 {% elif field.name == 'phone' %}
-                                 <i class="fal fa-phone"></i>
-                                 {% elif field.name == 'age' %}
-                                 <i class="fal fa-calendar"></i>
-                                 {% endif %}
+                           {% if field.name != 'agree' %}
+                              <div class="sign__input-wrapper mb-25">
+                                 <h5>{{ field.label }}</h5>
+                                 <div class="sign__input">
+                                    {{ field }}
+                                    {% if field.name == 'username' or field.name == 'first_name' or field.name == 'last_name' %}
+                                       <i class="fal fa-user"></i>
+                                    {% elif field.name == 'email' %}
+                                       <i class="fal fa-envelope"></i>
+                                    {% elif 'password' in field.name %}
+                                       <i class="fal fa-lock"></i>
+                                    {% elif field.name == 'phone' %}
+                                       <i class="fal fa-phone"></i>
+                                    {% elif field.name == 'age' %}
+                                       <i class="fal fa-calendar"></i>
+                                    {% endif %}
+                                 </div>
+                                 {{ field.errors }}
                               </div>
-                              {{ field.errors }}
-                           </div>
+                           {% endif %}
                         {% endfor %}
+
+                        <div class="sign__action d-flex justify-content-between mb-30">
+                           <div class="sign__agree d-flex align-items-center">
+                              {{ form.agree }}  <!-- Это checkbox -->
+                              <label class="m-check-label" for="{{ form.agree.id_for_label }}">
+                                 Я согласен с <a href="{% static 'main/docs/terms.pdf' %}">Условиями & предложениями</a>
+                              </label>
+                           </div>
+                           {% if form.agree.errors %}
+                              <div class="text-danger">{{ form.agree.errors.0 }}</div>
+                           {% endif %}
+                        </div>
 
                         {% if form.non_field_errors %}
                            <div class="text-danger mb-2">
@@ -99,4 +109,6 @@
    </section>
    <!-- sign up area end -->
 </main>
+
+
 {% endblock %}
