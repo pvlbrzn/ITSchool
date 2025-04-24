@@ -4,6 +4,7 @@ __pycache__/
 *$py.class
 
 /main/static/
+/media/
 .venv
 .idea
 .env

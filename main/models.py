@@ -20,6 +20,7 @@ class CustomUser(AbstractUser):
     age = models.PositiveIntegerField(blank=True, null=True, verbose_name='Возраст')
     stack = models.CharField(max_length=200, blank=True, null=True, verbose_name='Стек технологий')  # для teacher
     phone = models.CharField(max_length=20, blank=True, null=True, verbose_name='Номер телефона')    # для student
+    image = models.ImageField(upload_to='', blank=True, null=True, verbose_name='Изображение')
 
     def is_student(self):
         return self.role == 'student'
@@ -61,6 +62,7 @@ class Course(models.Model):
     price = models.DecimalField(max_digits=8, decimal_places=2, verbose_name='Стоимость')
     language = models.CharField(max_length=20, choices=LANGUAGE_CHOICES, verbose_name='Язык')
     skill = models.CharField(max_length=20, choices=SKILL_CHOICES, verbose_name='Тип')
+    image = models.ImageField(upload_to='', blank=True, null=True, verbose_name='Изображение')
     teachers = models.ManyToManyField('CustomUser', limit_choices_to={'role': 'teacher'},
                                       related_name='courses_as_teacher', verbose_name='Преподаватели')
     students = models.ManyToManyField('CustomUser', limit_choices_to={'role': 'student'},

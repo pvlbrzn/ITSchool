@@ -11,14 +11,15 @@ from . forms import StudentRegistrationForm
 
 
 def index(request):
-    teachers = CustomUser.objects.filter(role='teacher')
-    courses = Course.objects.order_by('title')[:8]
+    teachers = CustomUser.objects.filter(role='teacher')[:8]
+    courses_hot = Course.objects.order_by('title')[:8]
+    blogs = Blog.objects.order_by('-title')[:8]
 
     skill = request.GET.get('skill', 'all')
     if skill == 'all':
-        courses = Course.objects.all()
+        courses = Course.objects.all()[:9]
     else:
-        courses = Course.objects.filter(skill=skill)
+        courses = Course.objects.filter(skill=skill)[:9]
 
     for course in courses:
         course.random_rating = round(random.uniform(3.7, 5.0), 1)
@@ -26,10 +27,12 @@ def index(request):
         course.random_likes = random.randint(1500, 3000)
         course.random_peoples = random.randint(300, 500)
 
-    blogs = Blog.objects.order_by('-title')[:8]
     return render(request, 'main/index.html',
-                  {'teachers': teachers, 'courses': courses, 'blogs': blogs,
-                  'current_skill': skill})
+                  {'teachers': teachers,
+                   'courses_hot': courses_hot,
+                   'courses': courses,
+                   'blogs': blogs,
+                   'current_skill': skill})
 
 
 def courses(request):
@@ -88,29 +91,6 @@ def after_login_redirect(request):
     return redirect('/')
 
 
-def is_manager(user):
-    return CustomUser.is_superuser or CustomUser.groups.filter(name='managers').exists()
-
-
-@user_passes_test(is_manager)
-def manager(request):
-    users = CustomUser.objects.exclude(groups__name='teachers')
-    courses = Course.objects.all()
-
-    if request.method == 'POST':
-        user_id = request.POST.get('user')
-        course_id = request.POST.get('course')
-        user = CustomUser.objects.get(id=user_id)
-        course = Course.objects.get(id=course_id)
-        course.students.add(user)
-        return redirect('manage_users')
-
-    return render(request, 'main/manager-account.html', {
-        'users': users,
-        'courses': courses,
-    })
-
-
 def register(request):
     if request.method == 'POST':
         form = StudentRegistrationForm(request.POST)
@@ -120,3 +100,30 @@ def register(request):
     else:
         form = StudentRegistrationForm()
     return render(request, 'main/registration.html', {'form': form})
+
+
+@login_required
+def personal_account(request):
+    user = request.user
+
+    if user.is_student():
+        courses = user.courses_as_student.all()
+    elif user.is_teacher():
+        courses = user.courses_as_teacher.all()
+    else:
+        courses = Course.objects.all()
+
+    return render(request, 'main/personal-account.html', {
+        'courses': courses,
+        'user_role': user.get_role_display()
+    })
+
+
+def is_manager(user):
+    return CustomUser.is_superuser or CustomUser.groups.filter(name='managers').exists()
+
+
+@user_passes_test(is_manager)
+def manager(request):
+    return render(request, 'main/manager-account.html')
+

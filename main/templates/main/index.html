@@ -17,7 +17,7 @@
                <p class="text-white mb-45">Представляем Академию — техническую школу будущего.</p>
                <div class="tp-hero__btn-wrappper d-md-flex align-items-center">
                   <div class="hero-btn-1 mr-20 p-relative z-index-1">
-                     <a href="#" class="tp-btn br-0">
+                     <a href="{% url 'courses' %}" class="tp-btn br-0">
                         <span>Выбрать курс</span>
                         <div class="transition"></div>
                      </a>
@@ -74,11 +74,11 @@
          </div>
       </div>
       <div class="row gx-70">
-         {% for course in courses %}
+         {% for course in courses_hot %}
          <div class="col-lg-3 col-md-4">
             <div class="tp-feature__item before-color-1 mb-30">
-               <div class="tp-feature__icon">
-                  <img src="{% static 'main/img/icons/design-icon.png' %}" alt="">
+               <div class="tp-feature__icon w-img fix p-relative">
+                  <img src="{{ course.image.url }}" alt="">
                </div>
                <h3 class="tp-feature__title"> {{ course.title }} </h3>
                <p> {{ course.price }} </p>
@@ -94,55 +94,53 @@
 
 <!-- about section  start -->
 <div class="tp-about__section pt-120 pb-90">
-<div class="container">
-   <div class="row align-items-center">
-      <div class="col-lg-7">
-         <div class="tp-about__img-wrapper d-md-flex p-relative">
-            <div class="tp-about__img-large w-img mb-30">
-               <img src="{% static 'main/img/about/about-1.png' %}" alt="">
-            </div>
-            <div class="tp-about__img-sm w-img mb-30">
-               <img src="{% static 'main/img/about/about-2.png' %}" alt="">
-            </div>
+   <div class="container">
+      <div class="row align-items-center">
+         <div class="col-lg-7">
+            <div class="tp-about__img-wrapper d-md-flex p-relative">
+               <div class="tp-about__img-large w-img mb-30">
+                  <img src="{% static 'main/img/about/about-1.png' %}" alt="">
+               </div>
+               <div class="tp-about__img-sm w-img mb-30">
+                  <img src="{% static 'main/img/about/about-2.png' %}" alt="">
+               </div>
 
-            <div class="tp-about-shapes">
-               <div class="tp-about__shapes-1">
-                  <img src="{% static 'main/img/icons/about-shapes.png' %}" alt="">
-                  <div class="tp-about__shapes-2 ">
-                     <img src="{% static 'main/img/icons/ring-shape.png' %}" alt="">
+               <div class="tp-about-shapes">
+                  <div class="tp-about__shapes-1">
+                     <img src="{% static 'main/img/icons/about-shapes.png' %}" alt="">
+                     <div class="tp-about__shapes-2 ">
+                        <img src="{% static 'main/img/icons/ring-shape.png' %}" alt="">
+                     </div>
                   </div>
                </div>
             </div>
          </div>
-      </div>
-      <div class="col-lg-5">
-         <div class="tp-section__title-wrapper">
-            <h3 class="tp-section__title mb-15">Научим<br>
-               программировать и
-               поможем стать ITшником.</h3>
-            <p class="mb-40">ITSchool - это школа программирования, где мы научим тебя
-               востребованным сегодня знаниям. Все наши программы составлены Senior и
-               Lead разработчиками ведущих IT компаний специально для новичков в IT.</p>
+         <div class="col-lg-5">
+            <div class="tp-section__title-wrapper">
+               <h3 class="tp-section__title mb-15">Научим<br>
+                  программировать и
+                  поможем стать ITшником.</h3>
+               <p class="mb-40">ITSchool - это школа программирования, где мы научим тебя
+                  востребованным сегодня знаниям. Все наши программы составлены Senior и
+                  Lead разработчиками ведущих IT компаний специально для новичков в IT.</p>
 
-            <div class="tp-about__feature-list mb-40">
-               <ul>
-                  <li><span><i class="icon_check"></i></span>Менторы. Специалисты международных компаний вроде Andersen, Netcracker, iTechArt или SaM Solutions</li>
-                  <li><span><i class="icon_check"></i></span>Программы. Ориентированы на получение практических умений для поиска работы в первые месяцы после окончания обучения</li>
-                  <li><span><i class="icon_check"></i></span>Открытые уроки и бесплатные мастер-классы. Отличная возможность для проверки своей мотивации</li>
-               </ul>
-            </div>
-            <div class="tp-hero__btn-wrappper">
-               <a href="#" class="tp-border-btn br-0">
-                  <span>Начать</span>
-                  <div class="transition"></div>
-               </a>
+               <div class="tp-about__feature-list mb-40">
+                  <ul>
+                     <li><span><i class="icon_check"></i></span>Менторы. Специалисты международных компаний вроде Andersen, Netcracker, iTechArt или SaM Solutions</li>
+                     <li><span><i class="icon_check"></i></span>Программы. Ориентированы на получение практических умений для поиска работы в первые месяцы после окончания обучения</li>
+                     <li><span><i class="icon_check"></i></span>Открытые уроки и бесплатные мастер-классы. Отличная возможность для проверки своей мотивации</li>
+                  </ul>
+               </div>
+               <div class="tp-hero__btn-wrappper">
+                  <a href="{% url 'register' %}" class="tp-border-btn br-0">
+                     <span>Начать</span>
+                     <div class="transition"></div>
+                  </a>
+               </div>
             </div>
          </div>
       </div>
-
    </div>
-
-</div>
 </div>
 <!-- about section end  -->
 
@@ -192,7 +190,7 @@
                   <div class="col-lg-4 col-md-6">
                      <div class="tp-courses__item mb-30">
                         <div class="tp-courses__thumb w-img fix p-relative">
-                           <img src="{% static 'main/img/courses/courses-2.jpg' %}" alt="">
+                           <img src="{{ course.image.url }}" alt="">
                            <span class="tp-courses__cat cat-color-2"><a href="#"> {{ course.skill }} </a></span>
                         </div>
                         <div class="tp-courses__content">
@@ -223,7 +221,7 @@
                      <div class="col-lg-4 col-md-6">
                         <div class="tp-courses__item mb-30">
                            <div class="tp-courses__thumb w-img fix p-relative">
-                              <img src="{% static 'main/img/courses/courses-2.jpg' %}" alt="">
+                              <img src="{{ course.image.url }}" alt="">
                               <span class="tp-courses__cat cat-color-2"><a href="#"> {{ course.skill }} </a></span>
                            </div>
                            <div class="tp-courses__content">
@@ -255,7 +253,7 @@
                      <div class="col-lg-4 col-md-6">
                         <div class="tp-courses__item mb-30">
                            <div class="tp-courses__thumb w-img fix p-relative">
-                              <img src="{% static 'main/img/courses/courses-2.jpg' %}" alt="">
+                              <img src="{{ course.image.url }}" alt="">
                               <span class="tp-courses__cat cat-color-2"><a href="#"> {{ course.skill }} </a></span>
                            </div>
                            <div class="tp-courses__content">
@@ -287,7 +285,7 @@
                      <div class="col-lg-4 col-md-6">
                         <div class="tp-courses__item mb-30">
                            <div class="tp-courses__thumb w-img fix p-relative">
-                              <img src="{% static 'main/img/courses/courses-2.jpg' %}" alt="">
+                              <img src="{{ course.image.url }}" alt="">
                               <span class="tp-courses__cat cat-color-2"><a href="#"> {{ course.skill }} </a></span>
                            </div>
                            <div class="tp-courses__content">
@@ -355,7 +353,7 @@
             </div>
             {% endfor %}
             {% if user.is_staff %}
-            <!-- Форма для обновления фильмов -->
+            <!-- Форма для обновления постов блога -->
            <form method="post" action="{% url 'run_parse' %}">
                {% csrf_token %}
                <button type="submit">Обновить посты</button>
@@ -384,8 +382,8 @@
             <div class="col-lg-3 col-md-6">
                <div class="tp-team__member fix mb-30">
                   <div class="tp-team__img w-img tp-team__overlay p-relative">
-                     <a href="{% url 'teachers_list' %}">
-                        <img src="{% static 'main/img/courses/courses-2.jpg' %}" alt="">
+                     <a href="#">
+                        <img src="{{ teacher.image.url }}" alt="">
                      </a>
                      <div class="tp-team__info text-center">
                         <h3 class="tp-team__name">{{ teacher.first_name }}</h3>
