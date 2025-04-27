@@ -1,0 +1,60 @@
+{% extends 'main/base.html' %}
+
+{% block title %}About Us{% endblock %}
+
+{% block content %}
+{% load static %}
+<main>
+
+      <!-- breadcrumb area start -->
+      <div class="breadcrumb__area include-bg pt-200 pb-150 breadcrumb__overlay"
+         data-background="assets/img/breadcrumb/breadcrumb-bg.jpg">
+         <div class="container">
+            <div class="row">
+               <div class="col-xxl-12">
+                  <div class="breadcrumb__content p-relative z-index-1">
+                     <h3 class="breadcrumb__title">FAQ</h3>
+                     <div class="breadcrumb__list">
+                        <span><a href="#">Home</a></span>
+                        <span class="dvdr"><i class="fa-regular fa-angle-right"></i></span>
+                        <span>faq</span>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <!-- breadcrumb area end -->
+
+     <!-- accordion-area-start -->
+   <div class="sd-accordio-area  pt-130 pb-130">
+      <div class="container">
+         <div class="row">
+            <div class="col-xl-12">
+               <div class="tp-custom-accordio">
+                  <div class="accordion" id="accordionExample">
+                     {% for faq in faqs %}
+                     <div class="accordion-items">
+                        <h2 class="accordion-header" id="headingOne">
+                           <button class="accordion-buttons" type="button" data-bs-toggle="collapse"
+                              data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                              {{ faq.question }}
+                           </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                           data-bs-parent="#accordionExample">
+                           <div class="accordion-body">
+                              {{ faq.answer }}
+                           </div>
+                        </div>
+                     </div>
+                     {% endfor %}
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!-- accordion-area-end -->
+</main>
+{% endblock %}

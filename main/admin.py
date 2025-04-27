@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from . models import Course, Lesson, Blog, CustomUser, EnrollmentRequest, Payment
+from . models import Course, Lesson, Blog, CustomUser, EnrollmentRequest, Payment, FAQ
 
 
 # Настройка отображения в админке для CustomUser
@@ -69,3 +69,10 @@ class PaymentAdmin(admin.ModelAdmin):
     list_display = ('student', 'course', 'payment_date', 'is_successful')
     search_fields = ('student', 'is_successful', 'payment_date')
     list_filter = ('payment_date', 'is_successful' )
+
+
+@admin.register(FAQ)
+class FAQAdmin(admin.ModelAdmin):
+    list_display = ('question', 'answer')
+    search_fields = ('question',)
+    list_filter = ('question',)
