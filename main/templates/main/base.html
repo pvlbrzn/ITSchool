@@ -27,6 +27,22 @@
 </head>
 
 <body>
+
+   <!-- messages area start -->
+   <div aria-live="polite" aria-atomic="true" class="position-fixed bottom-0 end-0 p-3" style="z-index: 1055;">
+     {% for message in messages %}
+       <div class="toast align-items-center text-white bg-{{ message.tags }} border-0 mb-2" role="alert" aria-live="assertive" aria-atomic="true">
+         <div class="d-flex">
+           <div class="toast-body">
+             {{ message }}
+           </div>
+           <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Закрыть"></button>
+         </div>
+       </div>
+     {% endfor %}
+   </div>
+   <!-- messages area end -->
+
    <!--[if lte IE 9]>
       <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
       <![endif]-->
@@ -105,6 +121,7 @@
                         <div class="header-acttion-btns d-flex align-items-center d-none d-md-flex">
                            {% if user.is_authenticated %}
                            <a href="{% url 'profile' %}" class="tp-btn br-0"><span>Личный кабинет</span></a>
+                           <a href="{% url 'logout' %}" class="tp-btn br-0"><span>Выход из аккаунта</span></a>
                            {% if user.is_manager %}
                            <a href="{% url 'manager' %}" class="tp-btn br-0"><span>Управление школой</span></a>
                            {% endif %}
@@ -131,7 +148,9 @@
       </div>
    </header>
    <!-- header area end -->
+
    {% block content %}{% endblock %}
+
    <!-- footer area start -->
    <footer>
    <div class="footer__area grey-bg">
@@ -235,6 +254,16 @@
    <script src="{% static 'main/js/ajax-form.js' %}"></script>
    <script src="{% static 'main/js/countdown.js' %}"></script>
    <script src="{% static 'main/js/main.js' %}"></script>
+   <script>
+     document.addEventListener('DOMContentLoaded', function () {
+       var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+       var toastList = toastElList.map(function (toastEl) {
+         var toast = new bootstrap.Toast(toastEl, { delay: 4000 }); // 4 секунды
+         toast.show();
+         return toast;
+       })
+     });
+   </script>
 </body>
 
 </html>

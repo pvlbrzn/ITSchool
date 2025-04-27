@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from . models import Course, Lesson, Blog, CustomUser
+from . models import Course, Lesson, Blog, CustomUser, EnrollmentRequest, Payment
 
 
 # Настройка отображения в админке для CustomUser
@@ -35,6 +35,7 @@ class CustomUserAdmin(UserAdmin):
 # Регистрируем кастомного пользователя
 admin.site.register(CustomUser, CustomUserAdmin)
 
+
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
     list_display = ('title', 'description', 'language', 'skill')
@@ -54,3 +55,17 @@ class BlogAdmin(admin.ModelAdmin):
     list_display = ('title', 'date', 'author')
     search_fields = ('title', 'author')
     list_filter = ('title', 'date', 'author')
+
+
+@admin.register(EnrollmentRequest)
+class EnrollmentRequestAdmin(admin.ModelAdmin):
+    list_display = ('user', 'course', 'status', 'created_at')
+    search_fields = ('user', 'course', 'status', 'created_at')
+    list_filter = ('status', 'created_at')
+
+
+@admin.register(Payment)
+class PaymentAdmin(admin.ModelAdmin):
+    list_display = ('student', 'course', 'payment_date', 'is_successful')
+    search_fields = ('student', 'is_successful', 'payment_date')
+    list_filter = ('payment_date', 'is_successful' )

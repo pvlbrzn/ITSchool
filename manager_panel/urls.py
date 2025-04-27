@@ -1,0 +1,30 @@
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('', views.manager, name='manager'),
+    path('courses/', views.course_list, name='manager_course_list'),
+    path('courses/create/', views.course_create, name='manager_course_create'),
+    path('courses/<int:pk>/edit/', views.course_edit, name='manager_course_edit'),
+    path('courses/<int:pk>/delete/', views.course_delete, name='manager_course_delete'),
+    path('users/', views.users_list, name='manager_users_list'),
+    path('users/create/', views.user_create, name='manager_user_create'),
+    path('users/<int:pk>/edit/', views.user_edit, name='manager_user_edit'),
+    path('users/<int:pk>/delete/', views.user_delete, name='manager_user_delete'),
+    path('blog/', views.blog_list, name='manager_blog_list'),
+    path('blog/create/', views.blog_create, name='manager_blog_create'),
+    path('blog/<int:pk>/edit/', views.blog_edit, name='manager_blog_edit'),
+    path('blog/<int:pk>/delete/', views.blog_delete, name='manager_blog_delete'),
+    path('users/bulk_action/', views.users_bulk_action, name='manager_users_bulk_action'),
+    path('courses/<int:course_id>/lessons/', views.lesson_list, name='manager_lesson_list'),
+    path('courses/<int:course_id>/lessons/create/', views.lesson_create, name='manager_lesson_create'),
+    path('lessons/<int:pk>/edit/', views.lesson_edit, name='manager_lesson_edit'),
+    path('lessons/<int:pk>/delete/', views.lesson_delete, name='manager_lesson_delete'),
+    path('courses/<int:course_id>/lessons/bulk_action/', views.manager_lesson_bulk_action,
+         name='manager_lesson_bulk_action'),
+    path('manager/enrollments/', views.enrollment_request_list_view, name='manager_enrollment_requests'),
+    path('manager/enrollments/<int:request_id>/approve/', views.enrollment_request_approve_view,
+         name='manager_enrollment_approve'),
+    path('manager/enrollments/<int:request_id>/reject/', views.enrollment_request_reject_view,
+         name='manager_enrollment_reject'),
+]

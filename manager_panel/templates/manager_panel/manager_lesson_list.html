@@ -1,0 +1,116 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Управление школой{% endblock %}
+
+{% block content %}
+{% load static %}
+
+
+<main>
+    <!-- breadcrumb area start -->
+    <div class="breadcrumb__area include-bg pt-200 pb-150 breadcrumb__overlay"
+         data-background="{% static '/main/img/breadcrumb/breadcrumb-bg-1.png' %}">
+        <div class="container">
+            <div class="row">
+                <div class="col-xxl-12">
+                    <div class="breadcrumb__content p-relative z-index-1">
+                        <h3 class="breadcrumb__title">Управление школой</h3>
+                        <div class="breadcrumb__list">
+                            <span><a href="{% url 'index' %}">Главная страница</a></span>
+                            <span class="dvdr"><i class="fa-regular fa-angle-right"></i></span>
+                            <span><a href="{% url 'manager' %}">Управление школой</a></span>
+                            <span class="dvdr"><i class="fa-regular fa-angle-right"></i></span>
+                            <span><a href="{% url 'manager_course_list' %}">Список курсов</a></span>
+                            <span class="dvdr"><i class="fa-regular fa-angle-right"></i></span>
+                            <span>Список занятий</span>
+                            <hr>
+                            <span><a href="{% url 'logout' %}">ВЫХОД ИЗ АККАУНТА</a></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- breadcrumb area end -->
+
+    <!-- Personal course Area Strat-->
+    <div class="postbox__area pt-120 pb-120">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="postbox__wrapper pr-30">
+                        <!-- Cart Area Strat-->
+                        <div class="cart-area pt-100 pb-100">
+                            <div class="container">
+                                <button class="e-btn e-btn-border" type="submit">
+                                    <a href="{% url 'manager_lesson_create' course.id %}">Добавить урок</a>
+                                </button>
+                                <button class="e-btn e-btn-border" type="submit">
+                                    <a href="{% url 'manager_course_list' %}">Назад к курсам</a>
+                                </button>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="table-content table-responsive">
+                                            <form method="post" action="{% url 'manager_lesson_bulk_action' course.id %}">
+                                                {% csrf_token %}
+
+                                                <div class="d-flex gap-2 mb-3">
+                                                    <select name="action" required>
+                                                        <option value="">-- Выберите действие --</option>
+                                                        <option value="delete">Удалить выбранные</option>
+                                                    </select>
+                                                    <button type="submit" class="btn btn-danger">Применить</button>
+                                                </div>
+                                                <table class="table">
+                                                    <thead>
+                                                    <tr>
+                                                        <th class="cart-product-name"><input type="checkbox" id="select-all"></th>
+                                                        <th class="cart-product-name">Название</th>
+                                                        <th class="cart-product-name">Преподаватель</th>
+                                                        <th class="product-subtotal">Редактировать</th>
+                                                        <th class="product-remove">Удалить</th>
+                                                    </tr>
+                                                    </thead>
+                                                    {% for lesson in lessons %}
+                                                    <tbody>
+                                                    <tr>
+                                                        <td class="product-name"><input type="checkbox" name="selected_lessons" value="{{ lesson.id }}"></td>
+                                                        <td class="product-name"><p>{{ lesson.title }} </p></td>
+                                                        <td class="product-name"><p>{{ lesson.teacher.get_full_name|default:"-" }}</p></td>
+                                                        <td class="product-quantity">
+                                                            <button class="e-btn e-btn-border" type="submit">
+                                                                <a href="{% url 'manager_lesson_edit' lesson.id %}">Редактировать</a>
+                                                            </button>
+                                                        </td>
+
+                                                        <td class="product-remove"><a
+                                                                href="{% url 'manager_lesson_delete' lesson.id %}"><i
+                                                                class="fa fa-times"></i></a></td>
+                                                    </tr>
+                                                    </tbody>
+                                                    {% endfor %}
+                                                </table>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Cart Area End-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Скрипт для выбора всех чекбоксов -->
+    <script>
+        document.getElementById('select-all').addEventListener('click', function(event) {
+            let checkboxes = document.querySelectorAll('input[name="selected_users"]');
+            checkboxes.forEach(cb => cb.checked = event.target.checked);
+        });
+    </script>
+
+</main>
+{% endblock %}

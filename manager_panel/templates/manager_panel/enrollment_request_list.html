@@ -1,0 +1,119 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Управление школой{% endblock %}
+
+{% block content %}
+{% load static %}
+
+
+<main>
+    <!-- breadcrumb area start -->
+    <div class="breadcrumb__area include-bg pt-200 pb-150 breadcrumb__overlay"
+         data-background="{% static '/main/img/breadcrumb/breadcrumb-bg-1.png' %}">
+        <div class="container">
+            <div class="row">
+                <div class="col-xxl-12">
+                    <div class="breadcrumb__content p-relative z-index-1">
+                        <h3 class="breadcrumb__title">Управление школой</h3>
+                        <div class="breadcrumb__list">
+                            <span><a href="{% url 'index' %}">Главная страница</a></span>
+                            <span class="dvdr"><i class="fa-regular fa-angle-right"></i></span>
+                            <span><a href="{% url 'manager' %}">Управление школой</a></span>
+                            <span class="dvdr"><i class="fa-regular fa-angle-right"></i></span>
+                            <span>Список заявок</span>
+                            <hr>
+                            <span><a href="{% url 'logout' %}">ВЫХОД ИЗ АККАУНТА</a></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- breadcrumb area end -->
+
+    <!-- Personal course Area Strat-->
+    <div class="postbox__area pt-120 pb-120">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="postbox__wrapper pr-30">
+
+                        <h2>Заявки</h2>
+
+                        <div class="d-flex gap-3">
+                            <a href="{% url 'manager' %}" class="btn btn-secondary">Назад</a>
+                        </div>
+
+                        <!-- Cart Area Strat-->
+                        <div class="cart-area pt-100 pb-100">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="table-content table-responsive">
+                                            <form method="post" action="#">
+                                                {% csrf_token %}
+                                                <div class="d-flex align-items-center gap-3 mt-3">
+                                                    <select name="action">
+                                                        <option value="">Выберите действие</option>
+                                                        <option value="delete">Удалить выбранные</option>
+                                                        <option value="promote">Одобрить</option>
+                                                        <option value="block">Отклонить</option>
+                                                    </select>
+
+                                                    <button type="submit" class="btn btn-primary">Применить</button>
+                                                </div>
+                                                <hr>
+                                                <table class="table">
+                                                    <thead>
+                                                    <tr>
+                                                        <th class="cart-product-name"><input type="checkbox"
+                                                                                             id="select-all"></th>
+                                                        <th class="cart-product-name">Пользователь</th>
+                                                        <th class="cart-product-name">Курс</th>
+                                                        <th class="product-price">Дата заявки</th>
+                                                        <th class="product-quantity">Статус</th>
+                                                        <th class="product-quantity">Действия</th>
+                                                    </tr>
+                                                    </thead>
+                                                    {% for req in requests %}
+                                                    <tbody>
+                                                    <tr>
+                                                        <td class="product-name"><input type="checkbox"
+                                                                                        name="selected_users"
+                                                                                        value="{{ req.id }}"></td>
+                                                        <td class="product-name"><p>{{ req.user.username }} </p></td>
+                                                        <td class="product-name"><p>{{ req.user.title }} </p></td>
+                                                        <td class="product-price"><p>{{ req.created_at|date:"d.m.Y H:i" }}</p></td>
+                                                        <td class="product-subtotal">{{ req.get_status_display }}</td>
+                                                        <td class="product-quantity">
+                                                            {% if req.status == 'pending' %}
+                                                            <a href="{% url 'manager_enrollment_approve' req.id %}" class="btn btn-success btn-sm">Одобрить</a>
+                                                            <a href="{% url 'manager_enrollment_reject' req.id %}" class="btn btn-danger btn-sm">Отклонить</a>
+                                                            {% else %}
+                                                            Обработано
+                                                            {% endif %}
+                                                        </td>
+
+                                                    </tr>
+                                                    {% empty %}
+                                                    <tr>
+                                                        <td colspan="5">Нет новых заявок.</td>
+                                                    </tr>
+                                                    </tbody>
+                                                    {% endfor %}
+                                                </table>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Cart Area End-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+{% endblock %}

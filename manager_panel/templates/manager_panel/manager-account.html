@@ -1,0 +1,54 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Управление школой{% endblock %}
+
+{% block content %}
+{% load static %}
+
+
+<main>
+   <!-- breadcrumb area start -->
+   <div class="breadcrumb__area include-bg pt-200 pb-150 breadcrumb__overlay"
+      data-background="{% static '/main/img/breadcrumb/breadcrumb-bg-1.png' %}">
+      <div class="container">
+         <div class="row">
+            <div class="col-xxl-12">
+               <div class="breadcrumb__content p-relative z-index-1">
+                  <h3 class="breadcrumb__title">Управление школой</h3>
+                  <div class="breadcrumb__list">
+                     <span><a href="{% url 'index' %}">Главная страница</a></span>
+                     <span class="dvdr"><i class="fa-regular fa-angle-right"></i></span>
+                     <span>Управление школой</span>
+                     <hr>
+                     <span><a href="{% url 'logout' %}">ВЫХОД ИЗ АККАУНТА</a></span>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!-- breadcrumb area end -->
+
+   <!-- Personal course Area Strat-->
+   <div class="postbox__area pt-120 pb-120">
+   <div class="container">
+      <h2>Добро пожаловать, {{ request.user.first_name }}!</h2>
+         <h4>Уровень аккаунта - {{ user_role }} </h4>
+         <hr>
+      <div class="row">
+         <div class="col-lg-12">
+            <div class="postbox__wrapper pr-30">
+                <h2>Управление данными</h2>
+                <a class="btn btn-secondary" href="{% url 'manager_users_list' %}" ><h5>Пользователи</h5></a>
+                <a class="btn btn-secondary" href="{% url 'manager_course_list' %}" ><h5>Курсы</h5></a>
+                <a class="btn btn-secondary" href="{% url 'manager_blog_list' %}" ><h5>Блог</h5></a>
+                <a class="btn btn-secondary" href="{% url 'manager_enrollment_requests' %}" ><h5>Заявки</h5></a>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+   <!-- Personal course Area End-->
+
+</main>
+{% endblock %}

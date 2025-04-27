@@ -1,0 +1,96 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Управление школой{% endblock %}
+
+{% block content %}
+{% load static %}
+
+
+<main>
+   <!-- breadcrumb area start -->
+   <div class="breadcrumb__area include-bg pt-200 pb-150 breadcrumb__overlay"
+      data-background="{% static '/main/img/breadcrumb/breadcrumb-bg-1.png' %}">
+      <div class="container">
+         <div class="row">
+            <div class="col-xxl-12">
+               <div class="breadcrumb__content p-relative z-index-1">
+                  <h3 class="breadcrumb__title">Управление школой</h3>
+                  <div class="breadcrumb__list">
+                     <span><a href="{% url 'index' %}">Главная страница</a></span>
+                     <span class="dvdr"><i class="fa-regular fa-angle-right"></i></span>
+                     <span><a href="{% url 'manager' %}">Управление школой</a></span>
+                     <span class="dvdr"><i class="fa-regular fa-angle-right"></i></span>
+                     <span>Список постов</span>
+                     <hr>
+                     <span><a href="{% url 'logout' %}">ВЫХОД ИЗ АККАУНТА</a></span>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!-- breadcrumb area end -->
+
+   <!-- Personal course Area Strat-->
+   <div class="postbox__area pt-120 pb-120">
+    <div class="container">
+      <div class="row">
+         <div class="col-lg-12">
+            <div class="postbox__wrapper pr-30">
+
+                <h2>Посты</h2>
+
+                <div class="d-flex gap-3">
+                    <a href="{% url 'manager_blog_create' %}" class="btn btn-secondary">Добавить пост</a>
+                    <a href="{%  url 'manager' %}" class="btn btn-secondary">Назад</a>
+
+                </div>
+
+                <!-- Cart Area Strat-->
+                <div class="cart-area pt-100 pb-100">
+                    <div class="container">
+                       <div class="row">
+                          <div class="col-12">
+                               <div class="table-content table-responsive">
+
+                                  <table class="table">
+                                        <thead>
+                                           <tr>
+                                              <th class="cart-product-name">Картинка</th>
+                                              <th class="cart-product-name">Заголовок</th>
+                                              <th class="product-price">Дата публикации</th>
+                                              <th class="product-quantity">Автор</th>
+                                              <th class="product-subtotal">Редактировать</th>
+                                              <th class="product-remove">Удалить</th>
+                                           </tr>
+                                        </thead>
+                                        {% for blog in blogs %}
+                                        <tbody>
+                                           <tr>
+                                              <td class="product-name postbox__thumb w-img"><img src="{{ blog.image }}" alt=""></td>
+                                              <td class="product-name"><p>{{ blog.title }} </p></td>
+                                              <td class="product-price"><p>{{ blog.date }} </p></td>
+                                              <td class="product-subtotal">{{ blog.author }}</td>
+                                              <td class="product-quantity">
+                                                    <button class="e-btn e-btn-border" type="submit">
+                                                        <a href="{% url 'manager_blog_edit' blog.pk %}">Редактировать</a></button>
+                                              </td>
+
+                                              <td class="product-remove"><a href="{% url 'manager_blog_delete' blog.pk %}"><i class="fa fa-times"></i></a></td>
+                                           </tr>
+                                        </tbody>
+                                        {% endfor %}
+                                  </table>
+                               </div>
+                          </div>
+                       </div>
+                    </div>
+                 </div>
+                <!-- Cart Area End-->
+            </div>
+         </div>
+      </div>
+   </div>
+   </div>
+</main>
+{% endblock %}

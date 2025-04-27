@@ -7,11 +7,12 @@
 <main>
    <!-- breadcrumb area start -->
    <div class="breadcrumb__area include-bg pt-200 pb-150 breadcrumb__overlay"
-      data-background="{% static 'main/img/breadcrumb/breadcrumb-bg-3.jpg' %}">
+      data-background="{% static 'main/img/breadcrumb/breadcrumb-bg-1.png' %}">
       <div class="container">
          <div class="row">
             <div class="col-xxl-12">
                <div class="breadcrumb__content p-relative z-index-1">
+                  <h3 class="breadcrumb__title">Личный кабинет</h3>
                   <div class="breadcrumb__list">
                      <span><a href="{% url 'index' %}">Главная страница</a></span>
                      <span class="dvdr"><i class="fa-regular fa-angle-right"></i></span>
@@ -30,35 +31,34 @@
    <div class="postbox__area pt-120 pb-120">
       <div class="container">
          <h2>Добро пожаловать, {{ request.user.first_name }}!</h2>
-         <h4>Уровень аккаунта - {{ user_role }} </h4>
+         <h4>Уровень аккаунта — {{ user_role }}</h4>
          <hr>
+
+         <!-- Ваши Курсы -->
          <h5>Ваши курсы:</h5>
          {% if courses %}
             <ul class="list-group">
                {% for course in courses %}
-                  <a href="{% url 'courses' %}">
-                     <li class="list-group-item">
-                        <strong>{{ course.title }}</strong> — {{ course.language|title }} / {{ course.skill|title }}<br>
-                        {{ course.description}}<br>
-                        {% if course.teachers.count == 0 %}
-                           <p>Преподаватель пока не назначен</p>
-                        {% elif course.teachers.count == 1 %}
-                           <p>Преподаватель —
-                              {% for teacher in course.teachers.all %}
-                                 {{ teacher.first_name }} {{ teacher.last_name }}
-                              {% endfor %}
-                           </p>
-                        {% else %}
-                           <p>Преподаватели —
-                              {% for teacher in course.teachers.all %}
-                                 {{ teacher.first_name }} {{ teacher.last_name }}{% if not forloop.last %}, {% endif %}
-                              {% endfor %}
-                           </p>
-                        {% endif %}<br>
-                        С {{ course.start_date }} по {{ course.end_date }}<br>
-                        {% if course.is_active %}<span class="text-success">Активен</span>{% else %}<span class="text-muted">Завершён</span>{% endif %}
-                     </li>
-                  </a>
+                  <li class="list-group-item mb-3">
+                     <a href="{% url 'course-detail' course_id=course.id %}">
+                        <strong>{{ course.title }}</strong> — {{ course.language|title }} / {{ course.skill|title }}
+                     </a><br>
+                     {{ course.description }}<br>
+
+                     {% if course.teachers.exists %}
+                        <p>
+                           {% if course.teachers.count == 1 %}Преподаватель:{% else %}Преподаватели:{% endif %}
+                           {% for teacher in course.teachers.all %}
+                              {{ teacher.first_name }} {{ teacher.last_name }}{% if not forloop.last %}, {% endif %}
+                           {% endfor %}
+                        </p>
+                     {% else %}
+                        <p>Преподаватель пока не назначен</p>
+                     {% endif %}
+
+                     <small>С {{ course.start_date }} по {{ course.end_date }}</small><br>
+                     <a href="{% url 'personal_lesson_list' course.id %}" class="btn btn-secondary">Лекции курса</a>
+                  </li>
                {% endfor %}
             </ul>
          {% else %}
@@ -67,6 +67,27 @@
                <span>Выбрать курс</span>
                <div class="transition"></div>
             </a>
+         {% endif %}
+
+         <hr>
+
+         <!-- Ваши заявки -->
+         {% if enrollment_requests %}
+            <h5>Ваши заявки на курсы:</h5>
+            {% for req in enrollment_requests %}
+               <div class="card mb-3">
+                  <div class="card-body">
+                     Курс: <strong>{{ req.course.title }}</strong><br>
+                     Статус: {{ req.get_status_display }}
+                     {% if req.status == 'approved' %}
+                        <br>
+                        <a href="{% url 'payment_start' request_id=req.id %}" class="btn btn-success btn-sm mt-2">
+                           Оплатить курс
+                        </a>
+                     {% endif %}
+                  </div>
+               </div>
+            {% endfor %}
          {% endif %}
       </div>
    </div>
