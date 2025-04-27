@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from . models import Course, Lesson, Blog, CustomUser, EnrollmentRequest, Payment, FAQ
+from . models import Course, Lesson, Blog, CustomUser, EnrollmentRequest, Payment, FAQ, Subscriber, Newsletter
+from .tasks import send_newsletter_to_all
 
 
 # Настройка отображения в админке для CustomUser
@@ -76,3 +77,22 @@ class FAQAdmin(admin.ModelAdmin):
     list_display = ('question', 'answer')
     search_fields = ('question',)
     list_filter = ('question',)
+
+
+@admin.register(Subscriber)
+class SubscriberAdmin(admin.ModelAdmin):
+    list_display = ('email',)
+    search_fields = ('email',)
+    list_filter = ('email',)
+
+
+@admin.register(Newsletter)
+class NewsletterAdmin(admin.ModelAdmin):
+    list_display = ('subject', 'created_at')
+    actions = ['send_newsletter']
+
+    def send_newsletter(self, request, queryset):
+        for newsletter in queryset:
+            send_newsletter_to_all.delay(newsletter.subject, newsletter.message)
+        self.message_user(request, "Рассылка запущена!")
+    send_newsletter.short_description = "📬 Отправить выбранные рассылки"

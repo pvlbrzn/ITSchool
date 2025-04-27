@@ -209,14 +209,22 @@
                         <div class="footer__subscribe">
                            <p>Получайте еженедельную рассылку с образовательными,
                               популярными книгами и многим другим!</p>
-                           <form action="#">
+                           {% if messages %}
+                              {% for message in messages %}
+                              <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                              {% endfor %}
+                           {% endif %}
+
+                           <form action="{% url 'subscribe' %}" method="post" class="subscribe-form">
+                              {% csrf_token %}
                               <div class="footer__subscribe-box">
                                  <div class="footer__subscribe-input">
-                                    <input type="email" placeholder="Email address">
+                                    <input type="email" name="email" placeholder="Email address" required>
                                  </div>
                                  <button class="footer-sub-btn" type="submit">Подписаться</button>
                               </div>
                            </form>
+
                         </div>
                      </div>
                   </div>

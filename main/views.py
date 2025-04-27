@@ -8,7 +8,8 @@ from django.db.models import Q
 
 from . models import Course, Blog, CustomUser, EnrollmentRequest, Payment, FAQ
 from . services import parse_blog
-from . forms import StudentRegistrationForm
+from . forms import StudentRegistrationForm, SubscribeForm
+from .utils import send_welcome_email
 
 
 def index(request):
@@ -200,3 +201,19 @@ def payment_start(request, request_id):
 
     # Направляем на личный кабинет
     return redirect('profile')  # Редирект на личный кабинет пользователя
+
+def subscribe(request):
+    if request.method == 'POST':
+        form = SubscribeForm(request.POST)
+        if form.is_valid():
+            subscriber = form.save()
+            print(f"Письмо отправляется на: {subscriber.email}")
+            send_welcome_email(subscriber.email)
+            messages.success(request, 'Вы успешно подписались!')
+            return redirect('subscribe')
+        else:
+            print("Форма НЕ прошла валидацию!")
+            messages.error(request, 'Ошибка! Проверьте правильность email.')
+    else:
+        form = SubscribeForm()
+    return render(request, 'main/base.html', {'form': form})

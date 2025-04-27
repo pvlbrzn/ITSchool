@@ -26,4 +26,5 @@ urlpatterns = [
     path('profile/<int:course_id>/lessons/', views.lesson_list, name='personal_lesson_list'),
     path('courses/<int:course_id>/enroll/', views.enroll_request_view, name='enroll_request'),
     path('payment/<int:request_id>/', views.payment_start, name='payment_start'),
+    path('subscribe/', views.subscribe, name='subscribe')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
