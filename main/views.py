@@ -6,7 +6,7 @@ from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 
-from . models import Course, Blog, CustomUser, EnrollmentRequest, Payment
+from . models import Course, Blog, CustomUser, EnrollmentRequest, Payment, FAQ
 from . services import parse_blog
 from . forms import StudentRegistrationForm
 
@@ -62,6 +62,11 @@ def teachers_list(request):
 
 def about(request):
     return render(request, 'main/about-us.html')
+
+
+def faq(request):
+    faqs = FAQ.objects.all()
+    return render(request, 'main/faq.html', {'faqs': faqs})
 
 
 def contact(request):
