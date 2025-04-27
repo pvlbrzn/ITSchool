@@ -1,0 +1,158 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Управление школой{% endblock %}
+
+{% block content %}
+{% load static %}
+
+
+<main>
+    <!-- breadcrumb area start -->
+    <div class="breadcrumb__area include-bg pt-200 pb-150 breadcrumb__overlay"
+         data-background="{% static '/main/img/breadcrumb/breadcrumb-bg-1.png' %}">
+        <div class="container">
+            <div class="row">
+                <div class="col-xxl-12">
+                    <div class="breadcrumb__content p-relative z-index-1">
+                        <h3 class="breadcrumb__title">Управление школой</h3>
+                        <div class="breadcrumb__list">
+                            <span><a href="{% url 'index' %}">Главная страница</a></span>
+                            <span class="dvdr"><i class="fa-regular fa-angle-right"></i></span>
+                            <span><a href="{% url 'manager' %}">Управление школой</a></span>
+                            <span class="dvdr"><i class="fa-regular fa-angle-right"></i></span>
+                            <span>Список пользователей</span>
+                            <hr>
+                            <span><a href="{% url 'logout' %}">ВЫХОД ИЗ АККАУНТА</a></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- breadcrumb area end -->
+
+    <!-- Personal course Area Strat-->
+    <div class="postbox__area pt-120 pb-120">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="postbox__wrapper pr-30">
+
+                        <h2>Пользователи</h2>
+                        <!-- Фильтры -->
+                        <form method="get" class="mb-4 d-flex flex-wrap gap-3 align-items-end">
+                            <div class="d-flex flex-column">
+                                <label for="search" class="form-label">Поиск пользователя</label>
+                                <input type="text" id="search" name="search" class="form-control"
+                                       value="{{ search_query }}" placeholder="Введите ключевое слово...">
+                            </div>
+
+                            <div class="d-flex flex-column">
+                                <label for="age" class="form-label">Возраст</label>
+                                <input type="number" id="age" name="age" class="form-control"
+                                       value="{{ age_filter }}">
+                            </div>
+
+                            <div class="d-flex flex-column">
+                                <label for="role" class="form-label">Выбор Роли</label>
+                                <select name="role" id="role">
+                                    <option value="">Все роли</option>
+                                    <option value="student" {% if role_filter == 'student' %}selected{% endif %}>Студенты</option>
+                                    <option value="teacher" {% if role_filter == 'teacher' %}selected{% endif %}>Преподаватели</option>
+                                </select>
+                            </div>
+
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary">🔍 Найти</button>
+                                <a href="{% url 'manager_users_list' %}" class="btn btn-secondary">Сбросить</a>
+                            </div>
+                        </form>
+
+
+                        <div class="d-flex gap-3">
+                            <a href="{% url 'manager_user_create' %}" class="btn btn-secondary">Добавить
+                                пользователя</a>
+                            <a href="{% url 'manager' %}" class="btn btn-secondary">Назад</a>
+                        </div>
+
+                        <!-- Cart Area Strat-->
+                        <div class="cart-area pt-100 pb-100">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="table-content table-responsive">
+                                            <form method="post" action="{% url 'manager_users_bulk_action' %}">
+                                                {% csrf_token %}
+                                                <div class="d-flex align-items-center gap-3 mt-3">
+                                                    <select name="action">
+                                                        <option value="">Выберите действие</option>
+                                                        <option value="delete">Удалить выбранных</option>
+                                                        <option value="promote">Повысить до преподавателей</option>
+                                                        <option value="block">Заблокировать</option>
+                                                        <option value="block">Рассылка</option>
+                                                    </select>
+
+                                                    <button type="submit" class="btn btn-primary">Применить</button>
+                                                </div>
+                                                <hr>
+                                                <table class="table">
+                                                    <thead>
+                                                    <tr>
+                                                        <th class="cart-product-name"><input type="checkbox"
+                                                                                             id="select-all"></th>
+                                                        <th class="cart-product-name">Ник</th>
+                                                        <th class="cart-product-name">Имя Фамилия</th>
+                                                        <th class="product-price">Возраст</th>
+                                                        <th class="product-quantity">email</th>
+                                                        <th class="product-quantity">роль</th>
+                                                        <th class="product-subtotal">Редактировать</th>
+                                                        <th class="product-remove">Удалить</th>
+                                                    </tr>
+                                                    </thead>
+                                                    {% for user in users %}
+                                                    <tbody>
+                                                    <tr>
+                                                        <td class="product-name"><input type="checkbox"
+                                                                                        name="selected_users"
+                                                                                        value="{{ user.id }}"></td>
+                                                        <td class="product-name"><p>{{ user.username }} </p></td>
+                                                        <td class="product-name"><p>{{ user.first_name }} {{ user.last_name}} </p></td>
+                                                        <td class="product-price"><p>{{ user.age }} </p></td>
+                                                        <td class="product-subtotal">{{ user.email }}</td>
+                                                        <td class="product-subtotal">{{ user.role }}</td>
+                                                        <td class="product-quantity">
+                                                            <button class="e-btn e-btn-border" type="submit">
+                                                                <a href="{% url 'manager_user_edit' user.pk %}">Редактировать</a>
+                                                            </button>
+                                                        </td>
+
+                                                        <td class="product-remove"><a
+                                                                href="{% url 'manager_user_delete' user.pk %}"><i
+                                                                class="fa fa-times"></i></a></td>
+                                                    </tr>
+                                                    </tbody>
+                                                    {% endfor %}
+                                                </table>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Cart Area End-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Скрипт для выбора всех чекбоксов -->
+    <script>
+        document.getElementById('select-all').addEventListener('click', function(event) {
+            let checkboxes = document.querySelectorAll('input[name="selected_users"]');
+            checkboxes.forEach(cb => cb.checked = event.target.checked);
+        });
+    </script>
+
+</main>
+{% endblock %}

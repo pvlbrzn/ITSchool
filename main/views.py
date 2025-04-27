@@ -3,9 +3,10 @@ import random
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 
-from . models import Course, Blog, CustomUser
+from . models import Course, Blog, CustomUser, EnrollmentRequest, Payment
 from . services import parse_blog
 from . forms import StudentRegistrationForm
 
@@ -42,7 +43,16 @@ def courses(request):
 
 def course_detail(request, course_id):
     course = get_object_or_404(Course, id=course_id)
-    return render(request, 'courses/detail.html', {'course': course})
+
+    # Ищем похожие курсы (по языку или навыку), исключая текущий
+    related_courses = Course.objects.filter(
+        Q(language=course.language) | Q(skill=course.skill)
+    ).exclude(id=course.id).order_by('?')[:3]  # случайные 3 похожих курса
+
+    return render(request, 'main/course-details.html', {
+        'course': course,
+        'related_courses': related_courses
+    })
 
 
 def teachers_list(request):
@@ -108,22 +118,80 @@ def personal_account(request):
 
     if user.is_student():
         courses = user.courses_as_student.all()
+        enrollment_requests = EnrollmentRequest.objects.filter(user=user).select_related('course')
     elif user.is_teacher():
         courses = user.courses_as_teacher.all()
+        enrollment_requests = None
     else:
         courses = Course.objects.all()
+        enrollment_requests = None
 
     return render(request, 'main/personal-account.html', {
         'courses': courses,
-        'user_role': user.get_role_display()
+        'user_role': user.get_role_display(),
+        'enrollment_requests': enrollment_requests,
     })
 
 
-def is_manager(user):
-    return CustomUser.is_superuser or CustomUser.groups.filter(name='managers').exists()
+@login_required()
+def lesson_list(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+    lessons = course.lessons.all()
+
+    return render(request, 'main/personal-account-lessons.html', {
+        'course': course,
+        'lessons': lessons,
+    })
 
 
-@user_passes_test(is_manager)
-def manager(request):
-    return render(request, 'main/manager-account.html')
+@login_required
+def enroll_request_view(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
 
+    # Проверяем, не подавал ли уже заявку
+    if EnrollmentRequest.objects.filter(user=request.user, course=course).exists():
+        messages.warning(request, 'Вы уже оставили заявку на этот курс.')
+        return redirect('course-detail', course_id=course.id)  # куда тебе удобно
+
+    EnrollmentRequest.objects.create(user=request.user, course=course)
+    messages.success(request, 'Заявка успешно отправлена! Проверьте статус в личном кабинете.')
+    return redirect('course-detail', course_id=course.id)
+
+
+@login_required
+def payment_start(request, request_id):
+    enroll_request = get_object_or_404(EnrollmentRequest, id=request_id, user=request.user)
+
+    # Проверяем, что заявка одобрена
+    if enroll_request.status != 'approved':
+        messages.error(request, 'Вы не можете оплатить этот курс, так как заявка не была одобрена.')
+        return redirect('student_enrollment_requests')  # Направляем на страницу с заявками
+
+    # Создаем запись о платеже
+    try:
+        Payment.objects.create(
+            amount=enroll_request.course.price,
+            student=request.user,
+            course=enroll_request.course,
+            is_successful=True,  # В реальной ситуации это зависит от статуса транзакции
+            payment_method="Manual"
+        )
+    except Exception as e:
+        messages.error(request, 'Ошибка при создании записи об оплате. Попробуйте позже.')
+        return redirect('profile')  # В случае ошибки возвращаем на профиль
+
+    # Добавляем студента в курс
+    enroll_request.course.students.add(request.user)
+
+    # Обновляем статус заявки и удаляем её
+    enroll_request.status = 'approved'
+    enroll_request.save()
+
+    # Удаляем заявку из личного кабинета (если нужно)
+    enroll_request.delete()  # Удаляем заявку, так как она больше не нужна
+
+    # Сообщаем пользователю об успешной оплате
+    messages.success(request, 'Оплата прошла успешно! Вы зачислены на курс.')
+
+    # Направляем на личный кабинет
+    return redirect('profile')  # Редирект на личный кабинет пользователя

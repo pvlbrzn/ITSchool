@@ -138,3 +138,27 @@ class Blog(models.Model):
         verbose_name = 'Блог'
         verbose_name_plural = 'Блоги'
         ordering = ['title']
+
+
+class EnrollmentRequest(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'На рассмотрении'),
+        ('approved', 'Одобрено'),
+        ('rejected', 'Отклонено'),
+    ]
+
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE,
+                             related_name='enrollment_requests', verbose_name='Пользователь')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE,
+                               related_name='enrollment_requests', verbose_name='Курс')
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending',
+                              verbose_name='Статус')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
+
+    class Meta:
+        verbose_name = 'Заявка на курс'
+        verbose_name_plural = 'Заявки на курсы'
+        unique_together = ('user', 'course')  # чтобы нельзя было дважды подать на один курс
+
+    def __str__(self):
+        return f"{self.user.username} → {self.course.title} ({self.get_status_display()})"
