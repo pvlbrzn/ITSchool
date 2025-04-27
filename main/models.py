@@ -140,6 +140,33 @@ class Blog(models.Model):
         ordering = ['title']
 
 
+class Subscriber(models.Model):
+    email = models.EmailField(unique=True)
+    subscribed_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.email
+
+    class Meta:
+        verbose_name = 'Подписчик'
+        verbose_name_plural = 'Подписчики'
+        ordering = ['email']
+
+
+class Newsletter(models.Model):
+    subject = models.CharField(max_length=255, verbose_name='Тема')
+    message = models.TextField(verbose_name='Сообщение')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.subject
+
+    class Meta:
+        verbose_name = 'Новость'
+        verbose_name_plural = 'Новости'
+        ordering = ['subject']
+
+
 class FAQ(models.Model):
     question = models.CharField(max_length=255, verbose_name='Вопрос')
     answer = models.TextField(verbose_name='Ответ')
