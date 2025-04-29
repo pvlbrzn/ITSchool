@@ -45,6 +45,9 @@ INSTALLED_APPS = [
     'main',
     'manager_panel',
     'django_celery_beat',
+    'rest_framework',
+    'main_rest',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -156,3 +159,9 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ]
+}
