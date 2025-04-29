@@ -127,96 +127,29 @@
          <div class="row">
             <div class="tp-testimonial-2__wrapper p-relative">
                <div class="tp-testimonial-2__slider">
+                  {% for review in reviews %}
                   <div class="tp-testimonial-2__box white-bg">
                      <div class="tp-testimonial-2__avata">
-                        <img src="{% static 'main/img/testimonial/tp-testi-2.1.jpg' %}" alt="">
+                         {% if review.image %}
+                         <img src="{{ review.image.url }}" alt="">
+                         {% else %}
+                         <img src="{% static 'main/img/testimonial/tp-testi-2.1.jpg' %}" alt="Нет изображения">
+                         {% endif %}
                         <span class="tp-testimonial-2__ratting">
                            <i class="fas fa-star"></i>
                            <i class="fas fa-star"></i>
                            <i class="fas fa-star"></i>
                            <i class="fas fa-star"></i>
-                           <i class="fas fa-star-half-alt"></i>
+                           <i class="fas fa-star"></i>
                         </span>
                      </div>
                      <div class="tp-testimonial-2__review">
-                        <p>Simply the best. Better than all the rest. I’d recommend this product to morish beginners
-                           andviverra maecenas accumsan lacus.Risus commodo viverra maecenas.</p>
-                        <h3>Maria Zokatti</h3>
-                        <span>CEO, Psdboss</span>
+                        <p>{{ review.comment }}</p>
+                        <h3>{{ review.author }}</h3>
+                        <span>{{ review.date }}</span>
                      </div>
                   </div>
-                  <div class="tp-testimonial-2__box white-bg">
-                     <div class="tp-testimonial-2__avata">
-                        <img src="{% static 'main/img/testimonial/tp-testi-2.2.jpg' %}" alt="">
-                        <span class="tp-testimonial-2__ratting">
-                           <i class="fas fa-star"></i>
-                           <i class="fas fa-star"></i>
-                           <i class="fas fa-star"></i>
-                           <i class="fas fa-star"></i>
-                           <i class="fas fa-star-half-alt"></i>
-                        </span>
-                     </div>
-                     <div class="tp-testimonial-2__review">
-                        <p>Simply the best. Better than all the rest. I’d recommend this product to morish beginners
-                           andviverra maecenas accumsan lacus.Risus commodo viverra maecenas.</p>
-                        <h3>Judy N</h3>
-                        <span>CEO, Psdboss</span>
-                     </div>
-                  </div>
-                  <div class="tp-testimonial-2__box white-bg">
-                     <div class="tp-testimonial-2__avata">
-                        <img src="{% static 'main/img/testimonial/tp-testi-2.3.jpg' %}" alt="">
-                        <span class="tp-testimonial-2__ratting">
-                           <i class="fas fa-star"></i>
-                           <i class="fas fa-star"></i>
-                           <i class="fas fa-star"></i>
-                           <i class="fas fa-star"></i>
-                           <i class="fas fa-star-half-alt"></i>
-                        </span>
-                     </div>
-                     <div class="tp-testimonial-2__review">
-                        <p>Simply the best. Better than all the rest. I’d recommend this product to morish beginners
-                           andviverra maecenas accumsan lacus.Risus commodo viverra maecenas.</p>
-                        <h3>Olive Yew.</h3>
-                        <span>CEO, Psdboss</span>
-                     </div>
-                  </div>
-                  <div class="tp-testimonial-2__box white-bg">
-                     <div class="tp-testimonial-2__avata">
-                        <img src="{% static 'main/img/testimonial/tp-testi-2.1.jpg' %}" alt="">
-                        <span class="tp-testimonial-2__ratting">
-                           <i class="fas fa-star"></i>
-                           <i class="fas fa-star"></i>
-                           <i class="fas fa-star"></i>
-                           <i class="fas fa-star"></i>
-                           <i class="fas fa-star-half-alt"></i>
-                        </span>
-                     </div>
-                     <div class="tp-testimonial-2__review">
-                        <p>Simply the best. Better than all the rest. I’d recommend this product to morish beginners
-                           andviverra maecenas accumsan lacus.Risus commodo viverra maecenas.</p>
-                        <h3>Teri Dactyl.</h3>
-                        <span>CEO, Psdboss</span>
-                     </div>
-                  </div>
-                  <div class="tp-testimonial-2__box white-bg">
-                     <div class="tp-testimonial-2__avata">
-                        <img src="{% static 'main/img/testimonial/tp-testi-2.3.jpg' %}" alt="">
-                        <span class="tp-testimonial-2__ratting">
-                           <i class="fas fa-star"></i>
-                           <i class="fas fa-star"></i>
-                           <i class="fas fa-star"></i>
-                           <i class="fas fa-star"></i>
-                           <i class="fas fa-star-half-alt"></i>
-                        </span>
-                     </div>
-                     <div class="tp-testimonial-2__review">
-                        <p>Simply the best. Better than all the rest. I’d recommend this product to morish beginners
-                           andviverra maecenas accumsan lacus.Risus commodo viverra maecenas.</p>
-                        <h3>Peg Legge.</h3>
-                        <span>CEO, Psdboss</span>
-                     </div>
-                  </div>
+                  {% endfor %}
                </div>
             </div>
          </div>

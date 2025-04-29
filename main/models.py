@@ -202,3 +202,18 @@ class EnrollmentRequest(models.Model):
 
     def __str__(self):
         return f"{self.user.username} → {self.course.title} ({self.get_status_display()})"
+
+
+class Review(models.Model):
+    image = models.ImageField(upload_to='', verbose_name='Изображение', blank=True, null=True)
+    comment = models.TextField(verbose_name='Ответ')
+    author = models.CharField(max_length=20, verbose_name='Автор')
+    date = models.DateField(default=timezone.now, verbose_name='Дата публикации')
+
+    def __str__(self):
+        return self.comment
+
+    class Meta:
+        verbose_name = 'Отзыв'
+        verbose_name_plural = 'Отзывы'
+        ordering = ['date']

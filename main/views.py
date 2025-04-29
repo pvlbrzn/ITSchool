@@ -6,7 +6,7 @@ from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 
-from . models import Course, Blog, CustomUser, EnrollmentRequest, Payment, FAQ
+from . models import Course, Blog, CustomUser, EnrollmentRequest, Payment, FAQ, Review
 from . forms import StudentRegistrationForm, SubscribeForm
 from .utils import send_welcome_email
 
@@ -14,13 +14,8 @@ from .utils import send_welcome_email
 def index(request):
     teachers = CustomUser.objects.filter(role='teacher')[:8]
     courses_hot = Course.objects.order_by('title')[:8]
+    courses = Course.objects.all()[:9]
     blogs = Blog.objects.order_by('-title')[:8]
-
-    skill = request.GET.get('skill', 'all')
-    if skill == 'all':
-        courses = Course.objects.all()[:9]
-    else:
-        courses = Course.objects.filter(skill=skill)[:9]
 
     for course in courses:
         course.random_rating = round(random.uniform(3.7, 5.0), 1)
@@ -32,12 +27,18 @@ def index(request):
                   {'teachers': teachers,
                    'courses_hot': courses_hot,
                    'courses': courses,
-                   'blogs': blogs,
-                   'current_skill': skill})
+                   'blogs': blogs})
 
 
 def courses(request):
     courses = Course.objects.all()
+
+    for course in courses:
+        course.random_rating = round(random.uniform(3.7, 5.0), 1)
+        course.random_stars = random.randint(50, 150)
+        course.random_likes = random.randint(1500, 3000)
+        course.random_peoples = random.randint(300, 500)
+
     return render(request, 'main/courses.html', {'courses': courses})
 
 
@@ -61,7 +62,8 @@ def teachers_list(request):
 
 
 def about(request):
-    return render(request, 'main/about-us.html')
+    reviews = Review.objects.all()
+    return render(request, 'main/about-us.html', {'reviews': reviews})
 
 
 def faq(request):
