@@ -14,7 +14,7 @@ from .utils import send_welcome_email
 def index(request):
     teachers = CustomUser.objects.filter(role='teacher')[:8]
     courses_hot = Course.objects.order_by('title')[:8]
-    blogs = Blog.objects.order_by('-title')[:8]
+    blogs = Blog.objects.order_by('-title')[:4]
 
     skill = request.GET.get('skill', 'all')
     if skill == 'all':
@@ -90,9 +90,11 @@ def blog_details(request, blog_id):
 
 @login_required
 def after_login_redirect(request):
-    if request.user.is_staff:
+    if request.user.is_superuser:
         return redirect('/admin/')
-    return redirect('/')
+    elif request.user.groups.filter(name='managers').exists():
+        return redirect('/manager/')
+    return redirect('profile')
 
 
 def register(request):

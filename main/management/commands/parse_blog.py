@@ -79,7 +79,7 @@ async def parse_and_save_blogs() -> None:
 
                 # Аннотация — первый абзац внутри div
                 try:
-                    annotation_block = page.locator('div.t-text.t-text_md p')
+                    annotation_block = page.locator('div.t-text.t-text_md')
                     annotation: str = await annotation_block.first.inner_text() if await annotation_block.count() > 0 else ''
                 except Exception:
                     annotation = ''

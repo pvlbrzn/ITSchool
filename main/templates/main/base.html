@@ -182,7 +182,7 @@
                            <li><a href="{% url 'about' %}">О нас</a></li>
                            <li><a href="{% url 'blog' %}">Блог</a></li>
                            <li><a href="{% url 'contact' %}">Контакты</a></li>
-                           <li><a href="#">Сервис</a></li>
+                           <li><a href="{% url 'faq' %}">FAQ</a></li>
                         </ul>
                      </div>
                   </div>
@@ -192,11 +192,10 @@
                      <h3 class="footer__widget-title">Курсы</h3>
                      <div class="footer__widget-content">
                         <ul>
-                           <li><a href="#">Masters Degree</a></li>
-                           <li><a href="#">Post GraduateU</a></li>
-                           <li><a href="#">Ndergraduate</a></li>
-                           <li><a href="#">Engineering</a></li>
-                           <li><a href="#">Ph.D Degree</a></li>
+                           <li><a href="{% url 'courses' %}">Список курсов</a></li>
+                           <li><a href="#">Преподаватели</a></li>
+                           <li><a href="{% url 'profile' %}">Личный кабинет</a></li>
+                           <li><a href="{% url 'register' %}">Регистрация</a></li>
                         </ul>
                      </div>
                   </div>
