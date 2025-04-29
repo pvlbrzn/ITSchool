@@ -5,8 +5,8 @@ from django.contrib.auth.decorators import user_passes_test
 from django.db.models import Q
 from django.contrib import messages
 
-from main.models import CustomUser, Course, Blog, Lesson, EnrollmentRequest
-from . forms import CourseForm, ManagerUserCreateForm, ManagerUserEditForm, BlogForm
+from main.models import CustomUser, Course, Blog, Lesson, EnrollmentRequest, FAQ
+from . forms import CourseForm, ManagerUserCreateForm, ManagerUserEditForm, BlogForm, QuestionsForm
 
 
 def is_manager(user):
@@ -53,7 +53,7 @@ def course_list(request):
 
     languages = Course.LANGUAGE_CHOICES
 
-    return render(request, 'manager_panel/manager_course_list.html', {
+    return render(request, 'manager_panel/course/manager_course_list.html', {
         'courses': courses,
         'languages': languages,
         'search_query': search_query,
@@ -69,7 +69,7 @@ def course_create(request):
     if form.is_valid():
         form.save()
         return redirect('manager')
-    return render(request, 'manager_panel/manager_add_course.html', {'form': form})
+    return render(request, 'manager_panel/course/manager_add_course.html', {'form': form})
 
 
 @user_passes_test(is_manager)
@@ -79,7 +79,7 @@ def course_edit(request, pk):
     if form.is_valid():
         form.save()
         return redirect('manager')
-    return render(request, 'manager_panel/manager_add_course.html', {'form': form})
+    return render(request, 'manager_panel/course/manager_add_course.html', {'form': form})
 
 
 @user_passes_test(is_manager)
@@ -88,7 +88,7 @@ def course_delete(request, pk):
     if request.method == 'POST':
         course.delete()
         return redirect('manager')
-    return render(request, 'manager_panel/manager_del_course.html', {'course': course})
+    return render(request, 'manager_panel/course/manager_del_course.html', {'course': course})
 
 
 @user_passes_test(is_manager)
@@ -121,7 +121,7 @@ def users_list(request):
     if role_filter in ['student', 'teacher']:
         users = users.filter(role=role_filter)
 
-    return render(request, 'manager_panel/manager_users_list.html', {
+    return render(request, 'manager_panel/user/manager_users_list.html', {
         'users': users,
         'search_query': search_query,
         'age_filter': age_filter,
@@ -138,7 +138,7 @@ def user_create(request):
         user.save()
         messages.success(request, f"Пользователь {user.username} успешно создан.")
         return redirect('manager_users_list')
-    return render(request, 'manager_panel/manager_add_user.html', {'form': form})
+    return render(request, 'manager_panel/user/manager_add_user.html', {'form': form})
 
 
 @user_passes_test(is_manager)
@@ -158,7 +158,7 @@ def user_edit(request, pk):
         return redirect('manager_users_list')
 
     # Отправляем форму для редактирования, если она не валидна
-    return render(request, 'manager_panel/manager_add_user.html', {'form': form})
+    return render(request, 'manager_panel/user/manager_add_user.html', {'form': form})
 
 
 @user_passes_test(is_manager)
@@ -168,7 +168,7 @@ def user_delete(request, pk):
         user.delete()
         messages.success(request, "Пользователь успешно удалён.")
         return redirect('manager_users_list')
-    return render(request, 'manager_panel/manager_del_user.html', {'user': user})
+    return render(request, 'manager_panel/user/manager_del_user.html', {'user': user})
 
 
 @user_passes_test(is_manager)
@@ -204,7 +204,7 @@ def users_bulk_action(request):
 @user_passes_test(is_manager)
 def blog_list(request):
     blogs = Blog.objects.all()
-    return render(request, 'manager_panel/manager_blog_list.html', {'blogs': blogs})
+    return render(request, 'manager_panel/blog/manager_blog_list.html', {'blogs': blogs})
 
 
 @user_passes_test(is_manager)
@@ -213,7 +213,7 @@ def blog_create(request):
     if form.is_valid():
         form.save()
         return redirect('manager_blog_list')
-    return render(request, 'manager_panel/manager_add_blog.html', {'form': form})
+    return render(request, 'manager_panel/blog/manager_add_blog.html', {'form': form})
 
 
 @user_passes_test(is_manager)
@@ -223,7 +223,7 @@ def blog_edit(request, pk):
     if form.is_valid():
         form.save()
         return redirect('manager_blog_list')
-    return render(request, 'manager_panel/manager_add_blog.html', {'form': form})
+    return render(request, 'manager_panel/blog/manager_add_blog.html', {'form': form})
 
 
 @user_passes_test(is_manager)
@@ -232,7 +232,7 @@ def blog_delete(request, pk):
     if request.method == 'POST':
         blog.delete()
         return redirect('manager_blog_list')
-    return render(request, 'manager_panel/manager_del_blog.html', {'blog': blog})
+    return render(request, 'manager_panel/blog/manager_del_blog.html', {'blog': blog})
 
 
 @user_passes_test(is_manager)
@@ -240,7 +240,7 @@ def lesson_list(request, course_id):
     course = get_object_or_404(Course, id=course_id)
     lessons = course.lessons.all()
 
-    return render(request, 'manager_panel/manager_lesson_list.html', {
+    return render(request, 'manager_panel/lesson/manager_lesson_list.html', {
         'course': course,
         'lessons': lessons,
     })
@@ -263,7 +263,7 @@ def lesson_create(request, course_id):
         return redirect('manager_lesson_list', course_id=course.id)
 
     teachers = CustomUser.objects.filter(role='teacher')
-    return render(request, 'manager_panel/manager_add_lesson.html', {
+    return render(request, 'manager_panel/lesson/manager_add_lesson.html', {
         'course': course,
         'teachers': teachers,
     })
@@ -287,7 +287,7 @@ def lesson_edit(request, pk):
         return redirect('manager_lesson_list', course_id=lesson.course.id)
 
     teachers = CustomUser.objects.filter(role='teacher')
-    return render(request, 'manager_panel/manager_edit_lesson.html', {
+    return render(request, 'manager_panel/lesson/manager_edit_lesson.html', {
         'lesson': lesson,
         'teachers': teachers,
     })
@@ -302,7 +302,7 @@ def lesson_delete(request, pk):
         lesson.delete()
         return redirect('manager_lesson_list', course_id=course_id)
 
-    return render(request, 'manager_panel/manager_del_lesson.html', {'lesson': lesson})
+    return render(request, 'manager_panel/lesson/manager_del_lesson.html', {'lesson': lesson})
 
 
 @user_passes_test(is_manager)
@@ -360,3 +360,38 @@ def enrollment_request_reject_view(request, request_id):
 
     messages.info(request, 'Заявка отклонена.')
     return redirect('manager_enrollment_requests')
+
+
+@user_passes_test(is_manager)
+def questions_list(request):
+    faqs = FAQ.objects.all()
+    return render(request, 'manager_panel/question/manager_questions_list.html', {'faqs': faqs})
+
+
+@user_passes_test(is_manager)
+def question_create(request):
+    form = QuestionsForm(request.POST or None, request.FILES or None)
+    if form.is_valid():
+        form.save()
+        return redirect('manager_questions_list')
+    return render(request, 'manager_panel/question/manager_add_question.html', {'form': form})
+
+
+@user_passes_test(is_manager)
+def question_edit(request, pk):
+    question = get_object_or_404(FAQ, pk=pk)
+    form = QuestionsForm(request.POST or None, request.FILES or None, instance=question)
+    if form.is_valid():
+        form.save()
+        return redirect('manager_questions_list')
+    return render(request, 'manager_panel/question/manager_add_question.html', {'form': form})
+
+
+@user_passes_test(is_manager)
+def question_delete(request, pk):
+    question = get_object_or_404(FAQ, pk=pk)
+    if request.method == 'POST':
+        question.delete()
+        return redirect('manager_questions_list')
+    return render(request, 'manager_panel/question/manager_del_question.html', {'question': question})
+

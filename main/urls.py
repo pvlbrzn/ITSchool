@@ -15,7 +15,6 @@ urlpatterns = [
     path('contact/', views.contact, name='contact'),
     path('blog/', views.blog_list, name='blog'),
     path('blog/<int:blog_id>/', views.blog_details, name='blog_details'),
-    path('parse/', views.update_blog, name='run_parse'),
     path('login/', auth_views.LoginView.as_view(
         template_name='main/login.html'), name='login'),
     path('after-login/', views.after_login_redirect, name='after_login'),

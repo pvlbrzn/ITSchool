@@ -352,13 +352,6 @@
                </div>
             </div>
             {% endfor %}
-            {% if user.is_staff %}
-            <!-- Форма для обновления постов блога -->
-           <form method="post" action="{% url 'run_parse' %}">
-               {% csrf_token %}
-               <button type="submit">Обновить посты</button>
-           </form>
-            {% endif %}
          </div>
       </div>
    </div>
