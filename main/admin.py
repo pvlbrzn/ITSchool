@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from . models import Course, Lesson, Blog, CustomUser, EnrollmentRequest, Payment, FAQ, Subscriber, Newsletter
+from . models import (Course, Lesson, Blog, CustomUser, EnrollmentRequest, Payment, FAQ,
+                      Subscriber, Newsletter, Review)
 from .tasks import send_newsletter_to_all
 
 
@@ -77,6 +78,13 @@ class FAQAdmin(admin.ModelAdmin):
     list_display = ('question', 'answer')
     search_fields = ('question',)
     list_filter = ('question',)
+
+
+@admin.register(Review)
+class ReviewAdmin(admin.ModelAdmin):
+    list_display = ('comment', 'author', 'date', 'image')
+    search_fields = ('author',)
+    list_filter = ('date',)
 
 
 @admin.register(Subscriber)
