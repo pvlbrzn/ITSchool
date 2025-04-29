@@ -7,7 +7,6 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 
 from . models import Course, Blog, CustomUser, EnrollmentRequest, Payment, FAQ
-from . services import parse_blog
 from . forms import StudentRegistrationForm, SubscribeForm
 from .utils import send_welcome_email
 
@@ -87,17 +86,6 @@ def blog_list(request):
 def blog_details(request, blog_id):
     blog = get_object_or_404(Blog, id=blog_id)
     return render(request, 'main/blog-details.html', {'blog': blog})
-
-
-def update_blog(request):
-    if request.method == 'POST':
-        try:
-            parse_blog()  # Запускаем парсинг
-            messages.success(request, "Посты успешно обновлены!")  # Успешное сообщение
-        except Exception as e:
-            messages.error(request, f"Ошибка при обновлении постов: {e}")  # Сообщение об ошибке
-
-    return redirect('index')
 
 
 @login_required
@@ -201,6 +189,7 @@ def payment_start(request, request_id):
 
     # Направляем на личный кабинет
     return redirect('profile')  # Редирект на личный кабинет пользователя
+
 
 def subscribe(request):
     if request.method == 'POST':

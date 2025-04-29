@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 
-from main.models import CustomUser, Course, Blog
+from main.models import CustomUser, Course, Blog, FAQ
 
 
 class CourseForm(forms.ModelForm):
@@ -93,4 +93,10 @@ class ManagerUserEditForm(forms.ModelForm):
 class BlogForm(forms.ModelForm):
     class Meta:
         model = Blog
+        fields = '__all__'
+
+
+class QuestionsForm(forms.ModelForm):
+    class Meta:
+        model = FAQ
         fields = '__all__'
