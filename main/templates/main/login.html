@@ -39,7 +39,11 @@
                 <div class="col-xxl-8 offset-xxl-2 col-xl-8 offset-xl-2">
                     <div class="tp-section__title-wrapper text-center mb-55">
                         <h2 class="tp-section__title">Войдите <br> для выбора курса.</h2>
-                        <p><a href="{% url 'register' %}">Или зарегистрируйтесь здесь, если еще нет аккаунта.</a></p>
+                        <div class="sign__header mb-35">
+                            <div class="sign__in text-center">
+                                <p> <a href="{% url 'register' %}"><span>........</span> Или, зарегистрируйтесь тут <span>........</span></a> </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -92,11 +96,11 @@
 
                                 <div class="sign__action d-sm-flex justify-content-between mb-30">
                                     <div class="sign__agree d-flex align-items-center">
-                                        <input class="m-check-input" type="checkbox" id="m-agree">
-                                        <label class="m-check-label" for="m-agree">Оставить меня в системе</label>
+                                        <input class="m-check-input" type="checkbox" id="remember">
+                                        <label class="m-check-label" for="remember">Оставить меня в системе</label>
                                     </div>
                                     <div class="sign__forgot">
-                                        <a href="#">Забыли пароль?</a>
+                                        <a href="{% url 'password_reset' %}">Забыли пароль?</a>
                                     </div>
                                 </div>
                                 <button class="e-btn  w-100"> <span></span> Войти</button>

@@ -63,38 +63,3 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = '__all__'
-
-
-class TeacherSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CustomUser
-        fields = ['id', 'first_name', 'last_name', 'image', 'bio']  # подбери поля под себя
-
-
-class CourseSerializer(serializers.ModelSerializer):
-    random_rating = serializers.SerializerMethodField()
-    random_stars = serializers.SerializerMethodField()
-    random_likes = serializers.SerializerMethodField()
-    random_peoples = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Course
-        fields = ['id', 'title', 'description', 'random_rating', 'random_stars', 'random_likes', 'random_peoples']
-
-    def get_random_rating(self, obj):
-        return round(random.uniform(3.7, 5.0), 1)
-
-    def get_random_stars(self, obj):
-        return random.randint(50, 150)
-
-    def get_random_likes(self, obj):
-        return random.randint(1500, 3000)
-
-    def get_random_peoples(self, obj):
-        return random.randint(300, 500)
-
-
-class BlogSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Blog
-        fields = ['id', 'title', 'annotation', 'image', 'date']

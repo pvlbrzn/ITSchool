@@ -3,6 +3,8 @@ import random
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.core.paginator import Paginator
+from django.contrib.auth import login
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 
@@ -88,6 +90,22 @@ def blog_list(request):
 def blog_details(request, blog_id):
     blog = get_object_or_404(Blog, id=blog_id)
     return render(request, 'main/blog-details.html', {'blog': blog})
+
+
+def custom_login_view(request):
+    form = AuthenticationForm(request, data=request.POST or None)
+
+    if request.method == 'POST':
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+
+            if not request.POST.get('remember'):
+                request.session.set_expiry(0)
+
+            return redirect('after_login')  # или другой URL
+
+    return render(request, 'main/login.html', {'form': form})
 
 
 @login_required

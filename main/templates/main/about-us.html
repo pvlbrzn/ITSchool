@@ -66,10 +66,17 @@
                   </ul>
                </div>
                <div class="tp-hero__btn-wrappper">
+                  {% if user.is_authenticated %}
+                  <a href="{% url 'courses' %}" class="tp-border-btn br-0">
+                     <span>Начать</span>
+                     <div class="transition"></div>
+                  </a>
+                  {% else %}
                   <a href="{% url 'register' %}" class="tp-border-btn br-0">
                      <span>Начать</span>
                      <div class="transition"></div>
                   </a>
+                  {% endif %}
                </div>
             </div>
          </div>
