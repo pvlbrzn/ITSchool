@@ -1,14 +1,10 @@
 from rest_framework import viewsets
-from rest_framework.decorators import action
-from rest_framework.response import Response
-
 
 from main.models import (CustomUser, Course, Lesson, Payment, Blog, Subscriber, Newsletter, FAQ,
                          EnrollmentRequest, Review)
 from .serializers import (CustomUserSerializer, CourseSerializer, LessonSerializer, FAQSerializer,
                           PaymentSerializer, BlogSerializer, SubscriberSerializer,
-                          NewsletterSerializer, EnrollmentRequestSerializer, ReviewSerializer,
-                          TeacherSerializer)
+                          NewsletterSerializer, EnrollmentRequestSerializer, ReviewSerializer)
 from .permissions import IsManagerOrReadOnly
 
 
@@ -70,24 +66,3 @@ class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     permission_classes = [IsManagerOrReadOnly]
-
-
-class IndexViewSet(viewsets.ViewSet):
-    """
-    ViewSet для данных главной страницы (index).
-    """
-
-    @action(detail=False, methods=['get'], url_path='home')
-    def index(self, request):
-        teachers = CustomUser.objects.filter(role='teacher')[:8]
-        courses_hot = Course.objects.order_by('title')[:8]
-        courses = Course.objects.all()[:9]
-        blogs = Blog.objects.order_by('-title')[:4]
-
-        # Здесь добавляем случайные поля через сериализатор
-        return Response({
-            'teachers': TeacherSerializer(teachers, many=True).data,
-            'courses_hot': CourseSerializer(courses_hot, many=True).data,
-            'courses': CourseSerializer(courses, many=True).data,
-            'blogs': BlogSerializer(blogs, many=True).data,
-        })
