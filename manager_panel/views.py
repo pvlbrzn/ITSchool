@@ -4,9 +4,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import user_passes_test
 from django.db.models import Q
 from django.contrib import messages
+from django.core.mail import send_mass_mail
 
-from main.models import CustomUser, Course, Blog, Lesson, EnrollmentRequest, FAQ
-from . forms import CourseForm, ManagerUserCreateForm, ManagerUserEditForm, BlogForm, QuestionsForm
+from main.models import CustomUser, Course, Blog, Lesson, EnrollmentRequest, FAQ, Newsletter, Subscriber
+from . forms import (CourseForm, ManagerUserCreateForm, ManagerUserEditForm, BlogForm, QuestionsForm,
+                     NewsForm, NewsletterSendForm)
 
 
 def is_manager(user):
@@ -96,6 +98,7 @@ def users_list(request):
     search_query = request.GET.get('search', '')
     age_filter = request.GET.get('age', '')
     role_filter = request.GET.get('role', '')
+    newsletters = Newsletter.objects.all()
 
     users = CustomUser.objects.filter(
         is_superuser=False  # исключаем суперюзеров
@@ -126,6 +129,7 @@ def users_list(request):
         'search_query': search_query,
         'age_filter': age_filter,
         'role_filter': role_filter,
+        'newsletters': newsletters
     })
 
 
@@ -194,6 +198,28 @@ def users_bulk_action(request):
         elif action == 'block':
             users.update(is_active=False)
             messages.success(request, f"Заблокировано пользователей: {len(user_ids)}")
+
+        elif action == 'newsletter':
+            newsletter_id = request.POST.get('newsletter_id')
+            newsletter = get_object_or_404(Newsletter, id=newsletter_id)
+
+            messages_list = []
+            for user in users:
+                if user.email:
+                    messages_list.append((
+                        newsletter.subject,
+                        newsletter.message,
+                        'blr.artyom.gonchar@gmail.com',
+                        [user.email]
+                    ))
+
+            if messages_list:
+                send_mass_mail(messages_list, fail_silently=False)
+                messages.success(request, f'Рассылка отправлена {len(messages_list)} пользователям.')
+            else:
+                messages.warning(request, 'Ни у одного из выбранных пользователей нет email.')
+
+            return redirect('manager_users_list')
 
         else:
             messages.error(request, "Неизвестное действие.")
@@ -395,3 +421,87 @@ def question_delete(request, pk):
         return redirect('manager_questions_list')
     return render(request, 'manager_panel/question/manager_del_question.html', {'question': question})
 
+
+
+
+@user_passes_test(is_manager)
+def news_list(request):
+    news = Newsletter.objects.all()
+    return render(request, 'manager_panel/manager_news_list.html', {'news': news})
+
+
+@user_passes_test(is_manager)
+def news_create(request):
+    form = NewsForm(request.POST or None, request.FILES or None)
+    if form.is_valid():
+        form.save()
+        return redirect('manager_news_list')
+    return render(request, 'manager_panel/manager_add_news.html', {'form': form})
+
+
+@user_passes_test(is_manager)
+def news_edit(request, pk):
+    news = get_object_or_404(Newsletter, pk=pk)
+    form = NewsForm(request.POST or None, request.FILES or None, instance=news)
+    if form.is_valid():
+        form.save()
+        return redirect('manager_news_list')
+    return render(request, 'manager_panel/manager_add_news.html', {'form': form})
+
+
+@user_passes_test(is_manager)
+def news_delete(request, pk):
+    news = get_object_or_404(Newsletter, pk=pk)
+    if request.method == 'POST':
+        news.delete()
+        return redirect('manager_news_list')
+    return render(request, 'manager_panel/manager_del_news.html', {'news': news})
+
+
+@user_passes_test(is_manager)
+def send_newsletter(request, pk):
+    newsletter = get_object_or_404(Newsletter, pk=pk)
+    subscribers = Subscriber.objects.filter(is_confirmed=True)
+
+    if not subscribers:
+        messages.warning(request, "Нет подтверждённых подписчиков для рассылки.")
+        return redirect('manager_news_list')
+
+    messages_list = []
+    for sub in subscribers:
+        messages_list.append((
+            newsletter.subject,
+            newsletter.message,
+            'blr.artyom.gonchar@gmail.com',
+            [sub.email],
+        ))
+
+    send_mass_mail(messages_list, fail_silently=False)
+    messages.success(request, "Рассылка успешно отправлена подтверждённым подписчикам.")
+    return redirect('manager_news_list')
+
+
+@user_passes_test(is_manager)
+def send_newsletter_custom(request):
+    if request.method == 'POST':
+        form = NewsletterSendForm(request.POST)
+        if form.is_valid():
+            users = form.cleaned_data['users']
+            newsletter = form.cleaned_data['newsletter']
+
+            messages_list = []
+            for user in users:
+                messages_list.append((
+                    newsletter.title,
+                    newsletter.content,
+                    'your_email@example.com',  # От кого
+                    [user.email],
+                ))
+
+            send_mass_mail(messages_list, fail_silently=False)
+            messages.success(request, "Новость успешно отправлена выбранным пользователям.")
+            return redirect('manager_users_list')  # или куда нужно
+    else:
+        form = NewsletterSendForm()
+
+    return render(request, 'manager_panel/send_newsletter_custom.html', {'form': form})

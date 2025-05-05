@@ -180,9 +180,15 @@
                   <h3 class="tp-section__title text-white mb-25">Быстро получайте<br>
                      обновления о событиях и новостях!</h3>
                   <div class="tp-cta-2__form p-relative">
-                     <form>
+                     {% if messages %}
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                        {% endfor %}
+                     {% endif %}
+                     <form action="{% url 'subscribe' %}" method="post" class="subscribe-form">
+                        {% csrf_token %}
                         <div class="tp-cta-2__field">
-                           <input type="text" placeholder="Введите ваш Email">
+                           <input type="email" name="email" placeholder="Email address" required>
                         </div>
                         <button class="tp-cta-2__btn" type="submit">Подписаться</button>
                      </form>

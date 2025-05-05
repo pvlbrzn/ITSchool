@@ -1,0 +1,70 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Преподаватели{% endblock %}
+
+{% block content %}
+{% load static %}
+<main>
+
+   <!-- breadcrumb area start -->
+   <div class="breadcrumb__area include-bg pt-200 pb-150 breadcrumb__overlay"
+      data-background="{% static 'main/img/breadcrumb/breadcrumb-bg-1.png' %}">
+      <div class="container">
+         <div class="row">
+            <div class="col-xxl-12">
+               <div class="breadcrumb__content p-relative z-index-1">
+                  <h3 class="breadcrumb__title">Преподаватели</h3>
+                  <div class="breadcrumb__list">
+                     <span><a href="{% url 'index' %}">Главная страница</a></span>
+                     <span class="dvdr"><i class="fa-regular fa-angle-right"></i></span>
+                     <span>Преподаватели</span>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!-- breadcrumb area end -->
+
+    <!-- team start  -->
+    <div class="tp-team-2__section pt-120 pb-90">
+      <div class="container">
+         <div class="row">
+            <div class="tp-section__title-wrapper mb-40 text-center">
+               <h3 class="tp-section__title mb-15">Наши преподаватели <br></h3>
+               <p>Хочешь стать лучшим учись у лучших. Наши преподаватели профессионалы своего дела</p>
+            </div>
+         </div>
+         <div class="tp-team-2__wrapper mb-30">
+            <div class="row">
+               {% for teacher in teachers %}
+               <div class="col-lg-4 col-md-6">
+                  <div class="tp-team-2__member fix mb-30">
+                     <div class="tp-team-2__img w-img tp-team-2__overlay p-relative">
+                        <img src="{{ teacher.image.url }}" alt="">
+                        <div class="tp-team-2__social">
+                        </div>
+                     </div>
+                     <div class="tp-team-2__info">
+                        <h3 class="tp-team-2__name"><a href="{% url 'teacher_detail' teacher.id %}">{{ teacher.last_name }} {{ teacher.first_name }}</a></h3>
+                        <span class="tp-team-2__pro">Teacher MBA</span> <br>
+                        <span class="tp-team-2__ratting">
+                           <i class="fas fa-star"></i>
+                           <i class="fas fa-star"></i>
+                           <i class="fas fa-star"></i>
+                           <i class="fas fa-star"></i>
+                           <i class="fas fa-star-half-alt"></i>
+                        </span>
+                     </div>
+                  </div>
+               </div>
+               {% endfor %}
+            </div>
+         </div>
+      </div>
+   </div>
+   <!-- team end  -->
+
+
+
+{% endblock %}

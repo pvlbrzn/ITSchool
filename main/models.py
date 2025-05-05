@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
+import uuid
 
 
 class CustomUser(AbstractUser):
@@ -142,6 +143,8 @@ class Blog(models.Model):
 
 class Subscriber(models.Model):
     email = models.EmailField(unique=True)
+    is_confirmed = models.BooleanField(default=False)
+    confirmation_token = models.UUIDField(default=uuid.uuid4, editable=False)
     subscribed_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -157,6 +160,7 @@ class Newsletter(models.Model):
     subject = models.CharField(max_length=255, verbose_name='Тема')
     message = models.TextField(verbose_name='Сообщение')
     created_at = models.DateTimeField(auto_now_add=True)
+    picture = models.ImageField(upload_to='', verbose_name='Изображение', blank=True, null=True,)
 
     def __str__(self):
         return self.subject

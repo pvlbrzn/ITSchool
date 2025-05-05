@@ -1,0 +1,35 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Письмо отправлено{% endblock %}
+
+{% block content %}
+{% load static %}
+
+
+<!-- breadcrumb area start -->
+<div class="breadcrumb__area include-bg pt-200 pb-150 breadcrumb__overlay"
+ data-background="{% static 'main/img/breadcrumb/breadcrumb-bg-1.png' %}">
+ <div class="container">
+    <div class="row">
+       <div class="col-xxl-12">
+          <div class="breadcrumb__content p-relative z-index-1">
+             <h3 class="breadcrumb__title">Связаться с нами</h3>
+             <div class="breadcrumb__list">
+                <span><a href="{% url 'index' %}">Главная страница</a></span>
+                <span class="dvdr"><i class="fa-regular fa-angle-right"></i></span>
+                <span>Контакты</span>
+             </div>
+          </div>
+       </div>
+    </div>
+ </div>
+</div>
+<!-- breadcrumb area end -->
+
+<div class="container pt-100 pb-100">
+  <h2>Спасибо за ваше сообщение!</h2>
+  <p>Мы свяжемся с вами в ближайшее время.</p>
+  <a href="{% url 'index' %}" class="tp-btn mt-3">Вернуться на главную</a>
+</div>
+
+{% endblock %}
