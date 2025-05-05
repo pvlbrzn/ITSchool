@@ -34,6 +34,27 @@
          <h4>Уровень аккаунта — {{ user_role }}</h4>
          <hr>
 
+         <!-- Ваши заявки -->
+         {% if enrollment_requests %}
+            <h5>Ваши заявки на курсы:</h5>
+            {% for req in enrollment_requests %}
+               <div class="card mb-3">
+                  <div class="card-body">
+                     Курс: <strong>{{ req.course.title }}</strong><br>
+                     Статус: {{ req.get_status_display }}
+                     {% if req.status == 'approved' %}
+                        <br>
+                        <a href="{% url 'payment_start' request_id=req.id %}" class="btn btn-success btn-sm mt-2">
+                           Оплатить курс
+                        </a>
+                     {% endif %}
+                  </div>
+               </div>
+            {% endfor %}
+         {% endif %}
+
+         <hr>
+
          <!-- Ваши Курсы -->
          <h5>Ваши курсы:</h5>
          {% if courses %}
@@ -67,27 +88,6 @@
                <span>Выбрать курс</span>
                <div class="transition"></div>
             </a>
-         {% endif %}
-
-         <hr>
-
-         <!-- Ваши заявки -->
-         {% if enrollment_requests %}
-            <h5>Ваши заявки на курсы:</h5>
-            {% for req in enrollment_requests %}
-               <div class="card mb-3">
-                  <div class="card-body">
-                     Курс: <strong>{{ req.course.title }}</strong><br>
-                     Статус: {{ req.get_status_display }}
-                     {% if req.status == 'approved' %}
-                        <br>
-                        <a href="{% url 'payment_start' request_id=req.id %}" class="btn btn-success btn-sm mt-2">
-                           Оплатить курс
-                        </a>
-                     {% endif %}
-                  </div>
-               </div>
-            {% endfor %}
          {% endif %}
       </div>
    </div>

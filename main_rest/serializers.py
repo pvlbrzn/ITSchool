@@ -1,4 +1,3 @@
-import random
 from rest_framework import serializers
 
 from main.models import (CustomUser, Course, Lesson, Payment, Blog, Subscriber, Newsletter, FAQ,
