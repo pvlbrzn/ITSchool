@@ -5,7 +5,6 @@
 {% block content %}
 {% load static %}
 
-
 <main>
     <!-- breadcrumb area start -->
     <div class="breadcrumb__area include-bg pt-200 pb-150 breadcrumb__overlay"
@@ -29,7 +28,6 @@
             </div>
         </div>
     </div>
-    <!-- breadcrumb area end -->
 
     <!-- Personal course Area Strat-->
     <div class="postbox__area pt-120 pb-120">
@@ -39,6 +37,7 @@
                     <div class="postbox__wrapper pr-30">
 
                         <h2>Пользователи</h2>
+
                         <!-- Фильтры -->
                         <form method="get" class="mb-4 d-flex flex-wrap gap-3 align-items-end">
                             <div class="d-flex flex-column">
@@ -68,10 +67,8 @@
                             </div>
                         </form>
 
-
                         <div class="d-flex gap-3">
-                            <a href="{% url 'manager_user_create' %}" class="btn btn-secondary">Добавить
-                                пользователя</a>
+                            <a href="{% url 'manager_user_create' %}" class="btn btn-secondary">Добавить пользователя</a>
                             <a href="{% url 'manager' %}" class="btn btn-secondary">Назад</a>
                         </div>
 
@@ -84,54 +81,62 @@
                                             <form method="post" action="{% url 'manager_users_bulk_action' %}">
                                                 {% csrf_token %}
                                                 <div class="d-flex align-items-center gap-3 mt-3">
-                                                    <select name="action">
+                                                    <select name="action" id="bulk-action-select">
                                                         <option value="">Выберите действие</option>
                                                         <option value="delete">Удалить выбранных</option>
                                                         <option value="promote">Повысить до преподавателей</option>
                                                         <option value="block">Заблокировать</option>
-                                                        <option value="block">Рассылка</option>
+                                                        <option   value="newsletter">Рассылка
+                                                        </option>
                                                     </select>
+
+                                                    <div id="newsletter-select" class="d-none">
+                                                        <label for="newsletter_id" class="mb-0">Новость:</label>
+                                                        <select name="newsletter_id" id="newsletter_id" class="form-control">
+                                                            {% for news in newsletters %}
+                                                                <option value="{{ news.id }}">{{ news.subject }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
 
                                                     <button type="submit" class="btn btn-primary">Применить</button>
                                                 </div>
                                                 <hr>
+
                                                 <table class="table">
                                                     <thead>
                                                     <tr>
-                                                        <th class="cart-product-name"><input type="checkbox"
-                                                                                             id="select-all"></th>
-                                                        <th class="cart-product-name">Ник</th>
-                                                        <th class="cart-product-name">Имя Фамилия</th>
-                                                        <th class="product-price">Возраст</th>
-                                                        <th class="product-quantity">email</th>
-                                                        <th class="product-quantity">роль</th>
-                                                        <th class="product-subtotal">Редактировать</th>
-                                                        <th class="product-remove">Удалить</th>
+                                                        <th><input type="checkbox" id="select-all"></th>
+                                                        <th>Ник</th>
+                                                        <th>Имя Фамилия</th>
+                                                        <th>Возраст</th>
+                                                        <th>Email</th>
+                                                        <th>Роль</th>
+                                                        <th>Редактировать</th>
+                                                        <th>Удалить</th>
                                                     </tr>
                                                     </thead>
-                                                    {% for user in users %}
                                                     <tbody>
+                                                    {% for user in users %}
                                                     <tr>
-                                                        <td class="product-name"><input type="checkbox"
-                                                                                        name="selected_users"
-                                                                                        value="{{ user.id }}"></td>
-                                                        <td class="product-name"><p>{{ user.username }} </p></td>
-                                                        <td class="product-name"><p>{{ user.first_name }} {{ user.last_name}} </p></td>
-                                                        <td class="product-price"><p>{{ user.age }} </p></td>
-                                                        <td class="product-subtotal">{{ user.email }}</td>
-                                                        <td class="product-subtotal">{{ user.role }}</td>
-                                                        <td class="product-quantity">
-                                                            <button class="e-btn e-btn-border" type="submit">
-                                                                <a href="{% url 'manager_user_edit' user.pk %}">Редактировать</a>
-                                                            </button>
+                                                        <td><input type="checkbox" name="selected_users" value="{{ user.id }}"></td>
+                                                        <td>{{ user.username }}</td>
+                                                        <td>{{ user.first_name }} {{ user.last_name }}</td>
+                                                        <td>{{ user.age }}</td>
+                                                        <td>{{ user.email }}</td>
+                                                        <td>{{ user.role }}</td>
+                                                        <td>
+                                                            <a class="btn btn-outline-primary btn-sm"
+                                                               href="{% url 'manager_user_edit' user.pk %}">Редактировать</a>
                                                         </td>
-
-                                                        <td class="product-remove"><a
-                                                                href="{% url 'manager_user_delete' user.pk %}"><i
-                                                                class="fa fa-times"></i></a></td>
+                                                        <td>
+                                                            <a href="{% url 'manager_user_delete' user.pk %}">
+                                                                <i class="fa fa-times text-danger"></i>
+                                                            </a>
+                                                        </td>
                                                     </tr>
-                                                    </tbody>
                                                     {% endfor %}
+                                                    </tbody>
                                                 </table>
                                             </form>
                                         </div>
@@ -146,13 +151,27 @@
         </div>
     </div>
 
-    <!-- Скрипт для выбора всех чекбоксов -->
+    <!-- Скрипты -->
     <script>
-        document.getElementById('select-all').addEventListener('click', function(event) {
+        // Выбор всех чекбоксов
+        document.getElementById('select-all').addEventListener('click', function (event) {
             let checkboxes = document.querySelectorAll('input[name="selected_users"]');
             checkboxes.forEach(cb => cb.checked = event.target.checked);
+        });
+
+        // Показ выбора новости при выборе действия "Рассылка"
+        const actionSelect = document.getElementById('bulk-action-select');
+        const newsletterBlock = document.getElementById('newsletter-select');
+
+        actionSelect.addEventListener('change', function () {
+            if (this.value === 'newsletter') {
+                newsletterBlock.classList.remove('d-none');
+            } else {
+                newsletterBlock.classList.add('d-none');
+            }
         });
     </script>
 
 </main>
 {% endblock %}
+

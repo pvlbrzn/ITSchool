@@ -1,0 +1,115 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Преподаватели{% endblock %}
+
+{% block content %}
+{% load static %}
+
+<!-- breadcrumb area start -->
+<div class="breadcrumb__area include-bg pt-200 pb-150 breadcrumb__overlay"
+   data-background="{% static 'main/img/breadcrumb/breadcrumb-bg-1.png' %}">
+   <div class="container">
+      <div class="row">
+         <div class="col-xxl-12">
+            <div class="breadcrumb__content p-relative z-index-1">
+               <h3 class="breadcrumb__title">Преподаватель {{teacher.last_name}}</h3>
+               <div class="breadcrumb__list">
+                  <span><a href="{% url 'index' %}">Главная страница</a></span>
+                  <span class="dvdr"><i class="fa-regular fa-angle-right"></i></span>
+                  <span><a href="{% url 'teachers_list' %}">Наши преподаватели</a></span>
+                  <span class="dvdr"><i class="fa-regular fa-angle-right"></i></span>
+                  <span>{{teacher.last_name}} {{teacher.first_name}}</span>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- breadcrumb area end -->
+
+<!-- instructor details area start -->
+<section class="teacher__area pt-100 pb-110 p-relative">
+   <div class="container">
+      <div class="row">
+         <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6">
+            <div class="teacher__details-thumb p-relative w-img pr-30">
+               <img src="{{ teacher.image.url }}" alt="">
+            </div>
+         </div>
+         <div class="col-xxl-8 col-xl-8 col-lg-8">
+            <div class="teacher__wrapper">
+               <div class="teacher__top d-md-flex align-items-end justify-content-between">
+                  <div class="teacher__info">
+                     <h4>{{teacher.last_name}} {{teacher.first_name}}</h4>
+                     <span>{{teacher.stack}}</span>
+                  </div>
+                  <div class="teacher__rating">
+                     <h5>Оценки:</h5>
+                     <div class="teacher__rating-inner d-flex align-items-center">
+                        <ul>
+                           <li><a href="#"> <i class="icon_star"></i> </a></li>
+                           <li><a href="#"> <i class="icon_star"></i> </a></li>
+                           <li><a href="#"> <i class="icon_star"></i> </a></li>
+                           <li><a href="#"> <i class="icon_star"></i> </a></li>
+                           <li><a href="#"> <i class="icon_star"></i> </a></li>
+                        </ul>
+                        <p>4.5</p>
+                     </div>
+                  </div>
+               </div>
+               <div class="teacher__bio">
+                  <h3>Краткая биография</h3>
+                  <p>{{teacher.bio}}.</p>
+               </div>
+            </div>
+         </div>
+      </div>
+
+      <!-- Курсы преподавателя на всю ширину -->
+      <div class="row mt-80">
+         <div class="col-12">
+            <div class="teacher__courses pt-55">
+               <div class="section__title-wrapper mb-30">
+                  <h2 class="section__title">Курсы <span class="yellow-bg yellow-bg-big">преподавателя</span></h2>
+               </div>
+               <div class="row">
+                  {% for related_course in related_courses %}
+                  <div class="col-lg-4 col-md-6">
+                     <div class="tp-courses__item mb-30">
+                        <div class="tp-courses__thumb w-img fix p-relative">
+                           <img src="main/img/courses/courses-1.jpg" alt="">
+                           <span class="tp-courses__cat cat-color-1"><a href="#">Web Design</a></span>
+                        </div>
+                        <div class="tp-courses__content white-bg">
+                           <div class="tp-courses__meta">
+                              <span class="tp-ratting"><i class="icon_star_alt"></i> 4.5 (100)</span>
+                              <span><i class="icon_heart_alt"></i>18,400</span>
+                              <span><i class="fa-light fa-user"></i>365</span>
+                           </div>
+                           <h3 class="tp-courses__title">
+                              <a href="{% url 'course-detail' related_course.id %}">{{ related_course.title }}</a>
+                           </h3>
+                           <div class="tp-courses__price d-flex justify-content-between">
+                              <div class="tp-courses__time">
+                                 <span><a href="{% url 'course-detail' related_course.id %}" class="more-btn">
+                                    о курсе <i class="fa-regular fa-arrow-right"></i></a></span>
+                              </div>
+                              <div class="tp-courses__value">
+                                 <span>{{ related_course.price }} BYN</span>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  {% endfor %}
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</section>
+<!-- instructor details area end -->
+
+</main>
+
+{% endblock %}

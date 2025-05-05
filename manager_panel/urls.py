@@ -1,4 +1,7 @@
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
+
 from . import views
 
 urlpatterns = [
@@ -31,4 +34,10 @@ urlpatterns = [
     path('questions/create/', views.question_create, name='manager_question_create'),
     path('questions/<int:pk>/edit/', views.question_edit, name='manager_question_edit'),
     path('questions/<int:pk>/delete/', views.question_delete, name='manager_question_delete'),
-]
+    path('news/', views.news_list, name='manager_news_list'),
+    path('news/create/', views.news_create, name='manager_news_create'),
+    path('news/<int:pk>/edit/', views.news_edit, name='manager_news_edit'),
+    path('news/<int:pk>/delete/', views.news_delete, name='manager_news_delete'),
+    path('manager/news/send/<int:pk>/', views.send_newsletter, name='send_newsletter'),
+    path('manager/news/send/custom/', views.send_newsletter_custom, name='send_newsletter_custom'),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

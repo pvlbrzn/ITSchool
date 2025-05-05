@@ -7,10 +7,14 @@ from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
+from django.http import HttpResponse
+from django.urls import path
+from django.core.mail import send_mail
+from django.conf import settings
 
-from . models import Course, Blog, CustomUser, EnrollmentRequest, Payment, FAQ, Review
-from . forms import StudentRegistrationForm, SubscribeForm
-from .utils import send_welcome_email
+from . models import Course, Blog, CustomUser, EnrollmentRequest, Payment, FAQ, Review, Subscriber
+from . forms import StudentRegistrationForm, SubscribeForm, ContactForm
+from . utils import send_confirmation_email, send_welcome_email
 
 
 def index(request):
@@ -58,6 +62,17 @@ def course_detail(request, course_id):
     })
 
 
+def teacher_detail(request, teacher_id):
+    teacher = get_object_or_404(CustomUser, id=teacher_id, role='teacher')
+
+    related_courses = Course.objects.filter(teachers=teacher).order_by('?')[:3]
+
+    return render(request, 'main/teachers-details.html', {
+        'teacher': teacher,
+        'related_courses': related_courses
+    })
+
+
 def teachers_list(request):
     teachers = CustomUser.objects.filter(role='teacher')
     return render(request, 'main/teachers.html', {'teachers': teachers})
@@ -71,10 +86,6 @@ def about(request):
 def faq(request):
     faqs = FAQ.objects.all()
     return render(request, 'main/faq.html', {'faqs': faqs})
-
-
-def contact(request):
-    return render(request, 'main/contact.html')
 
 
 def blog_list(request):
@@ -217,14 +228,55 @@ def subscribe(request):
     if request.method == 'POST':
         form = SubscribeForm(request.POST)
         if form.is_valid():
-            subscriber = form.save()
-            print(f"Письмо отправляется на: {subscriber.email}")
-            send_welcome_email(subscriber.email)
-            messages.success(request, 'Вы успешно подписались!')
+            email = form.cleaned_data['email']
+            subscriber, created = Subscriber.objects.get_or_create(email=email)
+
+            if subscriber.is_confirmed:
+                messages.info(request, 'Вы уже подписаны.')
+            else:
+                send_confirmation_email(subscriber, request)
+                messages.success(request, 'Проверьте вашу почту для подтверждения подписки.')
+
             return redirect('subscribe')
         else:
             print("Форма НЕ прошла валидацию!")
             messages.error(request, 'Ошибка! Проверьте правильность email.')
     else:
         form = SubscribeForm()
-    return render(request, 'main/base.html', {'form': form})
+
+    # if path == 'about/':
+    return render(request, 'main/subscribe.html', {'form': form})
+   # else:
+       # return render(request, 'main/base.html', {'form': form})
+
+
+def confirm_subscription(request, token):
+    subscriber = get_object_or_404(Subscriber, confirmation_token=token)
+    if not subscriber.is_confirmed:
+        subscriber.is_confirmed = True
+        subscriber.save()
+        send_welcome_email(subscriber.email)
+        return HttpResponse('Спасибо! Подписка подтверждена.')
+    else:
+        return HttpResponse('Вы уже подтвердили подписку ранее.')
+
+
+def contact(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        subject = request.POST.get('subject')
+        message = request.POST.get('message')
+
+        full_message = f"От: {name} <{email}>\n\n{message}"
+
+        send_mail(
+            subject=subject,
+            message=full_message,
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=['blr.artyom.gonchar@gmail.com'],
+            fail_silently=False,
+        )
+        return render(request, 'main/contact_success.html')
+
+    return render(request, 'main/contact.html')

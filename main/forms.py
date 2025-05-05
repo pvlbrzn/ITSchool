@@ -26,6 +26,7 @@ class StudentRegistrationForm(UserCreationForm):
             user.save()
         return user
 
+
 class SubscribeForm(forms.ModelForm):
     class Meta:
         model = Subscriber
@@ -36,7 +37,8 @@ class SubscribeForm(forms.ModelForm):
 
     def clean_email(self):
         email = self.cleaned_data['email']
-        if Subscriber.objects.filter(email=email).exists():
+        subscriber = Subscriber.objects.filter(email=email).first()
+        if subscriber and subscriber.is_confirmed:
             raise forms.ValidationError("Этот email уже подписан.")
         return email
 
@@ -55,3 +57,12 @@ class NewsForm(forms.ModelForm):
         }
 
 
+class SubscriptionForm(forms.Form):
+    email = forms.EmailField()
+
+
+class ContactForm(forms.Form):
+    name = forms.CharField(max_length=100)
+    subject = forms.CharField(max_length=255)
+    email = forms.EmailField()
+    message = forms.CharField(widget=forms.Textarea)

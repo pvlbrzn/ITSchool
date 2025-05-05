@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 
-from main.models import CustomUser, Course, Blog, FAQ
+from main.models import CustomUser, Course, Blog, FAQ, Newsletter
 
 
 class CourseForm(forms.ModelForm):
@@ -100,3 +100,21 @@ class QuestionsForm(forms.ModelForm):
     class Meta:
         model = FAQ
         fields = '__all__'
+
+
+class NewsForm(forms.ModelForm):
+    class Meta:
+        model = Newsletter
+        fields = '__all__'
+
+
+class NewsletterSendForm(forms.Form):
+    users = forms.ModelMultipleChoiceField(
+        queryset=CustomUser.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        label="Выберите пользователей"
+    )
+    newsletter = forms.ModelChoiceField(
+        queryset=Newsletter.objects.all(),
+        label="Выберите новость"
+    )

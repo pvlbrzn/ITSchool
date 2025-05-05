@@ -4,8 +4,6 @@
 
 {% block content %}
 {% load static %}
-
-
 <main>
    <!-- breadcrumb area start -->
    <div class="breadcrumb__area include-bg pt-200 pb-150 breadcrumb__overlay"
@@ -18,7 +16,11 @@
                   <div class="breadcrumb__list">
                      <span><a href="{% url 'index' %}">Главная страница</a></span>
                      <span class="dvdr"><i class="fa-regular fa-angle-right"></i></span>
-                     <span>Управление школой</span>
+                     <span><a href="{% url 'manager' %}">Управление школой</a></span>
+                     <span class="dvdr"><i class="fa-regular fa-angle-right"></i></span>
+                     <span><a href="{% url 'manager_news_list' %}">Список новостей</a></span>
+                     <span class="dvdr"><i class="fa-regular fa-angle-right"></i></span>
+                     <span>Удаление новости</span>
                      <hr>
                      <span><a href="{% url 'logout' %}">ВЫХОД ИЗ АККАУНТА</a></span>
                   </div>
@@ -31,24 +33,20 @@
 
    <!-- Personal course Area Strat-->
    <div class="postbox__area pt-120 pb-120">
-   <div class="container">
-      <h2>Добро пожаловать, {{ request.user.first_name }}!</h2>
-         <h4>Уровень аккаунта - {{ user_role }} </h4>
-         <hr>
-      <div class="row">
-         <div class="col-lg-12">
-            <div class="postbox__wrapper pr-30">
-                <h2>Управление данными</h2>
-                <a class="btn btn-secondary" href="{% url 'manager_users_list' %}" ><h5>Пользователи</h5></a>
-                <a class="btn btn-secondary" href="{% url 'manager_course_list' %}" ><h5>Курсы</h5></a>
-                <a class="btn btn-secondary" href="{% url 'manager_blog_list' %}" ><h5>Блог</h5></a>
-                <a class="btn btn-secondary" href="{% url 'manager_enrollment_requests' %}" ><h5>Заявки</h5></a>
-                <a class="btn btn-secondary" href="{% url 'manager_questions_list' %}" ><h5>Вопросы</h5></a>
-                <a class="btn btn-secondary" href="{% url 'manager_news_list' %}" ><h5>Новости</h5></a>
-            </div>
-         </div>
+   <div class="container mt-5">
+      <div class="card shadow-sm p-4">
+        <h2 class="text-danger mb-4">Вы уверены, что хотите удалить новость:</h2>
+        <h4 class="mb-4 text-dark-emphasis"><strong>{{ news.subject }} от {{ news.created_at }} </strong>?</h4>
+
+        <form method="post">
+          {% csrf_token %}
+          <div class="d-flex gap-3">
+            <button type="submit" class="btn btn-danger">🗑 Да, удалить</button>
+            <a href="{% url 'manager_news_list' %}" class="btn btn-secondary">❌ Отмена</a>
+          </div>
+        </form>
       </div>
-   </div>
+    </div>
 </div>
    <!-- Personal course Area End-->
 

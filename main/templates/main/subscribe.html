@@ -1,0 +1,65 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Подписка оформлена{% endblock %}
+
+{% load static %}
+{% block content %}
+
+<main>
+
+   <!-- breadcrumb area start -->
+   <div class="breadcrumb__area include-bg pt-200 pb-150 breadcrumb__overlay"
+      data-background="{% static 'main/img/breadcrumb/breadcrumb-bg-1.png' %}">
+      <div class="container">
+         <div class="row">
+            <div class="col-xxl-12">
+               <div class="breadcrumb__content p-relative z-index-1">
+                  <h3 class="breadcrumb__title">Рассылка</h3>
+                  <div class="breadcrumb__list">
+                     <span><a href="{% url 'index' %}">Главная страница</a></span>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+
+
+
+    <section class="subscribe__confirmation-area pt-120 pb-120">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-8 col-lg-10">
+                <div class="subscribe__confirmation text-center">
+                <div class="subscribe__icon mb-30">
+                    <i class="fa-solid fa-envelope-circle-check fa-3x" style="color: #00C896;"></i>
+                        {% if messages %}
+                            {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                            {% endfor %}
+                        {% endif %}
+
+                           <form action="{% url 'subscribe' %}" method="post" class="subscribe-form">
+                              {% csrf_token %}
+                              <div class="footer__subscribe-box">
+                                 <div class="footer__subscribe-input">
+                                    <input type="email" name="email" placeholder="Email адресс" required>
+                                 </div>
+                                 <button class="footer-sub-btn" type="submit">Подписаться</button>
+                              </div>
+                           </form>
+                </div>
+                <h2 class="subscribe__title mb-20">Подпишись, чтобы ничего не пропустить!</h2>
+                <p class="mb-30">
+                    Актуальные новости, интересные события, и скидки на курсы.
+                </p>
+                <a href="{% url 'index' %}" class="tp-btn">Вернуться на главную</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    </section>
+
+</main>
+
+{% endblock %}
