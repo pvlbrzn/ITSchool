@@ -5,28 +5,37 @@ from django.contrib.auth.decorators import user_passes_test
 from django.db.models import Q
 from django.contrib import messages
 from django.core.mail import send_mass_mail
+from django.http import HttpRequest, HttpResponse
 
-from main.models import CustomUser, Course, Blog, Lesson, EnrollmentRequest, FAQ, Newsletter, Subscriber
-from . forms import (CourseForm, ManagerUserCreateForm, ManagerUserEditForm, BlogForm, QuestionsForm,
-                     NewsForm, NewsletterSendForm)
-
-
-def is_manager(user):
-    return user.is_authenticated and (user.is_superuser or user.groups.filter(name='managers').exists())
+from main.models import (CustomUser, Course, Blog, Lesson, EnrollmentRequest, FAQ, Newsletter, Subscriber)
+from .forms import (CourseForm, ManagerUserCreateForm, ManagerUserEditForm, BlogForm,
+                    QuestionsForm, NewsForm, NewsletterSendForm)
 
 
-@user_passes_test(is_manager)
-def manager(request):
-    return render(request, 'manager_panel/manager-account.html',
-                  {'user_role': request.user.get_role_display()})
+def is_manager(user: CustomUser) -> bool:
+    """Проверяет, является ли пользователь менеджером или суперпользователем."""
+    return user.is_authenticated and (
+        user.is_superuser or user.groups.filter(name='managers').exists()
+)
 
 
 @user_passes_test(is_manager)
-def course_list(request):
-    search_query = request.GET.get('search', '')
-    language_filter = request.GET.get('language', '')
-    start_date_filter = request.GET.get('start_date', '')
-    end_date_filter = request.GET.get('end_date', '')
+def manager(request: HttpRequest) -> HttpResponse:
+    """Страница аккаунта менеджера."""
+    return render(
+        request,
+        'manager_panel/manager-account.html',
+        {'user_role': request.user.get_role_display()}
+    )
+
+
+@user_passes_test(is_manager)
+def course_list(request: HttpRequest) -> HttpResponse:
+    """Отображает список курсов с возможностью фильтрации."""
+    search_query: str = request.GET.get('search', '')
+    language_filter: str = request.GET.get('language', '')
+    start_date_filter: str = request.GET.get('start_date', '')
+    end_date_filter: str = request.GET.get('end_date', '')
 
     courses = Course.objects.all()
 
@@ -44,29 +53,32 @@ def course_list(request):
             start_date = datetime.strptime(start_date_filter, '%Y-%m-%d')
             courses = courses.filter(start_date__gte=start_date)
         except ValueError:
-            pass  # если невалидный формат даты, игнорируем
+            pass
 
     if end_date_filter:
         try:
             end_date = datetime.strptime(end_date_filter, '%Y-%m-%d')
             courses = courses.filter(end_date__lte=end_date)
         except ValueError:
-            pass  # если невалидный формат даты, игнорируем
+            pass
 
-    languages = Course.LANGUAGE_CHOICES
-
-    return render(request, 'manager_panel/course/manager_course_list.html', {
-        'courses': courses,
-        'languages': languages,
-        'search_query': search_query,
-        'language_filter': language_filter,
-        'start_date_filter': start_date_filter,
-        'end_date_filter': end_date_filter,
-    })
+    return render(
+        request,
+        'manager_panel/course/manager_course_list.html',
+        {
+            'courses': courses,
+            'languages': Course.LANGUAGE_CHOICES,
+            'search_query': search_query,
+            'language_filter': language_filter,
+            'start_date_filter': start_date_filter,
+            'end_date_filter': end_date_filter,
+        }
+    )
 
 
 @user_passes_test(is_manager)
-def course_create(request):
+def course_create(request: HttpRequest) -> HttpResponse:
+    """Создание нового курса."""
     form = CourseForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         form.save()
@@ -75,36 +87,50 @@ def course_create(request):
 
 
 @user_passes_test(is_manager)
-def course_edit(request, pk):
+def course_edit(request: HttpRequest, pk: int) -> HttpResponse:
+    """Редактирование существующего курса."""
     course = get_object_or_404(Course, pk=pk)
     form = CourseForm(request.POST or None, request.FILES or None, instance=course)
+
+    selected_students_ids = course.students.values_list('id', flat=True)
+    selected_teachers_ids = course.teachers.values_list('id', flat=True)
+
     if form.is_valid():
         form.save()
         return redirect('manager')
-    return render(request, 'manager_panel/course/manager_add_course.html', {'form': form})
+
+    return render(
+        request,
+        'manager_panel/course/manager_add_course.html',
+        {
+            'form': form,
+            'selected_students_ids': selected_students_ids,
+            'selected_teachers_ids': selected_teachers_ids,
+        }
+    )
 
 
 @user_passes_test(is_manager)
-def course_delete(request, pk):
+def course_delete(request: HttpRequest, pk: int) -> HttpResponse:
+    """Удаление курса."""
     course = get_object_or_404(Course, pk=pk)
     if request.method == 'POST':
         course.delete()
         return redirect('manager')
-    return render(request, 'manager_panel/course/manager_del_course.html', {'course': course})
+    return render(request, 'manager_panel/course/manager_del_course.html',
+                  {'course': course})
 
 
 @user_passes_test(is_manager)
-def users_list(request):
+def users_list(request: HttpRequest) -> HttpResponse:
+    """Список пользователей с возможностью фильтрации по имени, роли и возрасту."""
     search_query = request.GET.get('search', '')
     age_filter = request.GET.get('age', '')
     role_filter = request.GET.get('role', '')
     newsletters = Newsletter.objects.all()
 
-    users = CustomUser.objects.filter(
-        is_superuser=False  # исключаем суперюзеров
-    ).exclude(role='manager')  # исключаем менеджеров
+    users = CustomUser.objects.filter(is_superuser=False).exclude(role='manager')
 
-    # Фильтрация по поиску
     if search_query:
         users = users.filter(
             Q(first_name__icontains=search_query) |
@@ -113,14 +139,12 @@ def users_list(request):
             Q(username__icontains=search_query)
         )
 
-    # Фильтрация по возрасту
     if age_filter:
         try:
             users = users.filter(age=int(age_filter))
         except ValueError:
-            pass  # игнорируем, если некорректный возраст
+            pass
 
-    # Фильтрация по роли
     if role_filter in ['student', 'teacher']:
         users = users.filter(role=role_filter)
 
@@ -134,11 +158,12 @@ def users_list(request):
 
 
 @user_passes_test(is_manager)
-def user_create(request):
+def user_create(request: HttpRequest) -> HttpResponse:
+    """Создание нового пользователя менеджером."""
     form = ManagerUserCreateForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         user = form.save(commit=False)
-        user.set_password('default123')  # дефолтный пароль
+        user.set_password('default123')
         user.save()
         messages.success(request, f"Пользователь {user.username} успешно создан.")
         return redirect('manager_users_list')
@@ -146,27 +171,26 @@ def user_create(request):
 
 
 @user_passes_test(is_manager)
-def user_edit(request, pk):
+def user_edit(request: HttpRequest, pk: int) -> HttpResponse:
+    """Редактирование существующего пользователя, кроме менеджеров и суперпользователей."""
     user = get_object_or_404(CustomUser, pk=pk)
 
-    # Проверяем, не пытается ли менеджер редактировать себя или другого менеджера/суперпользователя
-    if user.role in ['manager'] or user.is_superuser:
+    if user.role == 'manager' or user.is_superuser:
         messages.error(request, "Нельзя редактировать администратора или менеджера.")
         return redirect('manager_users_list')
 
-    # Обрабатываем форму
     form = ManagerUserEditForm(request.POST or None, request.FILES or None, instance=user)
     if form.is_valid():
         form.save()
         messages.success(request, f"Пользователь {user.username} успешно обновлён.")
         return redirect('manager_users_list')
 
-    # Отправляем форму для редактирования, если она не валидна
     return render(request, 'manager_panel/user/manager_add_user.html', {'form': form})
 
 
 @user_passes_test(is_manager)
-def user_delete(request, pk):
+def user_delete(request: HttpRequest, pk: int) -> HttpResponse:
+    """Удаление пользователя."""
     user = get_object_or_404(CustomUser, pk=pk)
     if request.method == 'POST':
         user.delete()
@@ -176,7 +200,8 @@ def user_delete(request, pk):
 
 
 @user_passes_test(is_manager)
-def users_bulk_action(request):
+def users_bulk_action(request: HttpRequest) -> HttpResponse:
+    """Групповое действие над пользователями: удаление, блокировка, повышение в преподаватели."""
     if request.method == 'POST':
         user_ids = request.POST.getlist('selected_users')
         action = request.POST.get('action')
@@ -190,11 +215,9 @@ def users_bulk_action(request):
         if action == 'delete':
             users.delete()
             messages.success(request, f"Удалено пользователей: {len(user_ids)}")
-
         elif action == 'promote':
             users.update(role='teacher')
             messages.success(request, f"Повышено до преподавателей: {len(user_ids)}")
-
         elif action == 'block':
             users.update(is_active=False)
             messages.success(request, f"Заблокировано пользователей: {len(user_ids)}")
@@ -228,44 +251,52 @@ def users_bulk_action(request):
 
 
 @user_passes_test(is_manager)
-def blog_list(request):
+def blog_list(request: HttpRequest) -> HttpResponse:
+    """Список всех блогов."""
     blogs = Blog.objects.all()
-    return render(request, 'manager_panel/blog/manager_blog_list.html', {'blogs': blogs})
+    return render(request, 'manager_panel/blog/manager_blog_list.html',
+                  {'blogs': blogs})
 
 
 @user_passes_test(is_manager)
-def blog_create(request):
+def blog_create(request: HttpRequest) -> HttpResponse:
+    """Создание нового блога."""
     form = BlogForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         form.save()
         return redirect('manager_blog_list')
-    return render(request, 'manager_panel/blog/manager_add_blog.html', {'form': form})
+    return render(request, 'manager_panel/blog/manager_add_blog.html',
+                  {'form': form})
 
 
 @user_passes_test(is_manager)
-def blog_edit(request, pk):
+def blog_edit(request: HttpRequest, pk: int) -> HttpResponse:
+    """Редактирование существующего блога."""
     blog = get_object_or_404(Blog, pk=pk)
     form = BlogForm(request.POST or None, request.FILES or None, instance=blog)
     if form.is_valid():
         form.save()
         return redirect('manager_blog_list')
-    return render(request, 'manager_panel/blog/manager_add_blog.html', {'form': form})
+    return render(request, 'manager_panel/blog/manager_add_blog.html',
+                  {'form': form})
 
 
 @user_passes_test(is_manager)
-def blog_delete(request, pk):
+def blog_delete(request: HttpRequest, pk: int) -> HttpResponse:
+    """Удаление блога."""
     blog = get_object_or_404(Blog, pk=pk)
     if request.method == 'POST':
         blog.delete()
         return redirect('manager_blog_list')
-    return render(request, 'manager_panel/blog/manager_del_blog.html', {'blog': blog})
+    return render(request, 'manager_panel/blog/manager_del_blog.html',
+                  {'blog': blog})
 
 
 @user_passes_test(is_manager)
-def lesson_list(request, course_id):
+def lesson_list(request: HttpRequest, course_id: int) -> HttpResponse:
+    """Список уроков по заданному курсу."""
     course = get_object_or_404(Course, id=course_id)
     lessons = course.lessons.all()
-
     return render(request, 'manager_panel/lesson/manager_lesson_list.html', {
         'course': course,
         'lessons': lessons,
@@ -273,7 +304,8 @@ def lesson_list(request, course_id):
 
 
 @user_passes_test(is_manager)
-def lesson_create(request, course_id):
+def lesson_create(request: HttpRequest, course_id: int) -> HttpResponse:
+    """Создание нового урока в рамках курса."""
     course = get_object_or_404(Course, id=course_id)
 
     if request.method == 'POST':
@@ -281,9 +313,7 @@ def lesson_create(request, course_id):
         content = request.POST.get('content')
         teacher_id = request.POST.get('teacher')
 
-        teacher = None
-        if teacher_id:
-            teacher = CustomUser.objects.filter(id=teacher_id, role='teacher').first()
+        teacher = CustomUser.objects.filter(id=teacher_id, role='teacher').first() if teacher_id else None
 
         Lesson.objects.create(course=course, title=title, content=content, teacher=teacher)
         return redirect('manager_lesson_list', course_id=course.id)
@@ -296,19 +326,15 @@ def lesson_create(request, course_id):
 
 
 @user_passes_test(is_manager)
-def lesson_edit(request, pk):
+def lesson_edit(request: HttpRequest, pk: int) -> HttpResponse:
+    """Редактирование урока."""
     lesson = get_object_or_404(Lesson, pk=pk)
 
     if request.method == 'POST':
         lesson.title = request.POST.get('title')
         lesson.content = request.POST.get('content')
         teacher_id = request.POST.get('teacher')
-
-        teacher = None
-        if teacher_id:
-            teacher = CustomUser.objects.filter(id=teacher_id, role='teacher').first()
-
-        lesson.teacher = teacher
+        lesson.teacher = CustomUser.objects.filter(id=teacher_id, role='teacher').first() if teacher_id else None
         lesson.save()
         return redirect('manager_lesson_list', course_id=lesson.course.id)
 
@@ -320,19 +346,20 @@ def lesson_edit(request, pk):
 
 
 @user_passes_test(is_manager)
-def lesson_delete(request, pk):
+def lesson_delete(request: HttpRequest, pk: int) -> HttpResponse:
+    """Удаление урока."""
     lesson = get_object_or_404(Lesson, pk=pk)
     course_id = lesson.course.id
-
     if request.method == 'POST':
         lesson.delete()
         return redirect('manager_lesson_list', course_id=course_id)
-
-    return render(request, 'manager_panel/lesson/manager_del_lesson.html', {'lesson': lesson})
+    return render(request, 'manager_panel/lesson/manager_del_lesson.html',
+                  {'lesson': lesson})
 
 
 @user_passes_test(is_manager)
-def manager_lesson_bulk_action(request, course_id):
+def manager_lesson_bulk_action(request: HttpRequest, course_id: int) -> HttpResponse:
+    """Групповые действия над уроками курса."""
     if request.method == 'POST':
         action = request.POST.get('action')
         selected_ids = request.POST.getlist('selected_lessons')
@@ -352,74 +379,83 @@ def manager_lesson_bulk_action(request, course_id):
 
 
 @user_passes_test(is_manager)
-def enrollment_request_list_view(request):
+def enrollment_request_list_view(request: HttpRequest) -> HttpResponse:
+    """Список всех заявок на запись в курсы."""
     requests = EnrollmentRequest.objects.all().order_by('-created_at')
-    return render(request, 'manager_panel/enrollment_request_list.html', {
-        'requests': requests
-    })
+    return render(request, 'manager_panel/enrollment_request_list.html',
+                  {'requests': requests})
 
 
-def enrollment_request_approve_view(request, request_id):
+@user_passes_test(is_manager)
+def enrollment_request_approve_view(request: HttpRequest, request_id: int) -> HttpResponse:
+    """Одобрение заявки на курс."""
     enroll_request = get_object_or_404(EnrollmentRequest, id=request_id)
 
     if enroll_request.status != 'pending':
         messages.warning(request, 'Эта заявка уже была обработана.')
-        return redirect('manager_enrollment_requests')
+    else:
+        enroll_request.status = 'approved'
+        enroll_request.save()
+        messages.success(request, 'Заявка одобрена, студент добавлен на курс.')
 
-    enroll_request.status = 'approved'
-    enroll_request.save()
-
-    messages.success(request, 'Заявка одобрена, студент добавлен на курс.')
     return redirect('manager_enrollment_requests')
 
 
 @user_passes_test(is_manager)
-def enrollment_request_reject_view(request, request_id):
+def enrollment_request_reject_view(request: HttpRequest, request_id: int) -> HttpResponse:
+    """Отклонение заявки на курс."""
     enroll_request = get_object_or_404(EnrollmentRequest, id=request_id)
 
     if enroll_request.status != 'pending':
         messages.warning(request, 'Эта заявка уже была обработана.')
-        return redirect('manager_enrollment_requests')
+    else:
+        enroll_request.status = 'rejected'
+        enroll_request.save()
+        messages.info(request, 'Заявка отклонена.')
 
-    enroll_request.status = 'rejected'
-    enroll_request.save()
-
-    messages.info(request, 'Заявка отклонена.')
     return redirect('manager_enrollment_requests')
 
 
 @user_passes_test(is_manager)
-def questions_list(request):
+def questions_list(request: HttpRequest) -> HttpResponse:
+    """Список часто задаваемых вопросов (FAQ)."""
     faqs = FAQ.objects.all()
-    return render(request, 'manager_panel/question/manager_questions_list.html', {'faqs': faqs})
+    return render(request, 'manager_panel/question/manager_questions_list.html',
+                  {'faqs': faqs})
 
 
 @user_passes_test(is_manager)
-def question_create(request):
+def question_create(request: HttpRequest) -> HttpResponse:
+    """Создание нового вопроса FAQ."""
     form = QuestionsForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         form.save()
         return redirect('manager_questions_list')
-    return render(request, 'manager_panel/question/manager_add_question.html', {'form': form})
+    return render(request, 'manager_panel/question/manager_add_question.html',
+                  {'form': form})
 
 
 @user_passes_test(is_manager)
-def question_edit(request, pk):
+def question_edit(request: HttpRequest, pk: int) -> HttpResponse:
+    """Редактирование существующего вопроса FAQ."""
     question = get_object_or_404(FAQ, pk=pk)
     form = QuestionsForm(request.POST or None, request.FILES or None, instance=question)
     if form.is_valid():
         form.save()
         return redirect('manager_questions_list')
-    return render(request, 'manager_panel/question/manager_add_question.html', {'form': form})
+    return render(request, 'manager_panel/question/manager_add_question.html',
+                  {'form': form})
 
 
 @user_passes_test(is_manager)
-def question_delete(request, pk):
+def question_delete(request: HttpRequest, pk: int) -> HttpResponse:
+    """Удаление вопроса FAQ."""
     question = get_object_or_404(FAQ, pk=pk)
     if request.method == 'POST':
         question.delete()
         return redirect('manager_questions_list')
-    return render(request, 'manager_panel/question/manager_del_question.html', {'question': question})
+    return render(request, 'manager_panel/question/manager_del_question.html',
+                  {'question': question})
 
 
 

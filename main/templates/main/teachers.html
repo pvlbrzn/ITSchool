@@ -41,7 +41,11 @@
                <div class="col-lg-4 col-md-6">
                   <div class="tp-team-2__member fix mb-30">
                      <div class="tp-team-2__img w-img tp-team-2__overlay p-relative">
-                        <img src="{{ teacher.image.url }}" alt="">
+                        {% if teacher.image %}
+                            <img src="{{ teacher.image.url }}" alt="{{ teacher.name }}">
+                        {% else %}
+                            <img src="#" alt="Нет фото">
+                        {% endif %}
                         <div class="tp-team-2__social">
                         </div>
                      </div>

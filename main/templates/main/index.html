@@ -382,7 +382,7 @@
             <div class="col-lg-3 col-md-6">
                <div class="tp-team__member fix mb-30">
                   <div class="tp-team__img w-img tp-team__overlay p-relative">
-                     <a href="#">
+                     <a href="{% url 'teacher_detail' teacher.id %}">
                         <img src="{{ teacher.image.url }}" alt="">
                      </a>
                      <div class="tp-team__info text-center">

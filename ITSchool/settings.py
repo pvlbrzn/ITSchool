@@ -30,7 +30,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'main_rest',
     'drf_yasg',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [

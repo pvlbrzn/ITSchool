@@ -1,11 +1,12 @@
 import asyncio
+from asgiref.sync import sync_to_async
+from typing import Optional
 from playwright.async_api import async_playwright, Page
 
 from django.utils import timezone
 from django.core.management.base import BaseCommand
+
 from main.models import Blog
-from asgiref.sync import sync_to_async
-from typing import Optional
 
 
 class Command(BaseCommand):
@@ -72,7 +73,7 @@ async def parse_and_save_blogs() -> None:
 
                 # Картинка (первая подходящая)
                 try:
-                    image_url: Optional[str] = await page.locator('img.t-img.t-width').first.get_attribute('src')
+                    image_url: Optional[str] = await page.locator('img.t-img').first.get_attribute('data-original')
                 except Exception as e:
                     print(f"⚠️ Ошибка при извлечении картинки на {url}: {e}")
                     image_url = None
