@@ -21,11 +21,15 @@ urlpatterns = [
     path('blog/<int:blog_id>/', views.blog_details, name='blog_details'),
     path('login/', views.custom_login_view, name='login'),
     path('password-reset/', auth_views.PasswordResetView.as_view(), name='password_reset'),
-    path('password-reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
-    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
-    path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
+    path('password-reset/done/', auth_views.PasswordResetDoneView.as_view(),
+         name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(),
+         name='password_reset_confirm'),
+    path('reset/done/', auth_views.PasswordResetCompleteView.as_view(),
+         name='password_reset_complete'),
     path('after-login/', views.after_login_redirect, name='after_login'),
-    path('logout/', auth_views.LogoutView.as_view(template_name='main/logout.html'), name='logout'),
+    path('logout/', auth_views.LogoutView.as_view(template_name='main/logout.html'),
+         name='logout'),
     path('register/', views.register, name='register'),
     path('manager/', include('manager_panel.urls')),
     path('profile/', views.personal_account, name='profile'),
@@ -34,4 +38,8 @@ urlpatterns = [
     path('payment/<int:request_id>/', views.payment_start, name='payment_start'),
     path('subscribe/', views.subscribe, name='subscribe'),
     path('confirm/<uuid:token>/', views.confirm_subscription, name='confirm_subscription'),
+    path('show-404/', views.test_404),  # Этот путь используется для тестирования страницы 404
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+# кастомный обработчик ошибок
+handler404 = 'main.views.custom_404'

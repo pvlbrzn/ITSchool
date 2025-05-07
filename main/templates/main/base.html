@@ -29,7 +29,7 @@
 <body>
 
    <!-- messages area start -->
-   <div aria-live="polite" aria-atomic="true" class="position-fixed bottom-0 end-0 p-3" style="z-index: 1055;">
+   <div aria-live="polite" aria-atomic="true" class="position-fixed top-0 end-0 p-3" style="z-index: 1055;">
      {% for message in messages %}
        <div class="toast align-items-center text-white bg-{{ message.tags }} border-0 mb-2" role="alert" aria-live="assertive" aria-atomic="true">
          <div class="d-flex">
@@ -193,7 +193,7 @@
                      <div class="footer__widget-content">
                         <ul>
                            <li><a href="{% url 'courses' %}">Список курсов</a></li>
-                           <li><a href="#">Преподаватели</a></li>
+                           <li><a href="{% url 'teachers_list' %}">Преподаватели</a></li>
                            <li><a href="{% url 'profile' %}">Личный кабинет</a></li>
                            <li><a href="{% url 'register' %}">Регистрация</a></li>
                         </ul>

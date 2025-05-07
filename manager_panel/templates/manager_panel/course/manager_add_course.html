@@ -1,13 +1,13 @@
 {% extends 'main/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
 
 {% block title %}Управление школой{% endblock %}
 
 {% block content %}
-{% load static %}
 <main>
-   <!-- breadcrumb area start -->
    <div class="breadcrumb__area include-bg pt-200 pb-150 breadcrumb__overlay"
-      data-background="{% static '/main/img/breadcrumb/breadcrumb-bg-1.png' %}">
+        data-background="{% static '/main/img/breadcrumb/breadcrumb-bg-1.png' %}">
       <div class="container">
          <div class="row">
             <div class="col-xxl-12">
@@ -29,36 +29,59 @@
          </div>
       </div>
    </div>
-   <!-- breadcrumb area end -->
 
-   <!-- Personal course Area Strat-->
+   <!-- Personal course Area Start -->
    <div class="postbox__area pt-120 pb-120">
-   <div class="container">
-        <div class="card shadow-sm p-4">
-            <h2 class="mb-4">{{ form.instance.pk|yesno:"Редактировать курс,Добавить курс" }}</h2>
+     <div class="container">
+       <div class="card shadow-sm p-4">
+         <h2 class="mb-4">{{ form.instance.pk|yesno:"Редактировать курс,Добавить курс" }}</h2>
 
-            <form method="post" enctype="multipart/form-data">
-              {% csrf_token %}
-              {% for field in form %}
-                <div class="mb-3">
-                  <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-                  {{ field }}
-                  {% if field.help_text %}
-                    <div class="form-text">{{ field.help_text }}</div>
-                  {% endif %}
-                  {% if field.errors %}
-                    <div class="text-danger small">{{ field.errors }}</div>
-                  {% endif %}
-                </div>
-              {% endfor %}
+         <form method="post" enctype="multipart/form-data">
+           {% csrf_token %}
 
-              <button type="submit" class="btn btn-primary">💾 Сохранить</button>
-              <a href="{% url 'manager_course_list' %}" class="btn btn-secondary">🔙 Назад</a>
-            </form>
-          </div>
+           <!-- Все поля формы -->
+           {% for field in form %}
+             <div class="mb-3">
+               <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+
+               <!-- Если поле является множественным выбором (чекбоксы) -->
+               {% if field.field.widget.input_type == "checkbox" %}
+                 <div class="form-check">
+                   {{ field }} <!-- Отображаем чекбокс рядом с меткой -->
+                   <label class="form-check-label" for="{{ field.id_for_label }}">
+                     {{ field.choice_label }}
+                   </label>
+                 </div>
+               {% else %}
+                 {{ field|add_class:"form-control" }}  <!-- Для других типов полей используем стандартный класс -->
+               {% endif %}
+
+               {% if field.help_text %}
+                 <div class="form-text">{{ field.help_text }}</div>
+               {% endif %}
+               {% if field.errors %}
+                 <div class="text-danger small">{{ field.errors }}</div>
+               {% endif %}
+             </div>
+           {% endfor %}
+
+           <button type="submit" class="btn btn-primary">💾 Сохранить</button>
+           <a href="{% url 'manager_course_list' %}" class="btn btn-secondary">🔙 Назад</a>
+         </form>
+       </div>
+     </div>
    </div>
-</div>
-   <!-- Personal course Area End-->
+   <!-- Personal course Area End -->
 
+   <!-- Кастомные стили для прокручиваемого списка -->
+   <style>
+     .student-checkboxes, .teacher-checkboxes {
+         max-height: 300px;  /* Ограничиваем максимальную высоту */
+         overflow-y: auto;   /* Добавляем вертикальную прокрутку */
+         display: block;
+         margin-bottom: 20px;
+         padding: 0 10px;     /* Дополнительные отступы, если нужно */
+     }
+   </style>
 </main>
 {% endblock %}
