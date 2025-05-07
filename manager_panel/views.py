@@ -541,3 +541,4 @@ def send_newsletter_custom(request):
         form = NewsletterSendForm()
 
     return render(request, 'manager_panel/send_newsletter_custom.html', {'form': form})
+

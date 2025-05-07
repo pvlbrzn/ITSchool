@@ -19,6 +19,15 @@ from django.urls import path, include
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+from django.contrib.auth.decorators import user_passes_test
+
+
+def superuser_only(user):
+    return user.is_superuser
+
+
+admin.site.login = user_passes_test(superuser_only)(admin.site.login)
+
 
 schema_view = get_schema_view(
    openapi.Info(
@@ -37,5 +46,4 @@ urlpatterns = [
     path('', include('main.urls')),
     path('api/', include('main_rest.urls')),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-
 ]

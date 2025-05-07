@@ -74,7 +74,11 @@
          <div class="col-12">
             <div class="teacher__courses pt-55">
                <div class="section__title-wrapper mb-30">
-                  <h2 class="section__title">Курсы <span class="yellow-bg yellow-bg-big">преподавателя</span></h2>
+                  {% if related_courses %}
+                     <h2 class="section__title">Курсы <span class="yellow-bg yellow-bg-big">преподавателя</span></h2>
+                  {% else %}
+                     <h2 class="section__title"> <span class="yellow-bg yellow-bg-big">Этот преподаветель не ведёт курсы в данный момент</span></h2>
+                  {% endif %}
                </div>
                <div class="row">
                   {% for related_course in related_courses %}
