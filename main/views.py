@@ -1,3 +1,4 @@
+import asyncio
 import random
 from datetime import timedelta
 
@@ -15,6 +16,7 @@ from django.conf import settings
 from . models import Course, Blog, CustomUser, EnrollmentRequest, Payment, FAQ, Review, Subscriber
 from . forms import StudentRegistrationForm, SubscribeForm, ContactForm
 from .utils import send_confirmation_email, send_welcome_email
+from support_bot.utils import send_enrollment_update
 
 
 def index(request) -> render:
@@ -293,8 +295,11 @@ def enroll_request_view(request, course_id: int) -> redirect:
         messages.warning(request, 'Вы уже оставили заявку на этот курс.')
         return redirect('course-detail', course_id=course.id)  # куда тебе удобно
 
-    EnrollmentRequest.objects.create(user=request.user, course=course)
+    enrollment = EnrollmentRequest.objects.create(user=request.user, course=course)
     messages.success(request, 'Заявка успешно отправлена! Проверьте статус в личном кабинете.')
+
+    asyncio.run(send_enrollment_update(enrollment, request))
+
     return redirect('course-detail', course_id=course.id)
 
 
