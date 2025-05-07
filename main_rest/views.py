@@ -5,13 +5,13 @@ from main.models import (CustomUser, Course, Lesson, Payment, Blog, Subscriber, 
 from .serializers import (CustomUserSerializer, CourseSerializer, LessonSerializer, FAQSerializer,
                           PaymentSerializer, BlogSerializer, SubscriberSerializer,
                           NewsletterSerializer, EnrollmentRequestSerializer, ReviewSerializer)
-from .permissions import IsManagerOrReadOnly
+from .permissions import IsManagerOrReadOnly, IsManager
 
 
 class CustomUserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
-    permission_classes = [IsManagerOrReadOnly]
+    permission_classes = [IsManager]
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -29,7 +29,7 @@ class LessonViewSet(viewsets.ModelViewSet):
 class PaymentViewSet(viewsets.ModelViewSet):
     queryset = Payment.objects.all()
     serializer_class = PaymentSerializer
-    permission_classes = [IsManagerOrReadOnly]
+    permission_classes = [IsManager]
 
 
 class BlogViewSet(viewsets.ModelViewSet):
@@ -41,13 +41,13 @@ class BlogViewSet(viewsets.ModelViewSet):
 class SubscriberViewSet(viewsets.ModelViewSet):
     queryset = Subscriber.objects.all()
     serializer_class = SubscriberSerializer
-    permission_classes = [IsManagerOrReadOnly]
+    permission_classes = [IsManager]
 
 
 class NewsletterViewSet(viewsets.ModelViewSet):
     queryset = Newsletter.objects.all()
     serializer_class = NewsletterSerializer
-    permission_classes = [IsManagerOrReadOnly]
+    permission_classes = [IsManager]
 
 
 class FAQViewSet(viewsets.ModelViewSet):

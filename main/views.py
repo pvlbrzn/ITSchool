@@ -9,6 +9,8 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import HttpResponse
 from django.urls import path
+from django.contrib.admin import site
+from django.contrib.auth.decorators import user_passes_test
 from django.core.mail import send_mail
 from django.conf import settings
 
@@ -280,3 +282,4 @@ def contact(request):
         return render(request, 'main/contact_success.html')
 
     return render(request, 'main/contact.html')
+
