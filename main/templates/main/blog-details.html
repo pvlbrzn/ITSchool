@@ -36,7 +36,11 @@
                   <div class="postbox__wrapper pr-30">
                      <article class="postbox__item format-image mb-50 transition-3">
                         <div class="postbox__thumb m-img">
+                              {% if blog.image %}
                               <img src="{{ blog.image }}" alt="">
+                              {% else %}
+                              <img src="{% static 'main/img/no_img/images.png' %}" alt="Нет изображения">
+                              {% endif %}
                         </div>
                         <div class="postbox__content">
                            <div class="postbox__meta">

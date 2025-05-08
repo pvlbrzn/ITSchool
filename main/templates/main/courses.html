@@ -72,7 +72,11 @@
                      <div class="col-lg-4 col-md-6">
                         <div class="tp-courses__item mb-30">
                            <div class="tp-courses__thumb w-img fix p-relative">
+                              {% if course.image %}
                               <img src="{{ course.image.url }}" alt="">
+                              {% else %}
+                              <img src="{% static 'main/img/no_img/images.png' %}" alt="Нет изображения">
+                              {% endif %}
                               <span class="tp-courses__cat cat-color-2"><a href="#"> {{ course.skill }} </a></span>
                            </div>
                            <div class="tp-courses__content">
@@ -103,7 +107,11 @@
                         <div class="col-lg-4 col-md-6">
                            <div class="tp-courses__item mb-30">
                               <div class="tp-courses__thumb w-img fix p-relative">
+                                 {% if course.image %}
                                  <img src="{{ course.image.url }}" alt="">
+                                 {% else %}
+                                 <img src="{% static 'main/img/no_img/images.png' %}" alt="Нет изображения">
+                                 {% endif %}
                                  <span class="tp-courses__cat cat-color-2"><a href="#"> {{ course.skill }} </a></span>
                               </div>
                               <div class="tp-courses__content">
@@ -135,7 +143,11 @@
                         <div class="col-lg-4 col-md-6">
                            <div class="tp-courses__item mb-30">
                               <div class="tp-courses__thumb w-img fix p-relative">
+                                 {% if course.image %}
                                  <img src="{{ course.image.url }}" alt="">
+                                 {% else %}
+                                 <img src="{% static 'main/img/no_img/images.png' %}" alt="Нет изображения">
+                                 {% endif %}
                                  <span class="tp-courses__cat cat-color-2"><a href="#"> {{ course.skill }} </a></span>
                               </div>
                               <div class="tp-courses__content">
@@ -167,7 +179,11 @@
                         <div class="col-lg-4 col-md-6">
                            <div class="tp-courses__item mb-30">
                               <div class="tp-courses__thumb w-img fix p-relative">
+                                 {% if course.image %}
                                  <img src="{{ course.image.url }}" alt="">
+                                 {% else %}
+                                 <img src="{% static 'main/img/no_img/images.png' %}" alt="Нет изображения">
+                                 {% endif %}
                                  <span class="tp-courses__cat cat-color-2"><a href="#"> {{ course.skill }} </a></span>
                               </div>
                               <div class="tp-courses__content">

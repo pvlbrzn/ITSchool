@@ -1,15 +1,15 @@
-from django.contrib.auth.forms import UserCreationForm
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
 
 from .models import CustomUser, Subscriber, Newsletter
 
 
 class StudentRegistrationForm(UserCreationForm):
     """
-    Форма для регистрации студента.
+    Form for student registration.
 
-    Включает поля для имени пользователя, email, пароля, имени, фамилии, телефона, возраста
-    и согласие с условиями.
+    Includes fields for username, email, password, first name, last name,
+    phone number, age, and a required agreement checkbox.
     """
     agree = forms.BooleanField(
         required=True,
@@ -36,10 +36,10 @@ class StudentRegistrationForm(UserCreationForm):
 
     def save(self, commit: bool = True) -> CustomUser:
         """
-        Сохраняет пользователя с ролью 'student'.
+        Saves the user with the role set to 'student'.
 
-        :param commit: Флаг, указывающий, нужно ли сохранять объект в базе данных.
-        :return: Сохранённый объект пользователя.
+        :param commit: Whether to save the object to the database.
+        :return: The saved CustomUser instance.
         """
         user = super().save(commit=False)
         user.role = 'student'  # Устанавливаем роль вручную
@@ -50,9 +50,9 @@ class StudentRegistrationForm(UserCreationForm):
 
 class SubscribeForm(forms.ModelForm):
     """
-    Форма подписки на новостную рассылку.
+    Form for subscribing to the newsletter.
 
-    Включает только поле для email и проверку на уникальность email.
+    Includes a unique email field.
     """
     class Meta:
         model = Subscriber
@@ -63,10 +63,10 @@ class SubscribeForm(forms.ModelForm):
 
     def clean_email(self) -> str:
         """
-        Проверяет уникальность email для подписки.
+        Ensures the email is not already confirmed for subscription.
 
-        :return: Проверенный и очищенный email.
-        :raises ValidationError: Если email уже подписан.
+        :raises ValidationError: If the email is already subscribed.
+        :return: Validated email.
         """
         email = self.cleaned_data['email']
         subscriber = Subscriber.objects.filter(email=email).first()
@@ -77,9 +77,9 @@ class SubscribeForm(forms.ModelForm):
 
 class NewsForm(forms.ModelForm):
     """
-    Форма для создания и отправки новостной рассылки.
+    Form for creating and sending a newsletter.
 
-    Включает поля для темы и сообщения.
+    Includes fields for subject and message content.
     """
     class Meta:
         model = Newsletter
@@ -95,10 +95,18 @@ class NewsForm(forms.ModelForm):
 
 
 class SubscriptionForm(forms.Form):
+    """
+    Basic subscription form with a single email field.
+    """
     email = forms.EmailField()
 
 
 class ContactForm(forms.Form):
+    """
+    Contact form for sending a message.
+
+    Includes name, subject, email, and message body.
+    """
     name = forms.CharField(max_length=100)
     subject = forms.CharField(max_length=255)
     email = forms.EmailField()

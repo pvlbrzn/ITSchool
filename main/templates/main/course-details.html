@@ -47,7 +47,11 @@
                           {% with course.teachers.all|first as teacher %}
                               {% if teacher %}
                               <div class="course__teacher-thumb-3 mr-15">
+                                 {% if teacher.image %}
                                  <img src={{ teacher.image.url }} alt="">
+                                 {% else %}
+                                 <img src="{% static 'main/img/no_img/images.png' %}" alt="Нет изображения">
+                                 {% endif %}
                               </div>
                               <div class="course__teacher-info-3">
                                  <h5>Преподаватель</h5>

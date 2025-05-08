@@ -34,9 +34,9 @@
          <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6">
             <div class="teacher__details-thumb p-relative w-img pr-30">
                {% if teacher.image %}
-                   <img src="{{ teacher.image.url }}" alt="{{ teacher.name }}">
+               <img src="{{ teacher.image.url }}" alt="">
                {% else %}
-                   <img src="#" alt="Нет фото">
+               <img src="{% static 'main/img/no_img/images.png' %}" alt="Нет изображения">
                {% endif %}
             </div>
          </div>

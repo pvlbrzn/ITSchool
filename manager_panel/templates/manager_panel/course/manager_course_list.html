@@ -91,9 +91,9 @@
                            <div class="tp-feature__icon w-img fix p-relative">
                                {% if course.image %}
                               <img src="{{ course.image.url }}" alt="">
-                               {% else %}
-                               <img src="#" alt="">
-                               {% endif %}
+                              {% else %}
+                              <img src="{% static 'main/img/no_img/images.png' %}" alt="Нет изображения">
+                              {% endif %}
                            </div>
                            <h3 class="tp-feature__title"> {{ course.title }} </h3>
                            <p> Стоимость: {{ course.price }} </p>

@@ -82,7 +82,7 @@
                                                                                         name="selected_users"
                                                                                         value="{{ req.id }}"></td>
                                                         <td class="product-name"><p>{{ req.user.username }} </p></td>
-                                                        <td class="product-name"><p>{{ req.user.title }} </p></td>
+                                                        <td class="product-name"><p>{{ req.course.title }} </p></td>
                                                         <td class="product-price"><p>{{ req.created_at|date:"d.m.Y H:i" }}</p></td>
                                                         <td class="product-subtotal">{{ req.get_status_display }}</td>
                                                         <td class="product-quantity">
@@ -116,4 +116,14 @@
     </div>
 
 </main>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const selectAll = document.getElementById("select-all");
+        const checkboxes = document.querySelectorAll('input[name="selected_users"]');
+
+        selectAll.addEventListener("change", function () {
+            checkboxes.forEach(cb => cb.checked = selectAll.checked);
+        });
+    });
+</script>
 {% endblock %}
