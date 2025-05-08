@@ -8,22 +8,22 @@ from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpRequest
 from django.core.mail import send_mail
 from django.conf import settings
 
-from . models import Course, Blog, CustomUser, EnrollmentRequest, Payment, FAQ, Review, Subscriber
-from . forms import StudentRegistrationForm, SubscribeForm, ContactForm
+from .models import Course, Blog, CustomUser, EnrollmentRequest, Payment, FAQ, Review, Subscriber
+from .forms import StudentRegistrationForm, SubscribeForm
 from .utils import send_confirmation_email, send_welcome_email
 from support_bot.utils import notify_about_enrollment
 
 
 def index(request) -> render:
     """
-    Главная страница сайта, которая отображает случайные курсы, учителей и блоги.
+    The site's home page, which displays random courses, teachers, and blogs.
 
-    :param request: HTTP запрос
-    :return: HTML ответ с отрендеренной главной страницей
+    :param request: HTTP request
+    :return: HTML response with the rendered home page
     """
     teachers = CustomUser.objects.filter(role='teacher')[:8]
     courses_hot = Course.objects.order_by('title')[:8]
@@ -50,10 +50,10 @@ def index(request) -> render:
 
 def courses(request) -> render:
     """
-    Страница курсов, на которой отображаются все доступные курсы.
+    A courses page that displays all available courses.
 
-    :param request: HTTP запрос
-    :return: HTML ответ с отрендеренными курсами
+    :param request: HTTP request
+    :return: HTML response with rendered courses
     """
     courses = Course.objects.all()
 
@@ -68,11 +68,11 @@ def courses(request) -> render:
 
 def course_detail(request, course_id: int) -> render:
     """
-    Страница деталей курса, отображает информацию о выбранном курсе и похожие курсы.
+    Course details page, displays information about the selected course and similar courses.
 
-    :param request: HTTP запрос
-    :param course_id: ID курса, для которого отображается информация
-    :return: HTML ответ с отрендеренной страницей курса
+    :param request: HTTP request
+    :param course_id: ID of the course for which information is displayed
+    :return: HTML response with the rendered course page
     """
     course = get_object_or_404(Course, id=course_id)
 
@@ -87,7 +87,14 @@ def course_detail(request, course_id: int) -> render:
     })
 
 
-def teacher_detail(request, teacher_id):
+def teacher_detail(request, teacher_id: int) -> render:
+    """
+    Displays the details of a specific teacher along with a few random related courses.
+
+    :param request: The incoming HTTP request.
+    :param teacher_id: ID of the teacher to display.
+    :return: Rendered HTML page with teacher details and related courses.
+    """
     teacher = get_object_or_404(CustomUser, id=teacher_id, role='teacher')
 
     related_courses = Course.objects.filter(teachers=teacher).order_by('?')[:3]
@@ -100,10 +107,10 @@ def teacher_detail(request, teacher_id):
 
 def teachers_list(request) -> render:
     """
-    Страница списка учителей.
+    Teacher list page.
 
-    :param request: HTTP запрос
-    :return: HTML ответ с отрендеренным списком учителей
+    :param request: HTTP request
+    :return: HTML response with rendered teacher list
     """
     teachers = CustomUser.objects.filter(role='teacher')
     return render(request, 'main/teachers.html', {'teachers': teachers})
@@ -111,10 +118,10 @@ def teachers_list(request) -> render:
 
 def about(request) -> render:
     """
-    Страница 'О нас', которая отображает все отзывы.
+    About Us page that displays all reviews.
 
-    :param request: HTTP запрос
-    :return: HTML ответ с отрендеренной страницей с отзывами
+    :param request: HTTP request
+    :return: HTML response with rendered review page
     """
     reviews = Review.objects.all()
     return render(request, 'main/about-us.html', {'reviews': reviews})
@@ -122,10 +129,10 @@ def about(request) -> render:
 
 def faq(request) -> render:
     """
-    Страница часто задаваемых вопросов (FAQ).
+    Frequently asked questions (FAQ) page.
 
-    :param request: HTTP запрос
-    :return: HTML ответ с отрендеренными вопросами и ответами
+    :param request: HTTP request
+    :return: HTML response with rendered questions and answers
     """
     faqs = FAQ.objects.all()
     return render(request, 'main/faq.html', {'faqs': faqs})
@@ -133,20 +140,20 @@ def faq(request) -> render:
 
 def contact(request) -> render:
     """
-    Страница с контактной информацией.
+    Contact information page.
 
-    :param request: HTTP запрос
-    :return: HTML ответ с отрендеренной страницей контактов
+    :param request: HTTP request
+    :return: HTML response with rendered contact page
     """
     return render(request, 'main/contact.html')
 
 
 def blog_list(request) -> render:
     """
-    Страница блога с постами.
+    Blog page with posts.
 
-    :param request: HTTP запрос
-    :return: HTML ответ с отрендеренными блогами с пагинацией
+    :param request: HTTP request
+    :return: HTML response with rendered blogs with pagination
     """
     blogs = Blog.objects.all().order_by('-date')
     paginator = Paginator(blogs, 5)  # по 5 постов на страницу
@@ -159,11 +166,11 @@ def blog_list(request) -> render:
 
 def blog_details(request, blog_id: int) -> render:
     """
-    Страница деталей блога.
+    Blog details page.
 
-    :param request: HTTP запрос
-    :param blog_id: ID блога, для которого отображается информация
-    :return: HTML ответ с отрендеренной страницей блога
+    :param request: HTTP request
+    :param blog_id: ID of the blog to display information for
+    :return: HTML response with the rendered blog page
     """
     blog = get_object_or_404(Blog, id=blog_id)
     return render(request, 'main/blog-details.html', {'blog': blog})
@@ -198,10 +205,10 @@ def custom_login_view(request) -> render:
 @login_required
 def after_login_redirect(request) -> redirect:
     """
-    Перенаправление пользователя после входа в систему в зависимости от его роли.
+    Redirect the user after logging in, depending on their role.
 
-    :param request: HTTP запрос
-    :return: Перенаправление на страницу в зависимости от роли пользователя
+    :param request: HTTP request
+    :return: Redirect to a page, depending on the user's role
     """
     if request.user.is_superuser:
         return redirect('/admin/')
@@ -212,10 +219,10 @@ def after_login_redirect(request) -> redirect:
 
 def register(request) -> render:
     """
-    Страница регистрации нового пользователя.
+    New user registration page.
 
-    :param request: HTTP запрос
-    :return: HTML ответ с отрендеренной страницей регистрации
+    :param request: HTTP request
+    :return: HTML response with rendered registration page
     """
     if request.method == 'POST':
         form = StudentRegistrationForm(request.POST)
@@ -231,10 +238,10 @@ def register(request) -> render:
 @login_required
 def personal_account(request) -> render:
     """
-    Страница личного кабинета пользователя.
+    User's personal account page.
 
-    :param request: HTTP запрос
-    :return: HTML ответ с отрендеренной страницей личного кабинета
+    :param request: HTTP request
+    :return: HTML response with rendered personal account page
     """
     user = request.user
 
@@ -262,11 +269,11 @@ def personal_account(request) -> render:
 @login_required
 def lesson_list(request, course_id: int) -> render:
     """
-    Страница списка уроков для выбранного курса.
+    Lesson list page for the selected course.
 
-    :param request: HTTP запрос
-    :param course_id: ID курса для отображения уроков
-    :return: HTML ответ с отрендеренными уроками
+    :param request: HTTP request
+    :param course_id: Course ID to display lessons
+    :return: HTML response with rendered lessons
     """
     course = get_object_or_404(Course, id=course_id)
     lessons = course.lessons.all()
@@ -281,11 +288,11 @@ def lesson_list(request, course_id: int) -> render:
 @login_required
 def enroll_request_view(request, course_id: int) -> redirect:
     """
-    Отправка заявки на курс для пользователя.
+    Submit a course request for the user.
 
-    :param request: HTTP запрос
-    :param course_id: ID курса, на который подается заявка
-    :return: Перенаправление на страницу курса или сообщение об ошибке
+    :param request: HTTP request
+    :param course_id: ID of the course being applied for
+    :return: Redirect to the course page or an error message
     """
     course = get_object_or_404(Course, id=course_id)
 
@@ -305,11 +312,11 @@ def enroll_request_view(request, course_id: int) -> redirect:
 @login_required
 def payment_start(request, request_id: int) -> redirect:
     """
-    Начало процесса оплаты для выбранной заявки.
+    Start the payment process for the selected application.
 
-    :param request: HTTP запрос
-    :param request_id: ID заявки на курс
-    :return: Перенаправление в зависимости от статуса оплаты
+    :param request: HTTP request
+    :param request_id: Course application ID
+    :return: Redirect depending on the payment status
     """
     enroll_request = get_object_or_404(EnrollmentRequest, id=request_id, user=request.user)
 
@@ -324,7 +331,7 @@ def payment_start(request, request_id: int) -> redirect:
             amount=enroll_request.course.price,
             student=request.user,
             course=enroll_request.course,
-            is_successful=True,  # В реальной ситуации это зависит от статуса транзакции
+            is_successful=True,
             payment_method="Manual"
         )
     except Exception as e:
@@ -334,26 +341,19 @@ def payment_start(request, request_id: int) -> redirect:
     # Добавляем студента в курс
     enroll_request.course.students.add(request.user)
 
-    # Обновляем статус заявки и удаляем её
     enroll_request.status = 'approved'
     enroll_request.save()
-
-    # Удаляем заявку из личного кабинета (если нужно)
-    enroll_request.delete()  # Удаляем заявку, так как она больше не нужна
-
-    # Сообщаем пользователю об успешной оплате
+    enroll_request.delete()
     messages.success(request, 'Оплата прошла успешно! Вы зачислены на курс.')
-
-    # Направляем на личный кабинет
-    return redirect('profile')  # Редирект на личный кабинет пользователя
+    return redirect('profile')
 
 
 def subscribe(request) -> render:
     """
-    Страница подписки на рассылку новостей.
+    Newsletter subscription page.
 
-    :param request: HTTP запрос
-    :return: HTML ответ с формой подписки
+    :param request: HTTP request
+    :return: HTML response with subscription form
     """
     if request.method == 'POST':
         form = SubscribeForm(request.POST)
@@ -374,31 +374,41 @@ def subscribe(request) -> render:
     else:
         form = SubscribeForm()
 
-    # if path == 'about/':
     return render(request, 'main/subscribe.html', {'form': form})
-   # else:
-       # return render(request, 'main/base.html', {'form': form})
 
 
-def confirm_subscription(request, token):
+def confirm_subscription(request: HttpRequest, token: str) -> HttpResponse:
+    """
+    Confirms a user's email subscription using a token.
+
+    :param request: The incoming HTTP request.
+    :param token: Unique confirmation token.
+    :return: HTTP response indicating confirmation result.
+    """
     subscriber = get_object_or_404(Subscriber, confirmation_token=token)
+
     if not subscriber.is_confirmed:
         subscriber.is_confirmed = True
         subscriber.save()
         send_welcome_email(subscriber.email)
-        return HttpResponse('Спасибо! Подписка подтверждена.')
-    else:
-        return HttpResponse('Вы уже подтвердили подписку ранее.')
+        return HttpResponse('Thank you! Your subscription has been confirmed.')
+    return HttpResponse('You have already confirmed your subscription.')
 
 
-def contact(request):
+def contact(request: HttpRequest) -> HttpResponse:
+    """
+    Handles contact form submissions by sending an email to the admin.
+
+    :param request: The incoming HTTP request.
+    :return: Rendered success page or contact form.
+    """
     if request.method == 'POST':
         name = request.POST.get('name')
         email = request.POST.get('email')
         subject = request.POST.get('subject')
         message = request.POST.get('message')
 
-        full_message = f"От: {name} <{email}>\n\n{message}"
+        full_message = f"From: {name} <{email}>\n\n{message}"
 
         send_mail(
             subject=subject,
@@ -412,23 +422,22 @@ def contact(request):
     return render(request, 'main/contact.html')
 
 
-def custom_404(request, exception) -> render:
+def custom_404(request: HttpRequest, exception: Exception) -> HttpResponse:
     """
-    Страница ошибки 404 (не найдено).
+    Custom 404 error page view.
 
-    :param request: HTTP запрос
-    :param exception: исключение, вызвавшее ошибку
-    :return: HTML ответ с ошибкой 404
+    :param request: The HTTP request.
+    :param exception: The exception that triggered the 404.
+    :return: Rendered 404 HTML page.
     """
     return render(request, 'main/404.html', status=404)
 
 
-# Удалить при настройке Debug = False
-def test_404(request) -> render:
+def test_404(request: HttpRequest) -> HttpResponse:
     """
-    Тестовая страница для ошибки 404.
+    Test view for simulating a 404 error. For development use only.
 
-    :param request: HTTP запрос
-    :return: HTML ответ с ошибкой 404
+    :param request: The HTTP request.
+    :return: Rendered 404 HTML page.
     """
     return render(request, 'main/404.html', status=404)

@@ -1,0 +1,108 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Управление школой{% endblock %}
+
+{% block content %}
+{% load static %}
+
+
+<main>
+   <!-- breadcrumb area start -->
+   <div class="breadcrumb__area include-bg pt-200 pb-150 breadcrumb__overlay"
+      data-background="{% static '/main/img/breadcrumb/breadcrumb-bg-1.png' %}">
+      <div class="container">
+         <div class="row">
+            <div class="col-xxl-12">
+               <div class="breadcrumb__content p-relative z-index-1">
+                  <h3 class="breadcrumb__title">Управление школой</h3>
+                  <div class="breadcrumb__list">
+                     <span><a href="{% url 'index' %}">Главная страница</a></span>
+                     <span class="dvdr"><i class="fa-regular fa-angle-right"></i></span>
+                     <span><a href="{% url 'manager' %}">Управление школой</a></span>
+                     <span class="dvdr"><i class="fa-regular fa-angle-right"></i></span>
+                     <span>Подписчики</span>
+                     <hr>
+                     <span><a href="{% url 'logout' %}">ВЫХОД ИЗ АККАУНТА</a></span>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!-- breadcrumb area end -->
+
+   <!-- Personal course Area Strat-->
+   <div class="postbox__area pt-120 pb-120">
+    <div class="container">
+      <div class="row">
+         <div class="col-lg-12">
+            <div class="postbox__wrapper pr-30">
+
+                <h2>Подписчики</h2>
+
+                <div class="d-flex gap-3">
+                    <a href="{%  url 'manager' %}" class="btn btn-secondary">Назад</a>
+                </div>
+
+                <!-- Cart Area Strat-->
+                <div class="cart-area pt-100 pb-100">
+                    <div class="container">
+                       <div class="row">
+                          <div class="col-12">
+                               <div class="table-content table-responsive">
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        <div class="d-flex gap-3 my-3">
+                                            <select name="action" required>
+                                                <option value="">Выберите действие</option>
+                                                <option value="delete">Удалить</option>
+                                                <option value="confirm">Подтвердить Email</option>
+                                            </select>
+                                            <button type="submit" class="btn btn-primary">Применить</button>
+                                        </div>
+
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th><input type="checkbox" id="select-all"></th>
+                                                <th>Email</th>
+                                                <th>Подтвержден</th>
+                                                <th>Дата подписки</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            {% for sub in subscribers %}
+                                                <tr>
+                                                    <td><input type="checkbox" name="selected_subscribers" value="{{ sub.id }}"></td>
+                                                    <td>{{ sub.email }}</td>
+                                                    <td>{{ sub.is_confirmed|yesno:"Да,Нет" }}</td>
+                                                    <td>{{ sub.subscribed_at|date:"d.m.Y H:i" }}</td>
+                                                </tr>
+                                            {% empty %}
+                                                <tr><td colspan="4">Нет подписчиков.</td></tr>
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </form>
+                               </div>
+                          </div>
+                       </div>
+                    </div>
+                 </div>
+                <!-- Cart Area End-->
+            </div>
+         </div>
+      </div>
+   </div>
+   </div>
+</main>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const selectAll = document.getElementById("select-all");
+        const checkboxes = document.querySelectorAll('input[name="selected_subscribers"]');
+        selectAll.addEventListener("change", () => {
+            checkboxes.forEach(cb => cb.checked = selectAll.checked);
+        });
+    });
+</script>
+{% endblock %}

@@ -1,19 +1,38 @@
 from datetime import datetime
 
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import user_passes_test
-from django.db.models import Q
 from django.contrib import messages
+from django.contrib.auth.decorators import user_passes_test
 from django.core.mail import send_mass_mail
+from django.db.models import Q
 from django.http import HttpRequest, HttpResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_http_methods
 
-from main.models import (CustomUser, Course, Blog, Lesson, EnrollmentRequest, FAQ, Newsletter, Subscriber)
-from .forms import (CourseForm, ManagerUserCreateForm, ManagerUserEditForm, BlogForm,
-                    QuestionsForm, NewsForm, NewsletterSendForm)
+from main.models import (
+    Blog,
+    Course,
+    CustomUser,
+    EnrollmentRequest,
+    FAQ,
+    Lesson,
+    Newsletter,
+    Payment,
+    Review,
+    Subscriber,
+)
+from .forms import (
+    BlogForm,
+    CourseForm,
+    ManagerUserCreateForm,
+    ManagerUserEditForm,
+    NewsForm,
+    NewsletterSendForm,
+    QuestionsForm,
+)
 
 
 def is_manager(user: CustomUser) -> bool:
-    """Проверяет, является ли пользователь менеджером или суперпользователем."""
+    """Checks if the user is a manager or superuser."""
     return user.is_authenticated and (
         user.is_superuser or user.groups.filter(name='managers').exists()
 )
@@ -21,7 +40,7 @@ def is_manager(user: CustomUser) -> bool:
 
 @user_passes_test(is_manager)
 def manager(request: HttpRequest) -> HttpResponse:
-    """Страница аккаунта менеджера."""
+    """Manager account page."""
     return render(
         request,
         'manager_panel/manager-account.html',
@@ -31,7 +50,7 @@ def manager(request: HttpRequest) -> HttpResponse:
 
 @user_passes_test(is_manager)
 def course_list(request: HttpRequest) -> HttpResponse:
-    """Отображает список курсов с возможностью фильтрации."""
+    """Displays a list of courses with filtering options."""
     search_query: str = request.GET.get('search', '')
     language_filter: str = request.GET.get('language', '')
     start_date_filter: str = request.GET.get('start_date', '')
@@ -78,7 +97,7 @@ def course_list(request: HttpRequest) -> HttpResponse:
 
 @user_passes_test(is_manager)
 def course_create(request: HttpRequest) -> HttpResponse:
-    """Создание нового курса."""
+    """Create new course"""
     form = CourseForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         form.save()
@@ -88,7 +107,7 @@ def course_create(request: HttpRequest) -> HttpResponse:
 
 @user_passes_test(is_manager)
 def course_edit(request: HttpRequest, pk: int) -> HttpResponse:
-    """Редактирование существующего курса."""
+    """Editing an existing course."""
     course = get_object_or_404(Course, pk=pk)
     form = CourseForm(request.POST or None, request.FILES or None, instance=course)
 
@@ -112,7 +131,7 @@ def course_edit(request: HttpRequest, pk: int) -> HttpResponse:
 
 @user_passes_test(is_manager)
 def course_delete(request: HttpRequest, pk: int) -> HttpResponse:
-    """Удаление курса."""
+    """Delete course."""
     course = get_object_or_404(Course, pk=pk)
     if request.method == 'POST':
         course.delete()
@@ -123,7 +142,7 @@ def course_delete(request: HttpRequest, pk: int) -> HttpResponse:
 
 @user_passes_test(is_manager)
 def users_list(request: HttpRequest) -> HttpResponse:
-    """Список пользователей с возможностью фильтрации по имени, роли и возрасту."""
+    """List of users with the ability to filter by name, role and age."""
     search_query = request.GET.get('search', '')
     age_filter = request.GET.get('age', '')
     role_filter = request.GET.get('role', '')
@@ -159,7 +178,7 @@ def users_list(request: HttpRequest) -> HttpResponse:
 
 @user_passes_test(is_manager)
 def user_create(request: HttpRequest) -> HttpResponse:
-    """Создание нового пользователя менеджером."""
+    """Creating a new user by a manager."""
     form = ManagerUserCreateForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         user = form.save(commit=False)
@@ -172,7 +191,7 @@ def user_create(request: HttpRequest) -> HttpResponse:
 
 @user_passes_test(is_manager)
 def user_edit(request: HttpRequest, pk: int) -> HttpResponse:
-    """Редактирование существующего пользователя, кроме менеджеров и суперпользователей."""
+    """Editing an existing user, except for managers and superusers."""
     user = get_object_or_404(CustomUser, pk=pk)
 
     if user.role == 'manager' or user.is_superuser:
@@ -190,7 +209,7 @@ def user_edit(request: HttpRequest, pk: int) -> HttpResponse:
 
 @user_passes_test(is_manager)
 def user_delete(request: HttpRequest, pk: int) -> HttpResponse:
-    """Удаление пользователя."""
+    """Deleting a user."""
     user = get_object_or_404(CustomUser, pk=pk)
     if request.method == 'POST':
         user.delete()
@@ -201,7 +220,7 @@ def user_delete(request: HttpRequest, pk: int) -> HttpResponse:
 
 @user_passes_test(is_manager)
 def users_bulk_action(request: HttpRequest) -> HttpResponse:
-    """Групповое действие над пользователями: удаление, блокировка, повышение в преподаватели."""
+    """Group action on users: deletion, blocking, promotion to teacher."""
     if request.method == 'POST':
         user_ids = request.POST.getlist('selected_users')
         action = request.POST.get('action')
@@ -252,7 +271,7 @@ def users_bulk_action(request: HttpRequest) -> HttpResponse:
 
 @user_passes_test(is_manager)
 def blog_list(request: HttpRequest) -> HttpResponse:
-    """Список всех блогов."""
+    """List of all blogs."""
     blogs = Blog.objects.all()
     return render(request, 'manager_panel/blog/manager_blog_list.html',
                   {'blogs': blogs})
@@ -260,7 +279,7 @@ def blog_list(request: HttpRequest) -> HttpResponse:
 
 @user_passes_test(is_manager)
 def blog_create(request: HttpRequest) -> HttpResponse:
-    """Создание нового блога."""
+    """Create a new blog"""
     form = BlogForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         form.save()
@@ -271,7 +290,7 @@ def blog_create(request: HttpRequest) -> HttpResponse:
 
 @user_passes_test(is_manager)
 def blog_edit(request: HttpRequest, pk: int) -> HttpResponse:
-    """Редактирование существующего блога."""
+    """Editing an existing blog."""
     blog = get_object_or_404(Blog, pk=pk)
     form = BlogForm(request.POST or None, request.FILES or None, instance=blog)
     if form.is_valid():
@@ -283,7 +302,7 @@ def blog_edit(request: HttpRequest, pk: int) -> HttpResponse:
 
 @user_passes_test(is_manager)
 def blog_delete(request: HttpRequest, pk: int) -> HttpResponse:
-    """Удаление блога."""
+    """Deleting a blog."""
     blog = get_object_or_404(Blog, pk=pk)
     if request.method == 'POST':
         blog.delete()
@@ -294,7 +313,7 @@ def blog_delete(request: HttpRequest, pk: int) -> HttpResponse:
 
 @user_passes_test(is_manager)
 def lesson_list(request: HttpRequest, course_id: int) -> HttpResponse:
-    """Список уроков по заданному курсу."""
+    """List of lessons for a given course."""
     course = get_object_or_404(Course, id=course_id)
     lessons = course.lessons.all()
     return render(request, 'manager_panel/lesson/manager_lesson_list.html', {
@@ -305,7 +324,7 @@ def lesson_list(request: HttpRequest, course_id: int) -> HttpResponse:
 
 @user_passes_test(is_manager)
 def lesson_create(request: HttpRequest, course_id: int) -> HttpResponse:
-    """Создание нового урока в рамках курса."""
+    """Creating a new lesson within a course."""
     course = get_object_or_404(Course, id=course_id)
 
     if request.method == 'POST':
@@ -327,7 +346,7 @@ def lesson_create(request: HttpRequest, course_id: int) -> HttpResponse:
 
 @user_passes_test(is_manager)
 def lesson_edit(request: HttpRequest, pk: int) -> HttpResponse:
-    """Редактирование урока."""
+    """Editing a lesson."""
     lesson = get_object_or_404(Lesson, pk=pk)
 
     if request.method == 'POST':
@@ -347,7 +366,7 @@ def lesson_edit(request: HttpRequest, pk: int) -> HttpResponse:
 
 @user_passes_test(is_manager)
 def lesson_delete(request: HttpRequest, pk: int) -> HttpResponse:
-    """Удаление урока."""
+    """Deleting a lesson."""
     lesson = get_object_or_404(Lesson, pk=pk)
     course_id = lesson.course.id
     if request.method == 'POST':
@@ -359,7 +378,7 @@ def lesson_delete(request: HttpRequest, pk: int) -> HttpResponse:
 
 @user_passes_test(is_manager)
 def manager_lesson_bulk_action(request: HttpRequest, course_id: int) -> HttpResponse:
-    """Групповые действия над уроками курса."""
+    """Group actions on course lessons."""
     if request.method == 'POST':
         action = request.POST.get('action')
         selected_ids = request.POST.getlist('selected_lessons')
@@ -379,16 +398,43 @@ def manager_lesson_bulk_action(request: HttpRequest, course_id: int) -> HttpResp
 
 
 @user_passes_test(is_manager)
+@require_http_methods(["GET", "POST"])
 def enrollment_request_list_view(request: HttpRequest) -> HttpResponse:
-    """Список всех заявок на запись в курсы."""
-    requests = EnrollmentRequest.objects.all().order_by('-created_at')
-    return render(request, 'manager_panel/enrollment_request_list.html',
-                  {'requests': requests})
+    """List of all applications for enrollment in courses and mass actions."""
+    if request.method == "POST":
+        action = request.POST.get("action")
+        selected_ids = request.POST.getlist("selected_users")
+
+        if not selected_ids:
+            messages.warning(request, "Не выбраны заявки.")
+        else:
+            queryset = EnrollmentRequest.objects.filter(id__in=selected_ids)
+
+            if action == "delete":
+                deleted, _ = queryset.delete()
+                messages.success(request, f"Удалено заявок: {deleted}")
+
+            elif action == "promote":
+                updated = queryset.filter(status="pending").update(status="approved")
+                messages.success(request, f"Одобрено заявок: {updated}")
+
+            elif action == "block":
+                updated = queryset.filter(status="pending").update(status="rejected")
+                messages.success(request, f"Отклонено заявок: {updated}")
+
+            else:
+                messages.warning(request, "Выберите корректное действие.")
+
+        return redirect("manager_enrollment_requests")
+
+    # GET-запрос
+    requests = EnrollmentRequest.objects.all().order_by("-created_at")
+    return render(request, "manager_panel/enrollments/enrollment_request_list.html", {"requests": requests})
 
 
 @user_passes_test(is_manager)
 def enrollment_request_approve_view(request: HttpRequest, request_id: int) -> HttpResponse:
-    """Одобрение заявки на курс."""
+    """Approval of the application for the course."""
     enroll_request = get_object_or_404(EnrollmentRequest, id=request_id)
 
     if enroll_request.status != 'pending':
@@ -403,7 +449,7 @@ def enrollment_request_approve_view(request: HttpRequest, request_id: int) -> Ht
 
 @user_passes_test(is_manager)
 def enrollment_request_reject_view(request: HttpRequest, request_id: int) -> HttpResponse:
-    """Отклонение заявки на курс."""
+    """Course application rejected."""
     enroll_request = get_object_or_404(EnrollmentRequest, id=request_id)
 
     if enroll_request.status != 'pending':
@@ -418,7 +464,7 @@ def enrollment_request_reject_view(request: HttpRequest, request_id: int) -> Htt
 
 @user_passes_test(is_manager)
 def questions_list(request: HttpRequest) -> HttpResponse:
-    """Список часто задаваемых вопросов (FAQ)."""
+    """List of Frequently Asked Questions (FAQ)."""
     faqs = FAQ.objects.all()
     return render(request, 'manager_panel/question/manager_questions_list.html',
                   {'faqs': faqs})
@@ -426,7 +472,7 @@ def questions_list(request: HttpRequest) -> HttpResponse:
 
 @user_passes_test(is_manager)
 def question_create(request: HttpRequest) -> HttpResponse:
-    """Создание нового вопроса FAQ."""
+    """Creating a new FAQ question."""
     form = QuestionsForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         form.save()
@@ -437,7 +483,7 @@ def question_create(request: HttpRequest) -> HttpResponse:
 
 @user_passes_test(is_manager)
 def question_edit(request: HttpRequest, pk: int) -> HttpResponse:
-    """Редактирование существующего вопроса FAQ."""
+    """Editing an existing FAQ question."""
     question = get_object_or_404(FAQ, pk=pk)
     form = QuestionsForm(request.POST or None, request.FILES or None, instance=question)
     if form.is_valid():
@@ -449,7 +495,7 @@ def question_edit(request: HttpRequest, pk: int) -> HttpResponse:
 
 @user_passes_test(is_manager)
 def question_delete(request: HttpRequest, pk: int) -> HttpResponse:
-    """Удаление вопроса FAQ."""
+    """Removing a FAQ question."""
     question = get_object_or_404(FAQ, pk=pk)
     if request.method == 'POST':
         question.delete()
@@ -458,44 +504,47 @@ def question_delete(request: HttpRequest, pk: int) -> HttpResponse:
                   {'question': question})
 
 
-
-
 @user_passes_test(is_manager)
-def news_list(request):
+def news_list(request: HttpRequest) -> HttpResponse:
+    """Display list of all newsletters."""
     news = Newsletter.objects.all()
-    return render(request, 'manager_panel/manager_news_list.html', {'news': news})
+    return render(request, 'manager_panel/news/manager_news_list.html', {'news': news})
 
 
 @user_passes_test(is_manager)
-def news_create(request):
+def news_create(request: HttpRequest) -> HttpResponse:
+    """Create a new newsletter."""
     form = NewsForm(request.POST or None, request.FILES or None)
     if form.is_valid():
         form.save()
         return redirect('manager_news_list')
-    return render(request, 'manager_panel/manager_add_news.html', {'form': form})
+    return render(request, 'manager_panel/news/manager_add_news.html', {'form': form})
 
 
 @user_passes_test(is_manager)
-def news_edit(request, pk):
+def news_edit(request: HttpRequest, pk: int) -> HttpResponse:
+    """Edit an existing newsletter."""
     news = get_object_or_404(Newsletter, pk=pk)
     form = NewsForm(request.POST or None, request.FILES or None, instance=news)
     if form.is_valid():
         form.save()
         return redirect('manager_news_list')
-    return render(request, 'manager_panel/manager_add_news.html', {'form': form})
+    return render(request, 'manager_panel/news/manager_add_news.html', {'form': form})
 
 
 @user_passes_test(is_manager)
-def news_delete(request, pk):
+def news_delete(request: HttpRequest, pk: int) -> HttpResponse:
+    """Delete a newsletter."""
     news = get_object_or_404(Newsletter, pk=pk)
     if request.method == 'POST':
         news.delete()
         return redirect('manager_news_list')
-    return render(request, 'manager_panel/manager_del_news.html', {'news': news})
+    return render(request, 'manager_panel/news/manager_del_news.html', {'news': news})
 
 
 @user_passes_test(is_manager)
-def send_newsletter(request, pk):
+def send_newsletter(request: HttpRequest, pk: int) -> HttpResponse:
+    """Send newsletter to all confirmed subscribers."""
     newsletter = get_object_or_404(Newsletter, pk=pk)
     subscribers = Subscriber.objects.filter(is_confirmed=True)
 
@@ -503,14 +552,15 @@ def send_newsletter(request, pk):
         messages.warning(request, "Нет подтверждённых подписчиков для рассылки.")
         return redirect('manager_news_list')
 
-    messages_list = []
-    for sub in subscribers:
-        messages_list.append((
+    messages_list = [
+        (
             newsletter.subject,
             newsletter.message,
             'blr.artyom.gonchar@gmail.com',
             [sub.email],
-        ))
+        )
+        for sub in subscribers
+    ]
 
     send_mass_mail(messages_list, fail_silently=False)
     messages.success(request, "Рассылка успешно отправлена подтверждённым подписчикам.")
@@ -518,27 +568,109 @@ def send_newsletter(request, pk):
 
 
 @user_passes_test(is_manager)
-def send_newsletter_custom(request):
+def send_newsletter_custom(request: HttpRequest) -> HttpResponse:
+    """Send selected newsletter to chosen users."""
     if request.method == 'POST':
         form = NewsletterSendForm(request.POST)
         if form.is_valid():
             users = form.cleaned_data['users']
             newsletter = form.cleaned_data['newsletter']
 
-            messages_list = []
-            for user in users:
-                messages_list.append((
+            messages_list = [
+                (
                     newsletter.title,
                     newsletter.content,
-                    'your_email@example.com',  # От кого
+                    'your_email@example.com',
                     [user.email],
-                ))
+                )
+                for user in users
+            ]
 
             send_mass_mail(messages_list, fail_silently=False)
             messages.success(request, "Новость успешно отправлена выбранным пользователям.")
-            return redirect('manager_users_list')  # или куда нужно
+            return redirect('manager_users_list')
     else:
         form = NewsletterSendForm()
 
-    return render(request, 'manager_panel/send_newsletter_custom.html', {'form': form})
+    return render(request, 'manager_panel/news/send_newsletter_custom.html', {'form': form})
 
+
+@user_passes_test(is_manager)
+@require_http_methods(["GET", "POST"])
+def subscribers_list(request: HttpRequest) -> HttpResponse:
+    """Manage subscribers with bulk confirm/delete operations."""
+    if request.method == "POST":
+        action = request.POST.get("action")
+        selected_ids = request.POST.getlist("selected_subscribers")
+
+        if not selected_ids:
+            messages.warning(request, "Не выбраны подписчики.")
+        else:
+            subscribers = Subscriber.objects.filter(id__in=selected_ids)
+
+            if action == "delete":
+                deleted_count, _ = subscribers.delete()
+                messages.success(request, f"Удалено подписчиков: {deleted_count}")
+            elif action == "confirm":
+                updated_count = subscribers.filter(is_confirmed=False).update(is_confirmed=True)
+                messages.success(request, f"Подтверждено подписчиков: {updated_count}")
+            else:
+                messages.warning(request, "Выберите корректное действие.")
+
+        return redirect("manager_subscribers_list")
+
+    subscribers = Subscriber.objects.all().order_by("email")
+    return render(request, "manager_panel/subscribers/manager_subscribers.html",
+                  {"subscribers": subscribers})
+
+
+@user_passes_test(is_manager)
+def reviews_list(request: HttpRequest) -> HttpResponse:
+    """Display and manage reviews with bulk delete."""
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        selected_ids = request.POST.getlist('selected_reviews')
+
+        if not selected_ids:
+            messages.warning(request, "Выберите хотя бы один отзыв.")
+            return redirect('manage_reviews')
+
+        reviews = Review.objects.filter(id__in=selected_ids)
+
+        if action == 'delete':
+            reviews.delete()
+            messages.success(request, "Выбранные отзывы удалены.")
+        else:
+            messages.warning(request, "Выберите корректное действие.")
+
+        return redirect('manager_reviews_list')
+
+    reviews = Review.objects.all().order_by('-date')
+    return render(request, 'manager_panel/reviews/manager_reviews_list.html',
+                  {'reviews': reviews})
+
+
+@user_passes_test(is_manager)
+def payments_list(request: HttpRequest) -> HttpResponse:
+    """Display and manage payments with bulk delete."""
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        selected_ids = request.POST.getlist('selected_payments')
+
+        if not selected_ids:
+            messages.warning(request, "Выберите хотя бы одну оплату.")
+            return redirect('manage_payments')
+
+        payments = Payment.objects.filter(id__in=selected_ids)
+
+        if action == 'delete':
+            payments.delete()
+            messages.success(request, "Выбранные оплаты удалены.")
+        else:
+            messages.warning(request, "Выберите корректное действие.")
+
+        return redirect('manager_payments_list')
+
+    payments = Payment.objects.select_related('student', 'course').order_by('-payment_date')
+    return render(request, 'manager_panel/payments/manager_payments_list.html',
+                  {'payments': payments})

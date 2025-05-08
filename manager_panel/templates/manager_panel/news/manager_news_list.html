@@ -56,29 +56,22 @@
                                   <table class="table">
                                         <thead>
                                            <tr>
-                                              <th class="cart-product-name">Картинка</th>
                                               <th class="cart-product-name">Заголовок</th>
                                               <th class="product-price">Дата публикации</th>
                                               <th class="product-quantity">Текст</th>
                                               <th class="product-subtotal">Редактировать</th>
                                               <th class="product-remove">Удалить</th>
+                                              <th class="product-subtotal">Рассылка</th>
                                            </tr>
                                         </thead>
                                         {% for new in news %}
                                         <tbody>
                                            <tr>
-                                              <td class="product-name postbox__thumb w-img">
-                                                  <img src="{{ new.picture }}" alt="">
-                                              </td>
                                               <td class="product-name"><p>{{ new.subject }}</p></td>
                                               <td class="product-price"><p>{{ new.created_at }}</p></td>
                                               <td class="product-subtotal">{{ new.message }}</td>
                                               <td class="product-quantity">
-                                                 {% if new.pk %}
                                                  <a class="e-btn e-btn-border" href="{% url 'manager_news_edit' new.pk %}">Редактировать</a>
-                                                 {% else %}
-                                                 <span class="e-btn e-btn-border disabled">Редактировать</span>
-                                                 {% endif %}
                                               </td>
                                               <td class="product-remove">
                                                  {% if new.pk %}

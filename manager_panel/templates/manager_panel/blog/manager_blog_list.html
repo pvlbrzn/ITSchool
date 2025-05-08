@@ -67,7 +67,11 @@
                                         {% for blog in blogs %}
                                         <tbody>
                                            <tr>
+                                              {% if blog.image %}
                                               <td class="product-name postbox__thumb w-img"><img src="{{ blog.image }}" alt=""></td>
+                                              {% else %}
+                                              <td class="product-name postbox__thumb w-img"><img src="{% static 'main/img/no_img/images.png' %}" alt="Нет изображения"></td>
+                                              {% endif %}
                                               <td class="product-name"><p>{{ blog.title }} </p></td>
                                               <td class="product-price"><p>{{ blog.date }} </p></td>
                                               <td class="product-subtotal">{{ blog.author }}</td>

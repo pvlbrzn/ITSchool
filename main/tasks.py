@@ -1,10 +1,18 @@
 from celery import shared_task
+
 from django.core.mail import send_mail
+
 from .models import Subscriber
 
 
 @shared_task
 def send_newsletter_to_all(subject, message):
+    """
+    Celery task to send a newsletter email to all confirmed subscribers.
+
+    :param subject: Email subject line
+    :param message: Email body content
+    """
     print("Запуск рассылки...")
     emails = Subscriber.objects.values_list('email', flat=True)
     for email in emails:
