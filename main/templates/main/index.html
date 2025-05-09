@@ -1,0 +1,432 @@
+{% extends 'main/base.html' %}
+
+{% block title %}ITSchool{% endblock %}
+
+{% block content %}
+{% load static %}
+<main>
+
+<!-- hero section  -->
+<div class="tp-hero__section pt-130 theme-bg p-relative fix">
+   <div class="container">
+      <div class="row">
+         <div class="col-lg-7">
+            <div class="tp-hero__content pt-200">
+               <span class="tp-hero__subtitle text-white mb-10">Наша цель </span>
+               <h3 class="tp-hero__title text-white mb-15">От "Hello world" до первого офера.</h3>
+               <p class="text-white mb-45">Представляем Академию — техническую школу будущего.</p>
+               <div class="tp-hero__btn-wrappper d-md-flex align-items-center">
+                  <div class="hero-btn-1 mr-20 p-relative z-index-1">
+                     <a href="{% url 'courses' %}" class="tp-btn br-0">
+                        <span>Выбрать курс</span>
+                        <div class="transition"></div>
+                     </a>
+                  </div>
+                  <div class="hero-btn-2">
+                     <a href="https://www.youtube.com/watch?v=EJ9TtYpQTV4"
+                        class="tp-play-btn d-flex align-items-center popup-video">
+
+                        <i class="arrow_triangle-right"></i>
+                        <span>Как выбрать направление в IT</span>
+                     </a>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="col-lg-5">
+            <div class="tp-hero__img">
+               <img src="{% static 'main/img/hero/hero-img-2.png' %}" alt="hero">
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="tp-hero__shapes">
+      <div class="tp-hero__shapes-1">
+         <img src="{% static 'main/img/icons/book-shape.png' %}" alt="">
+      </div>
+      <div class="tp-hero__shapes-2">
+         <img src="{% static 'main/img/icons/circle-shape.png' %}" alt="">
+      </div>
+      <div class="tp-hero__shapes-3">
+         <img src="{% static 'main/img/icons/dots-shapes.png' %}" alt="">
+      </div>
+      <div class="tp-hero__shapes-4">
+         <img src="{% static 'main/img/icons/line-shape.png' %}" alt="">
+      </div>
+      <div class="tp-hero__shapes-5">
+         <img src="{% static 'main/img/icons/lines-shape.png' %}" alt="">
+      </div>
+      <div class="tp-hero__shapes-6">
+         <img src="{% static 'main/img/icons/role-shape.png' %}" alt="">
+      </div>
+   </div>
+</div>
+<!-- hero section end  -->
+
+<!-- service area start  -->
+<div class="tp-feature__section pt-120 pb-30">
+   <div class="container">
+      <div class="row">
+         <div class="col-12">
+            <div class="tp-section__title-wrapper text-center mb-40">
+               <h3 class="tp-section__title">Самые востребованные направления в IT</h3>
+            </div>
+         </div>
+      </div>
+      <div class="row gx-70">
+         {% for course in courses_hot %}
+         <div class="col-lg-3 col-md-4">
+            <div class="tp-feature__item before-color-1 mb-30">
+               <div class="tp-feature__icon w-img fix p-relative">
+                  {% if course.image %}
+                  <img src="{{ course.image.url }}" alt="">
+                  {% else %}
+                  <img src="{% static 'main/img/no_img/images.png' %}" alt="Нет изображения">
+                  {% endif %}
+               </div>
+               <h3 class="tp-feature__title"> {{ course.title }} </h3>
+               <p> {{ course.price }} </p>
+               <p> {{ course.skill }} </p>
+               <a href="{% url 'course-detail' course.id %}" class="btn"> Подробнее</a>
+            </div>
+         </div>
+         {% endfor %}
+      </div>
+   </div>
+</div>
+<!-- service area end  -->
+
+<!-- about section  start -->
+<div class="tp-about__section pt-120 pb-90">
+   <div class="container">
+      <div class="row align-items-center">
+         <div class="col-lg-7">
+            <div class="tp-about__img-wrapper d-md-flex p-relative">
+               <div class="tp-about__img-large w-img mb-30">
+                  <img src="{% static 'main/img/about/about-1.png' %}" alt="">
+               </div>
+               <div class="tp-about__img-sm w-img mb-30">
+                  <img src="{% static 'main/img/about/about-2.png' %}" alt="">
+               </div>
+
+               <div class="tp-about-shapes">
+                  <div class="tp-about__shapes-1">
+                     <img src="{% static 'main/img/icons/about-shapes.png' %}" alt="">
+                     <div class="tp-about__shapes-2 ">
+                        <img src="{% static 'main/img/icons/ring-shape.png' %}" alt="">
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="col-lg-5">
+            <div class="tp-section__title-wrapper">
+               <h3 class="tp-section__title mb-15">Научим<br>
+                  программировать и
+                  поможем стать ITшником.</h3>
+               <p class="mb-40">ITSchool - это школа программирования, где мы научим тебя
+                  востребованным сегодня знаниям. Все наши программы составлены Senior и
+                  Lead разработчиками ведущих IT компаний специально для новичков в IT.</p>
+
+               <div class="tp-about__feature-list mb-40">
+                  <ul>
+                     <li><span><i class="icon_check"></i></span>Менторы. Специалисты международных компаний вроде Andersen, Netcracker, iTechArt или SaM Solutions</li>
+                     <li><span><i class="icon_check"></i></span>Программы. Ориентированы на получение практических умений для поиска работы в первые месяцы после окончания обучения</li>
+                     <li><span><i class="icon_check"></i></span>Открытые уроки и бесплатные мастер-классы. Отличная возможность для проверки своей мотивации</li>
+                  </ul>
+               </div>
+               <div class="tp-hero__btn-wrappper">
+                  {% if user.is_authenticated %}
+                  <a href="{% url 'courses' %}" class="tp-border-btn br-0">
+                     <span>Начать</span>
+                     <div class="transition"></div>
+                  </a>
+                  {% else %}
+                  <a href="{% url 'register' %}" class="tp-border-btn br-0">
+                     <span>Начать</span>
+                     <div class="transition"></div>
+                  </a>
+                  {% endif %}
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- about section end  -->
+
+<!-- course start  -->
+<div class="tp-courses__section grey-bg-2 pt-120 pb-90">
+   <div class="container">
+      <div class="row align-items-center">
+         <div class="col-lg-6">
+            <div class="tp-section__title-wrapper mb-40">
+               <h3 class="tp-section__title mb-15">Наши популярные курсы</h3>
+               <p>За 8 лет мы выпустили более 12 000 айтишников,
+                  которые успешно начали свой путь в международных IT компаниях.</p>
+            </div>
+         </div>
+         <div class="col-lg-6">
+            <div class="tp-courses__buttons d-flex justify-content-lg-end mb-60">
+               <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                  <li class="nav-item" role="presentation">
+                     <button class="nav-link active" id="pills-all-tab" data-bs-toggle="pill"
+                        data-bs-target="#pills-all" type="button" role="tab" aria-controls="pills-all"
+                        aria-selected="true">Все</button>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                     <button class="nav-link" id="pills-popularity-tab" data-bs-toggle="pill"
+                        data-bs-target="#pills-frontend" type="button" role="tab"
+                        aria-controls="pills-frontend" aria-selected="false">Frontend</button>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                     <button class="nav-link" id="pills-featured-tab" data-bs-toggle="pill"
+                        data-bs-target="#pills-backend" type="button" role="tab" aria-controls="pills-backend"
+                        aria-selected="false">Backend</button>
+                  </li>
+                  <li class="nav-item" role="presentation">
+                     <button class="nav-link" id="pills-design-tab" data-bs-toggle="pill"
+                        data-bs-target="#pills-devops" type="button" role="tab" aria-controls="pills-devops"
+                        aria-selected="false">Devops</button>
+                  </li>
+               </ul>
+            </div>
+         </div>
+      </div>
+      <div class="tp-courses__tab-content">
+         <div class="tab-content" id="pills-tabContent">
+            <div class="tab-pane fade show active" id="pills-all" role="tabpanel" aria-labelledby="pills-all-tab">
+               <div class="row">
+                  {% for course in courses %}
+                  <div class="col-lg-4 col-md-6">
+                     <div class="tp-courses__item mb-30">
+                        <div class="tp-courses__thumb w-img fix p-relative">
+                           {% if course.image %}
+                           <img src="{{ course.image.url }}" alt="">
+                           {% else %}
+                           <img src="{% static 'main/img/no_img/images.png' %}" alt="Нет изображения">
+                           {% endif %}
+                           <span class="tp-courses__cat cat-color-2"><a href="#"> {{ course.skill }} </a></span>
+                        </div>
+                        <div class="tp-courses__content">
+                           <div class="tp-courses__meta">
+                              <span class="tp-ratting"><i class="icon_star_alt"></i>{{ course.random_rating }} ({{ course.random_stars }})</span>
+                              <span><i class="icon_heart_alt"></i>{{ course.random_likes }}</span>
+                              <span><i class="fa-light fa-user"></i>{{ course.random_peoples }}</span>
+                           </div>
+                           <h3 class="tp-courses__title"><a href="{% url 'course-detail' course.id %}">{{ course.title }}</a></h3>
+                           <div class="tp-courses__price d-flex justify-content-between">
+                              <div class="tp-courses__time">
+                                 <span><i class="fa-light fa-clock"></i> {{ course.duration }} мес. </span>
+                              </div>
+                              <div class="tp-courses__value">
+                                 <span> {{ course.price }} BYN</span>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  {% endfor %}
+               </div>
+            </div>
+            <div class="tab-pane fade" id="pills-frontend" role="tabpanel" aria-labelledby="pills-all-tab">
+               <div class="row">
+                  {% for course in courses %}
+                     {% if course.skill == "frontend" %}
+                     <div class="col-lg-4 col-md-6">
+                        <div class="tp-courses__item mb-30">
+                           <div class="tp-courses__thumb w-img fix p-relative">
+                              {% if course.image %}
+                              <img src="{{ course.image.url }}" alt="">
+                              {% else %}
+                              <img src="{% static 'main/img/no_img/images.png' %}" alt="Нет изображения">
+                              {% endif %}
+                              <span class="tp-courses__cat cat-color-2"><a href="#"> {{ course.skill }} </a></span>
+                           </div>
+                           <div class="tp-courses__content">
+                              <div class="tp-courses__meta">
+                                 <span class="tp-ratting"><i class="icon_star_alt"></i>{{ course.random_rating }} ({{ course.random_stars }})</span>
+                                 <span><i class="icon_heart_alt"></i>{{ course.random_likes }}</span>
+                                 <span><i class="fa-light fa-user"></i>{{ course.random_peoples }}</span>
+                              </div>
+                              <h3 class="tp-courses__title"><a href="{% url 'course-detail' course.id %}">{{ course.title }}</a></h3>
+                              <div class="tp-courses__price d-flex justify-content-between">
+                                 <div class="tp-courses__time">
+                                    <span><i class="fa-light fa-clock"></i> {{ course.duration }} мес. </span>
+                                 </div>
+                                 <div class="tp-courses__value">
+                                    <span> {{ course.price }} BYN</span>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                     {% endif %}
+                  {% endfor %}
+               </div>
+            </div>
+            <div class="tab-pane fade" id="pills-backend" role="tabpanel" aria-labelledby="pills-all-tab">
+               <div class="row">
+                  {% for course in courses %}
+                     {% if course.skill == "backend" %}
+                     <div class="col-lg-4 col-md-6">
+                        <div class="tp-courses__item mb-30">
+                           <div class="tp-courses__thumb w-img fix p-relative">
+                              {% if course.image %}
+                              <img src="{{ course.image.url }}" alt="">
+                              {% else %}
+                              <img src="{% static 'main/img/no_img/images.png' %}" alt="Нет изображения">
+                              {% endif %}
+                              <span class="tp-courses__cat cat-color-2"><a href="#"> {{ course.skill }} </a></span>
+                           </div>
+                           <div class="tp-courses__content">
+                              <div class="tp-courses__meta">
+                                 <span class="tp-ratting"><i class="icon_star_alt"></i>{{ course.random_rating }} ({{ course.random_stars }})</span>
+                                 <span><i class="icon_heart_alt"></i>{{ course.random_likes }}</span>
+                                 <span><i class="fa-light fa-user"></i>{{ course.random_peoples }}</span>
+                              </div>
+                              <h3 class="tp-courses__title"><a href="{% url 'course-detail' course.id %}">{{ course.title }}</a></h3>
+                              <div class="tp-courses__price d-flex justify-content-between">
+                                 <div class="tp-courses__time">
+                                    <span><i class="fa-light fa-clock"></i> {{ course.duration }} мес. </span>
+                                 </div>
+                                 <div class="tp-courses__value">
+                                    <span> {{ course.price }} BYN</span>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                     {% endif %}
+                  {% endfor %}
+               </div>
+            </div>
+            <div class="tab-pane fade" id="pills-devops" role="tabpanel" aria-labelledby="pills-all-tab">
+               <div class="row">
+                  {% for course in courses %}
+                     {% if course.skill == "devops" %}
+                     <div class="col-lg-4 col-md-6">
+                        <div class="tp-courses__item mb-30">
+                           <div class="tp-courses__thumb w-img fix p-relative">
+                              {% if course.image %}
+                              <img src="{{ course.image.url }}" alt="">
+                              {% else %}
+                              <img src="{% static 'main/img/no_img/images.png' %}" alt="Нет изображения">
+                              {% endif %}
+                              <span class="tp-courses__cat cat-color-2"><a href="#"> {{ course.skill }} </a></span>
+                           </div>
+                           <div class="tp-courses__content">
+                              <div class="tp-courses__meta">
+                                 <span class="tp-ratting"><i class="icon_star_alt"></i>{{ course.random_rating }} ({{ course.random_stars }})</span>
+                                 <span><i class="icon_heart_alt"></i>{{ course.random_likes }}</span>
+                                 <span><i class="fa-light fa-user"></i>{{ course.random_peoples }}</span>
+                              </div>
+                              <h3 class="tp-courses__title"><a href="{% url 'course-detail' course.id %}">{{ course.title }}</a></h3>
+                              <div class="tp-courses__price d-flex justify-content-between">
+                                 <div class="tp-courses__time">
+                                    <span><i class="fa-light fa-clock"></i> {{ course.duration }} мес. </span>
+                                 </div>
+                                 <div class="tp-courses__value">
+                                    <span> {{ course.price }} BYN</span>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                     {% endif %}
+                  {% endfor %}
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+<!-- course end  -->
+
+<!-- blog start-->
+<div class="tp-event__section pt-120 pb-90 p-relative">
+   <div class="tp-event__shape">
+      <div class="event-1">
+         <img src="{% static 'main/img/icons/event-line-1.png' %}" alt="">
+      </div>
+      <div class="event-2">
+         <img src="{% static 'main/img/icons/event-circle.png' %}" alt="">
+      </div>
+   </div>
+   <div class="container">
+      <div class="row">
+         <div class="col-lg-12">
+            <div class="tp-section__title-wrapper mb-40 text-center">
+               <h3 class="tp-section__title mb-15">Последнее из блога</h3>
+            </div>
+         </div>
+      </div>
+      <div class="tp-event__wrapper">
+         <div class="row">
+            {% for blog in blogs %}
+            <div class="col-lg-3 col-md-6">
+               <div class="tp-event__item mb-30 h-100">
+                  <div class="tp-event__thumb w-img fix">
+                     {% if blog.image %}
+                     <img src="{{ blog.image }}" alt="">
+                     {% else %}
+                     <img src="{% static 'main/img/no_img/images.png' %}" alt="Нет изображения">
+                     {% endif %}
+                  </div>
+                  <div class="tp-event__content">
+                     <div class="tp-event__meta mb-10">
+                        <span class="event-date"><i class="fa-solid fa-circle-small"></i> {{ blog.date }}</span>
+                     </div>
+                     <h3 class="tp-event__title mb-30"><a href="{% url 'blog' %}"> {{ blog.title }}</a></h3>
+                     <a href="{% url 'blog' %}" class="more-btn">Читать Блог <i class="fa-regular fa-arrow-right"></i></a>
+                  </div>
+               </div>
+            </div>
+            {% endfor %}
+         </div>
+      </div>
+   </div>
+</div>
+<!-- blog end -->
+
+<!-- teachers start  -->
+<div class="tp-team__section pb-130">
+   <div class="container">
+      <div class="row">
+         <div class="tp-section__title-wrapper mb-40 text-center">
+            <h3 class="tp-section__title mb-15">Преподаватели - практики</h3>
+            <p>Учись у лучших. Каждый день наши преподаватели работают в IT компаниях и кодят,
+               господи, как же они кодят! А по вечерам спешат делиться своими бесценными
+               знаниями и навыками с тобой.</p>
+         </div>
+      </div>
+      <div class="tp-team__wrapper mb-30">
+         <div class="row">
+            {% for teacher in teachers %}
+            <div class="col-lg-3 col-md-6">
+               <div class="tp-team__member fix mb-30">
+                  <div class="tp-team__img w-img tp-team__overlay p-relative">
+                     <a href="{% url 'teacher_detail' teacher.id %}">
+                        {% if teacher.image %}
+                        <img src="{{ teacher.image.url }}" alt="">
+                        {% else %}
+                        <img src="{% static 'main/img/no_img/images.png' %}" alt="Нет изображения">
+                        {% endif %}
+                     </a>
+                     <div class="tp-team__info text-center">
+                        <h3 class="tp-team__name">{{ teacher.first_name }}</h3>
+                        <span>{{ teacher.stack }}</span>
+                        <span>{{ teacher.courses.skill }}</span>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            {% endfor %}
+         </div>
+      </div>
+   </div>
+</div>
+<!-- team end  -->
+
+</main>
+{% endblock %}

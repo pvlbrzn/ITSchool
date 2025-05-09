@@ -1,0 +1,112 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Управление школой{% endblock %}
+
+{% block content %}
+{% load static %}
+
+
+<main>
+   <!-- breadcrumb area start -->
+   <div class="breadcrumb__area include-bg pt-200 pb-150 breadcrumb__overlay"
+      data-background="{% static '/main/img/breadcrumb/breadcrumb-bg-1.png' %}">
+      <div class="container">
+         <div class="row">
+            <div class="col-xxl-12">
+               <div class="breadcrumb__content p-relative z-index-1">
+                  <h3 class="breadcrumb__title">Управление школой</h3>
+                  <div class="breadcrumb__list">
+                     <span><a href="{% url 'index' %}">Главная страница</a></span>
+                     <span class="dvdr"><i class="fa-regular fa-angle-right"></i></span>
+                     <span><a href="{% url 'manager' %}">Управление школой</a></span>
+                     <span class="dvdr"><i class="fa-regular fa-angle-right"></i></span>
+                     <span>Отзывы</span>
+                     <hr>
+                     <span><a href="{% url 'logout' %}">ВЫХОД ИЗ АККАУНТА</a></span>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!-- breadcrumb area end -->
+
+   <!-- Personal course Area Strat-->
+   <div class="postbox__area pt-120 pb-120">
+    <div class="container">
+      <div class="row">
+         <div class="col-lg-12">
+            <div class="postbox__wrapper pr-30">
+
+                <h2>Отзывы</h2>
+
+                <div class="d-flex gap-3">
+                    <a href="{%  url 'manager' %}" class="btn btn-secondary">Назад</a>
+                </div>
+
+                <!-- Cart Area Strat-->
+                <div class="cart-area pt-100 pb-100">
+                    <div class="container">
+                       <div class="row">
+                          <div class="col-12">
+                               <div class="table-content table-responsive">
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        <div class="d-flex align-items-center gap-3 mb-3">
+                                            <select name="action" required>
+                                                <option value="">Выберите действие</option>
+                                                <option value="delete">Удалить выбранные</option>
+                                            </select>
+                                            <button type="submit" class="btn btn-primary">Применить</button>
+                                        </div>
+
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th><input type="checkbox" id="select-all"></th>
+                                                    <th>Автор</th>
+                                                    <th>Комментарий</th>
+                                                    <th>Дата</th>
+                                                    <th>Изображение</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for review in reviews %}
+                                                    <tr>
+                                                        <td><input type="checkbox" name="selected_reviews" value="{{ review.id }}"></td>
+                                                        <td>{{ review.author }}</td>
+                                                        <td>{{ review.comment|truncatewords:15 }}</td>
+                                                        <td>{{ review.date }}</td>
+                                                        <td>
+                                                            {% if review.image %}
+                                                                <img src="{{ review.image.url }}" alt="review" style="height: 50px;">
+                                                            {% else %}
+                                                                —
+                                                            {% endif %}
+                                                        </td>
+                                                    </tr>
+                                                {% empty %}
+                                                    <tr><td colspan="5">Отзывы не найдены.</td></tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </form>
+                               </div>
+                          </div>
+                       </div>
+                    </div>
+                 </div>
+                <!-- Cart Area End-->
+            </div>
+         </div>
+      </div>
+   </div>
+   </div>
+</main>
+<script>
+    document.getElementById('select-all').addEventListener('click', function () {
+        const checkboxes = document.querySelectorAll('input[name="selected_reviews"]');
+        for (let cb of checkboxes) cb.checked = this.checked;
+    });
+</script>
+{% endblock %}

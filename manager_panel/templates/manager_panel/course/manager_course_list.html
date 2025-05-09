@@ -1,0 +1,122 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Управление школой{% endblock %}
+
+{% block content %}
+{% load static %}
+
+
+<main>
+   <!-- breadcrumb area start -->
+   <div class="breadcrumb__area include-bg pt-200 pb-150 breadcrumb__overlay"
+      data-background="{% static '/main/img/breadcrumb/breadcrumb-bg-1.png' %}">
+      <div class="container">
+         <div class="row">
+            <div class="col-xxl-12">
+               <div class="breadcrumb__content p-relative z-index-1">
+                  <h3 class="breadcrumb__title">Управление школой</h3>
+                  <div class="breadcrumb__list">
+                     <span><a href="{% url 'index' %}">Главная страница</a></span>
+                     <span class="dvdr"><i class="fa-regular fa-angle-right"></i></span>
+                     <span><a href="{% url 'manager' %}">Управление школой</a></span>
+                     <span class="dvdr"><i class="fa-regular fa-angle-right"></i></span>
+                     <span>Список курсов</span>
+                     <hr>
+                     <span><a href="{% url 'logout' %}">ВЫХОД ИЗ АККАУНТА</a></span>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!-- breadcrumb area end -->
+
+   <!-- Personal course Area Strat-->
+   <div class="postbox__area pt-120 pb-120">
+   <div class="container">
+      <div class="row">
+         <div class="col-lg-12">
+            <div class="postbox__wrapper pr-30">
+
+                <h2>Курсы</h2>
+               <!-- Фильтры -->
+                <form method="get" class="mb-4 d-flex flex-wrap gap-3 align-items-end">
+                  <div>
+                    <label for="search" class="form-label">Поиск по названию или описанию</label>
+                    <input type="text" id="search" name="search" class="form-control"
+                           value="{{ search_query }}" placeholder="Введите ключевое слово...">
+                  </div>
+
+                  <div>
+                    <label for="language"></label>
+                    <select id="language" name="language">
+                      <option value="">Все языки</option>
+                      {% for code, lang in languages %}
+                        <option value="{{ code }}" {% if code == language_filter %}selected{% endif %}>{{ lang }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label for="start_date" class="form-label">Дата начала (с)</label>
+                    <input type="date" id="start_date" name="start_date" class="form-control"
+                           value="{{ start_date_filter }}">
+                  </div>
+
+                  <div>
+                    <label for="end_date" class="form-label">Дата окончания (до)</label>
+                    <input type="date" id="end_date" name="end_date" class="form-control"
+                           value="{{ end_date_filter }}">
+                  </div>
+
+                  <div>
+                    <button type="submit" class="btn btn-primary">🔍 Найти</button>
+                    <a href="{% url 'manager_course_list' %}" class="btn btn-secondary">Сбросить</a>
+                  </div>
+                </form>
+
+                <div class="d-flex gap-3">
+                    <a href="{% url 'manager_course_create' %}" class="btn btn-secondary">Добавить курс</a>
+                    <a href="{% url 'manager' %}" class="btn btn-secondary">Назад</a>
+                </div>
+
+               <ul>
+                <!-- service area start  -->
+                <div class="tp-feature__section pt-120 pb-30">
+                <div class="container">
+                  <div class="row gx-70">
+                     {% for course in courses %}
+                     <div class="col-lg-3 col-md-4">
+                        <div class="tp-feature__item before-color-1 mb-30">
+                           <div class="tp-feature__icon w-img fix p-relative">
+                               {% if course.image %}
+                              <img src="{{ course.image.url }}" alt="">
+                              {% else %}
+                              <img src="{% static 'main/img/no_img/images.png' %}" alt="Нет изображения">
+                              {% endif %}
+                           </div>
+                           <h3 class="tp-feature__title"> {{ course.title }} </h3>
+                           <p> Стоимость: {{ course.price }} </p>
+                           <p> Тип курса: {{ course.skill }} </p>
+                           <p> Дата начала: {{ course.start_date }} </p>
+                           <p> Дата окончания: {{ course.end_date }} </p>
+                            <a href="{% url 'manager_course_edit' course.pk %}" class="btn btn-secondary">Редактировать</a>
+                            <a href="{% url 'manager_lesson_list' course.id %}" class="btn btn-secondary">Лекции курса</a>
+                            <a href="{% url 'manager_course_delete' course.pk %}" class="btn btn-danger">Удалить</a>
+                        </div>
+                     </div>
+                     {% endfor %}
+                  </div>
+                </div>
+                </div>
+                <!-- service area end  -->
+               </ul>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+   <!-- Personal course Area End-->
+
+</main>
+{% endblock %}

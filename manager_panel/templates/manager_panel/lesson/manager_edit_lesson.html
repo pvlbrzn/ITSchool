@@ -1,0 +1,76 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Управление школой{% endblock %}
+
+{% block content %}
+{% load static %}
+<main>
+    <!-- breadcrumb area start -->
+    <div class="breadcrumb__area include-bg pt-200 pb-150 breadcrumb__overlay"
+         data-background="{% static '/main/img/breadcrumb/breadcrumb-bg-1.png' %}">
+        <div class="container">
+            <div class="row">
+                <div class="col-xxl-12">
+                    <div class="breadcrumb__content p-relative z-index-1">
+                        <h3 class="breadcrumb__title">Управление школой</h3>
+                        <div class="breadcrumb__list">
+                            <span><a href="{% url 'index' %}">Главная страница</a></span>
+                            <span class="dvdr"><i class="fa-regular fa-angle-right"></i></span>
+                            <span><a href="{% url 'manager' %}">Управление школой</a></span>
+                            <span class="dvdr"><i class="fa-regular fa-angle-right"></i></span>
+                            <span><a href="{% url 'manager_course_list' %}">Список курсов</a></span>
+                            <span class="dvdr"><i class="fa-regular fa-angle-right"></i></span>
+                            <span><a href="{% url 'manager_lesson_list' lesson.course.id %}">Список занятий</a></span>
+                            <span class="dvdr"><i class="fa-regular fa-angle-right"></i></span>
+                            <span>Редактировать занятие</span>
+                            <hr>
+                            <span><a href="{% url 'logout' %}">ВЫХОД ИЗ АККАУНТА</a></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- breadcrumb area end -->
+
+    <!-- Personal course Area Strat-->
+    <div class="postbox__area pt-120 pb-120">
+        <div class="container">
+            <div class="card shadow-sm p-4">
+                <h2 class="mb-4">Редактировать занятие</h2>
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Название урока</label>
+                        <input type="text" id="title" name="title" class="form-control" value="{{ lesson.title }}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="content" class="form-label">Содержание урока</label>
+                        <textarea id="content" name="content" class="form-control" rows="5" required>{{ lesson.content }}</textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="teacher" class="form-label">Преподаватель</label>
+                        <select id="teacher" name="teacher" class="form-control">
+                            <option value="">Без преподавателя</option>
+                            {% for teacher in teachers %}
+                                <option value="{{ teacher.id }}" {% if lesson.teacher and lesson.teacher.id == teacher.id %}selected{% endif %}>
+                                    {{ teacher.first_name }} {{ teacher.last_name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                    <a href="{% url 'manager_lesson_list' lesson.course.id %}" class="btn btn-secondary">Назад к урокам</a>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Personal course Area End-->
+
+</main>
+{% endblock %}

@@ -15,8 +15,35 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+from django.contrib.auth.decorators import user_passes_test
+
+
+def superuser_only(user):
+    return user.is_superuser
+
+
+admin.site.login = user_passes_test(superuser_only)(admin.site.login)
+
+
+schema_view = get_schema_view(
+   openapi.Info(
+       title="ITSchool API",
+       default_version='v1',
+       description="Документация для API проекта",
+       contact=openapi.Contact(email="pavelberezan1998@gmail.com"),
+       license=openapi.License(name="MIT License"),
+   ),
+   public=True,
+   permission_classes=(permissions.AllowAny,),
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include('main.urls')),
+    path('api/', include('main_rest.urls')),
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 ]

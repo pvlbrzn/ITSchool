@@ -1,0 +1,48 @@
+from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
+
+from . import views
+
+urlpatterns = [
+    path('', views.manager, name='manager'),
+    path('courses/', views.course_list, name='manager_course_list'),
+    path('courses/create/', views.course_create, name='manager_course_create'),
+    path('courses/<int:pk>/edit/', views.course_edit, name='manager_course_edit'),
+    path('courses/<int:pk>/delete/', views.course_delete, name='manager_course_delete'),
+    path('user/', views.users_list, name='manager_users_list'),
+    path('user/create/', views.user_create, name='manager_user_create'),
+    path('user/<int:pk>/edit/', views.user_edit, name='manager_user_edit'),
+    path('user/<int:pk>/delete/', views.user_delete, name='manager_user_delete'),
+    path('blog/', views.blog_list, name='manager_blog_list'),
+    path('blog/create/', views.blog_create, name='manager_blog_create'),
+    path('blog/<int:pk>/edit/', views.blog_edit, name='manager_blog_edit'),
+    path('blog/<int:pk>/delete/', views.blog_delete, name='manager_blog_delete'),
+    path('user/bulk_action/', views.users_bulk_action, name='manager_users_bulk_action'),
+    path('courses/<int:course_id>/lessons/', views.lesson_list, name='manager_lesson_list'),
+    path('courses/<int:course_id>/lessons/create/', views.lesson_create,
+         name='manager_lesson_create'),
+    path('lessons/<int:pk>/edit/', views.lesson_edit, name='manager_lesson_edit'),
+    path('lessons/<int:pk>/delete/', views.lesson_delete, name='manager_lesson_delete'),
+    path('courses/<int:course_id>/lessons/bulk_action/', views.manager_lesson_bulk_action,
+         name='manager_lesson_bulk_action'),
+    path('manager/enrollments/', views.enrollment_request_list_view,
+         name='manager_enrollment_requests'),
+    path('manager/enrollments/<int:request_id>/approve/', views.enrollment_request_approve_view,
+         name='manager_enrollment_approve'),
+    path('manager/enrollments/<int:request_id>/reject/', views.enrollment_request_reject_view,
+         name='manager_enrollment_reject'),
+    path('questions/', views.questions_list, name='manager_questions_list'),
+    path('questions/create/', views.question_create, name='manager_question_create'),
+    path('questions/<int:pk>/edit/', views.question_edit, name='manager_question_edit'),
+    path('questions/<int:pk>/delete/', views.question_delete, name='manager_question_delete'),
+    path('news/', views.news_list, name='manager_news_list'),
+    path('news/create/', views.news_create, name='manager_news_create'),
+    path('news/<int:pk>/edit/', views.news_edit, name='manager_news_edit'),
+    path('news/<int:pk>/delete/', views.news_delete, name='manager_news_delete'),
+    path('manager/news/send/<int:pk>/', views.send_newsletter, name='send_newsletter'),
+    path('manager/news/send/custom/', views.send_newsletter_custom, name='send_newsletter_custom'),
+    path('manager/subscribers/', views.subscribers_list, name='manager_subscribers_list'),
+    path('manager/reviews/', views.reviews_list, name='manager_reviews_list'),
+    path('manager/payments/', views.payments_list, name='manager_payments_list'),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

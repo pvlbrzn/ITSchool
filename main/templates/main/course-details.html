@@ -1,0 +1,211 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Детали курса{% endblock %}
+
+{% block content %}
+{% load static %}
+<main>
+
+  <!-- breadcrumb area start -->
+      <div class="breadcrumb__area include-bg pt-200 pb-150 breadcrumb__overlay"
+         data-background="{% static 'main/img/breadcrumb/breadcrumb-bg-1.png' %}">
+         <div class="container">
+            <div class="row">
+               <div class="col-xxl-12">
+                  <div class="breadcrumb__content p-relative z-index-1">
+                     <h3 class="breadcrumb__title">Детали курса</h3>
+                     <div class="breadcrumb__list">
+                        <span><a href="{% url 'index' %}">Главная страница</a></span>
+                        <span class="dvdr"><i class="fa-regular fa-angle-right"></i></span>
+                        <span><a href="{% url 'courses' %}">Список курсов</a></span>
+                        <span class="dvdr"><i class="fa-regular fa-angle-right"></i></span>
+                        <span>Детали курса</span>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+  <!-- breadcrumb area end -->
+
+
+  <!-- course details -->
+
+  <div class="course-details pt-60">
+     <div class="container">
+
+        <div class="course-details__header">
+           <div class="container">
+              <div class="row">
+                 <div class="col-lg-8">
+                    <div class="page__title-content mb-25">
+                       <span class="page__title-pre">{{ course.skill }}</span>
+                       <h1 class="page__title">{{ course.title }}</h1>
+                    </div>
+                    <div class="course-details__meta d-sm-flex">
+                       <div class="course__teacher-3 d-flex align-items-center mr-70 mb-30">
+                          {% with course.teachers.all|first as teacher %}
+                              {% if teacher %}
+                              <div class="course__teacher-thumb-3 mr-15">
+                                 {% if teacher.image %}
+                                 <img src={{ teacher.image.url }} alt="">
+                                 {% else %}
+                                 <img src="{% static 'main/img/no_img/images.png' %}" alt="Нет изображения">
+                                 {% endif %}
+                              </div>
+                              <div class="course__teacher-info-3">
+                                 <h5>Преподаватель</h5>
+                                 <p>{{ teacher.first_name }} {{ teacher.last_name }}</p>
+                              </div>
+                              {% else %}
+                               <div class="course__teacher-info-3">
+                                 <h5>Преподаватель</h5>
+                                 <p>Еще не назначен</p>
+                              </div>
+                              {% endif %}
+                          {% endwith %}
+                       </div>
+                       <div class="course__update mr-80 mb-30">
+                          <h5>Длительнотсь:</h5>
+                          <p>{{ course.duration}} месяца</p>
+                       </div>
+                    </div>
+                     <div class="postbox__content">
+                        <div class="postbox__meta">
+                           <span><i class="far fa-calendar-check"></i> Начало: {{ course.start_date }} </span>
+                           <span><i class="far fa-calendar-check"></i> Окончание: {{ course.end_date }} </span>
+                        </div>
+                        <h3 class="postbox__title">{{ course.title }}</h3>
+                        <div class="postbox__text">
+                           <p>{{ course.description }}</p>
+                        </div>
+                     </div>
+                    <div>
+                       <h3>Уроки курса:</h3>
+                        {% if course.lessons.all %}
+                            <ul>
+                                {% for lesson in course.lessons.all %}
+                                    <li>{{ lesson.title }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p>Уроки пока не добавлены.</p>
+                        {% endif %}
+                    </div>
+                 </div>
+                 <div class="col-xxl-4 col-xl-4 col-lg-4">
+                    <div class="course__sidebar pl-70 p-relative">
+                       <div class="course__sidebar-widget-2 white-bg mb-20">
+                          <div class="course__video">
+                             <div class="course__video-meta mb-25 d-flex align-items-center justify-content-between">
+                                <div class="course__video-price">
+                                   <h5>{{course.price}} BYN </h5>
+                                </div>
+                             </div>
+                             <div class="course__video-content mb-35">
+                                <ul>
+                                   <li class="d-flex align-items-center">
+                                      <div class="course__video-icon">
+                                         <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 24 24" style="enable-background:new 0 0 24 24;" xml:space="preserve">
+                                            <path class="st0" d="M4,19.5C4,18.1,5.1,17,6.5,17H20"/>
+                                            <path class="st0" d="M6.5,2H20v20H6.5C5.1,22,4,20.9,4,19.5v-15C4,3.1,5.1,2,6.5,2z"/>
+                                         </svg>
+                                      </div>
+                                      <div class="course__video-info">
+                                         <h5><span>Уроки :</span>{{ course.lessons.count }}</h5>
+                                      </div>
+                                   </li>
+                                   <li class="d-flex align-items-center">
+                                      <div class="course__video-icon">
+                                         <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 16 16" style="enable-background:new 0 0 16 16;" xml:space="preserve">
+                                            <circle class="st0" cx="8" cy="8" r="6.7"/>
+                                            <polyline class="st0" points="8,4 8,8 10.7,9.3 "/>
+                                         </svg>
+                                      </div>
+                                      <div class="course__video-info">
+                                         <h5><span>Длительность :</span>{{course.duration}} мес</h5>
+                                      </div>
+                                   </li>
+                                   <li class="d-flex align-items-center">
+                                      <div class="course__video-icon">
+                                         <svg>
+                                            <path class="st0" d="M13.3,14v-1.3c0-1.5-1.2-2.7-2.7-2.7H5.3c-1.5,0-2.7,1.2-2.7,2.7V14"/>
+                                            <circle class="st0" cx="8" cy="4.7" r="2.7"/>
+                                         </svg>
+                                      </div>
+                                      <div class="course__video-info">
+                                         <h5><span>Группа :</span>{{course.students.count}} студентов</h5>
+                                      </div>
+                                   </li>
+                                   <li class="d-flex align-items-center">
+                                      <div class="course__video-icon">
+                                         <svg>
+                                            <circle class="st0" cx="8" cy="8" r="6.7"/>
+                                            <line class="st0" x1="1.3" y1="8" x2="14.7" y2="8"/>
+                                            <path class="st0" d="M8,1.3c1.7,1.8,2.6,4.2,2.7,6.7c-0.1,2.5-1,4.8-2.7,6.7C6.3,12.8,5.4,10.5,5.3,8C5.4,5.5,6.3,3.2,8,1.3z"/>
+                                         </svg>
+                                      </div>
+                                      <div class="course__video-info">
+                                         <h5><span>Язык :</span>Русский</h5>
+                                      </div>
+                                   </li>
+                                </ul>
+                             </div>
+                             <div class="course__payment mb-35">
+                                <h3>Оплата:</h3>
+                                <a href="#">
+                                   <img src="{% static 'main/img/icons/payment-1.png' %}" alt="">
+                                </a>
+                             </div>
+                             <div class="course__enroll-btn p-relative z-index-1">
+                                <a href="{% url 'enroll_request' course.id %}" class="tp-btn w-100">
+                                   <span>Записаться на курс <i class="fa-regular fa-arrow-right"></i> </span>
+                                   <div class="transition"></div>
+                                </a>
+                             </div>
+                          </div>
+                       </div>
+                       <div class="course__sidebar-widget-2 white-bg mb-20">
+                          <div class="course__sidebar-course">
+                             <h3 class="course__sidebar-title">Похожие курсы</h3>
+                             <ul>
+                                {% for related in related_courses %}
+                                <li>
+                                   <div class="course__sm d-flex align-items-center mb-30">
+                                      <div class="course__sm-thumb mr-20">
+                                         <a href="{% url 'course-detail' course_id=related.id %}">
+                                            <img src="{{ related.image.url}}" alt="">
+                                         </a>
+                                      </div>
+                                      <div class="course__sm-content">
+                                         <div class="course__sm-rating">
+                                            <ul>
+                                               <li><a href="#"> <i class="icon_star"></i> </a></li>
+                                               <li><a href="#"> <i class="icon_star"></i> </a></li>
+                                               <li><a href="#"> <i class="icon_star"></i> </a></li>
+                                               <li><a href="#"> <i class="icon_star"></i> </a></li>
+                                               <li><a href="#"> <i class="icon_star"></i> </a></li>
+                                            </ul>
+                                         </div>
+                                         <h5><a href="{% url 'course-detail' course_id=related.id %}">{{ related.title}}</a></h5>
+                                         <div class="course__sm-price">
+                                            <span>{{ related.price }} BYN</span>
+                                         </div>
+                                      </div>
+                                   </div>
+                                </li>
+                                {% endfor %}
+                             </ul>
+                          </div>
+                       </div>
+                    </div>
+                 </div>
+              </div>
+           </div>
+        </div>
+
+     </div>
+  </div>
+
+</main>
+{% endblock %}

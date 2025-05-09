@@ -1,0 +1,65 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Блог{% endblock %}
+
+{% block content %}
+{% load static %}
+
+   <main>
+
+      <!-- breadcrumb area start -->
+      <div class="breadcrumb__area include-bg pt-200 pb-150 breadcrumb__overlay"
+         data-background="{% static 'main/img/breadcrumb/breadcrumb-bg-1.png' %}">
+         <div class="container">
+            <div class="row">
+               <div class="col-xxl-12">
+                  <div class="breadcrumb__content p-relative z-index-1">
+                     <h3 class="breadcrumb__title">Детали блога</h3>
+                     <div class="breadcrumb__list">
+                        <span><a href="{% url 'index' %}">Главная страница</a></span>
+                        <span class="dvdr"><i class="fa-regular fa-angle-right"></i></span>
+                        <span><a href="{% url 'blog' %}">Блог</a></span>
+                        <span class="dvdr"><i class="fa-regular fa-angle-right"></i></span>
+                        <span>Читать блог</span>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <!-- breadcrumb area end -->
+      <!-- postbox area start -->
+      <div class="postbox__area pt-120 pb-120">
+         <div class="container">
+            <div class="row">
+               <div class="col-xxl-12">
+                  <div class="postbox__wrapper pr-30">
+                     <article class="postbox__item format-image mb-50 transition-3">
+                        <div class="postbox__thumb m-img">
+                              {% if blog.image %}
+                              <img src="{{ blog.image }}" alt="">
+                              {% else %}
+                              <img src="{% static 'main/img/no_img/images.png' %}" alt="Нет изображения">
+                              {% endif %}
+                        </div>
+                        <div class="postbox__content">
+                           <div class="postbox__meta">
+                              <span><i class="far fa-calendar-check"></i> {{ blog.date }} </span>
+                              <span><i class="far fa-user"></i> {{ blog.author }} </span>
+                           </div>
+                           <h3 class="postbox__title">{{ blog.title }}</h3>
+                           <div class="postbox__text">
+                              <p>{{ blog.annotation }}</p>
+                              <p>{{ blog.content }}</p>
+                           </div>
+                        </div>
+                     </article>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <!-- postbox area end -->
+
+   </main>
+{% endblock %}
