@@ -49,9 +49,11 @@ INSTALLED_APPS = [
     'main_rest',
     'drf_yasg',
     'widget_tweaks',
+    'whitenoise.runserver_nostatic',
 ]
 
 MIDDLEWARE = [
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -128,13 +130,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 # Каталог, куда будут собираться статические файлы при команде collectstatic
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Путь до статических файлов
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'main', 'static'),]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'main', 'static', 'main')]
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -155,10 +159,10 @@ EMAIL_HOST_USER = os.getenv('DJANGO_EMAIL')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_KEY')
 DEFAULT_FROM_EMAIL = os.getenv('DJANGO_EMAIL')
 
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_BROKER_URL = 'redis://redis:6379/0'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
 REST_FRAMEWORK = {
