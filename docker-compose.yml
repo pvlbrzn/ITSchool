@@ -1,0 +1,45 @@
+services:
+  web:
+    build: .
+    command: gunicorn ITSchool.wsgi:application --bind 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+    env_file:
+      - .env
+
+  redis:
+    image: redis:7
+
+  celery:
+    build: .
+    command: celery -A ITSchool worker --loglevel=info
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+    env_file:
+      - .env
+
+  celery-beat:
+    build: .
+    command: celery -A ITSchool beat --loglevel=info
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+    env_file:
+      - .env
+
+#  django_manage:
+#    build: .
+#    entrypoint: ["python", "manage.py"]
+#    volumes:
+#      - .:/app
+#    depends_on:
+#      - redis
+#    env_file:
+#      - .env
