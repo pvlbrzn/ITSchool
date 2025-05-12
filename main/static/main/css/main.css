@@ -2545,6 +2545,68 @@ input[type=color] {
 .header-acttion-btns .avata:hover {
   border-color: rgba(255, 255, 255, 0.7);
 }
+.offcanvas__area {
+  position: fixed;
+  top: 0;
+  right: -320px;
+  width: 300px;
+  height: 100vh;
+  background: linear-gradient(135deg, #1e1e2f, #27293d);
+  box-shadow: -8px 0 20px rgba(0, 0, 0, 0.6);
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+  transition: right 0.4s ease-in-out;
+  z-index: 1002;
+  padding: 30px 20px;
+  color: #fff;
+  overflow-y: auto;
+}
+
+.offcanvas__area.offcanvas-opened {
+  right: 0;
+}
+
+.offcanvas__area a {
+  color: #fff;
+  font-size: 18px;
+  display: block;
+  margin-bottom: 20px;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.offcanvas__area a:hover {
+  color: #00bcd4;
+}
+
+.offcanvas-close-btn {
+  background: none;
+  border: none;
+  font-size: 26px;
+  color: #fff;
+  cursor: pointer;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  transition: transform 0.2s;
+}
+.offcanvas-close-btn:hover {
+  transform: rotate(90deg);
+}
+
+.body-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease;
+  z-index: 1000;
+}
+.body-overlay.opened {
+  opacity: 1;
+  visibility: visible;
+}
 
 /*----------------------------------------*/
 /*  03. MEAN MENU CSS

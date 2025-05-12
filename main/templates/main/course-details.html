@@ -174,7 +174,11 @@
                                    <div class="course__sm d-flex align-items-center mb-30">
                                       <div class="course__sm-thumb mr-20">
                                          <a href="{% url 'course-detail' course_id=related.id %}">
+                                            {% if related.image %}
                                             <img src="{{ related.image.url}}" alt="">
+                                            {% else %}
+                                            <img src="{% static 'main/img/no_img/images.png' %}" alt="Нет изображения">
+                                            {% endif %}
                                          </a>
                                       </div>
                                       <div class="course__sm-content">
