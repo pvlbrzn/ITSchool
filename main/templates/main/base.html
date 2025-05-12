@@ -134,11 +134,53 @@
                            </a>
                         </div>
                         <div class="tp-header__hamburger ml-50 d-lg-none">
+                           <!-- Бургер-кнопка -->
                            <button class="hamburger-btn offcanvas-open-btn">
-                              <span></span>
-                              <span></span>
-                              <span></span>
+                             <span></span>
+                             <span></span>
+                             <span></span>
                            </button>
+
+                           <!-- Выезжающее меню -->
+                           <div class="offcanvas__area">
+                             <button class="offcanvas-close-btn">✖</button>
+                              <span></span>
+                                 <ul>
+                                    <li>
+                                       <a href="{% url 'index' %}">Главная страница</a>
+                                    </li>
+                                    <li>
+                                       <a href="{% url 'courses' %}">Курсы</a>
+                                    </li>
+                                    <li>
+                                       <a href="{% url 'blog' %}">Блог</a>
+                                    </li>
+                                    <li>
+                                       <a href="{% url 'contact' %}">Контакты</a>
+                                    </li>
+                                    <li class="has-dropdown">
+                                       <a href="{% url 'about' %}">О нас</a>
+                                       <ul class="submenu">
+                                          <li><a href="{% url 'teachers_list' %}">Наши преподаватели</a></li>
+                                          <li><a href="{% url 'faq' %}">FAQ</a></li>
+                                       </ul>
+                                    </li>
+
+                                    {% if user.is_authenticated %}
+                                    <li><a href="{% url 'profile' %}">Личный кабинет</a></li>
+                                    {% if user.is_manager %}
+                                    <li><a href="{% url 'manager' %}">Управление школой</a></li>
+                                    {% endif %}
+                                    <li><a href="{% url 'logout' %}">Выход</a></li>
+                                    {% else %}
+                                    <li><a href="{% url 'login' %}">Войти в аккаунт</a></li>
+                                    <li><a href="{% url 'register' %}">Регистрация</a></li>
+                                    {% endif %}
+                                 </ul>
+                           </div>
+
+                           <!-- Затемнение фона -->
+                           <div class="body-overlay"></div>
                         </div>
                      </div>
                   </div>
