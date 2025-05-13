@@ -100,7 +100,7 @@ Generate fake users, courses, and lessons:
 python manage.py generate_fake_data
 ```
 
-Parse blog and FAQ from from [https://teachmeskills.by/](https://teachmeskills.by/):
+Parse blog and FAQ from [https://teachmeskills.by/](https://teachmeskills.by/):
 
 ```bash
 python manage.py parse_blog
@@ -154,6 +154,7 @@ This project is open-source and available under the MIT License.
 ![img.png](screenshots/tg_chat.png)
 
 ## Разработано [DreamTeam]
-    github: https://github.com/pvlbrzn
-    github: https://github.com/CrimsTwilight
-    github: https://github.com/mag215-sys
+
+github: https://github.com/pvlbrzn
+github: https://github.com/CrimsTwilight
+github: https://github.com/mag215-sys
