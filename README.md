@@ -109,6 +109,7 @@ python manage.py parse_faq
 
 ## Project structure
 
+```
 ITSchool/
 ├── ITSchool             - Project configuration
 ├── main                 - the main part of the project with all models, email newsletter, parser, css, and tamplates
@@ -118,6 +119,7 @@ ITSchool/
 ├── .env                 - file with hidden django secrest key, email, email password
 ├── manage.py          
 ├── requirements.txt     - list of all Python dependencies (libraries and packages)
+```
 
 ## 📁 Environment Variables
 
