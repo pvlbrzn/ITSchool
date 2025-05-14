@@ -27,9 +27,14 @@
 <!-- breadcrumb area end -->
 
 <div class="container pt-100 pb-100">
-  <h2>Спасибо за ваше сообщение!</h2>
-  <p>Мы свяжемся с вами в ближайшее время.</p>
-  <a href="{% url 'index' %}" class="tp-btn mt-3">Вернуться на главную</a>
+    <div class="sign__header mb-35">
+        <h2>Спасибо за ваше сообщение!</h2>
+        <p>Мы свяжемся с вами в ближайшее время.</p>
+        <hr>
+        <a href="{% url 'index' %}" class="btn btn-secondary px-4 py-2">
+            <i class="bi bi-arrow-left-circle"></i> На главную
+        </a>
+    </div>
 </div>
 
 {% endblock %}
