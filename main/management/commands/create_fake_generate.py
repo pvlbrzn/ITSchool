@@ -1,12 +1,14 @@
 from datetime import timedelta
 from io import BytesIO
+from typing import List
+
 from PIL import Image
 import random
-
 from faker import Faker
 
 from django.core.management.base import BaseCommand
 from django.core.files.base import ContentFile
+
 from main.models import CustomUser, Course, Lesson
 
 fake = Faker('ru_RU')
@@ -15,7 +17,11 @@ languages = ['python', 'csharp', 'go', 'java', 'js']
 skills = ['frontend', 'backend', 'devops', 'ml', 'security', 'test']
 
 
-def get_image_file():
+def get_image_file() -> ContentFile:
+    """
+    Generates a random PNG image and returns it as a Django ContentFile.
+    Used for populating image fields in models.
+    """
     img = Image.new('RGB', (800, 536),
                     color=(random.randint(100, 255),
                            random.randint(100, 255),
@@ -29,7 +35,11 @@ def get_image_file():
 class Command(BaseCommand):
     help = 'Генерация тестовых данных'
 
-    def handle(self, *args, **kwargs):
+    def handle(self, *args, **kwargs) -> None:
+        """
+        Entry point for the management command.
+        Creates test users, courses, and lessons with dummy data.
+        """
         self.stdout.write("Начало генерации данных...")
 
         teachers = self.generate_users(count=10, role='teacher')
@@ -46,7 +56,14 @@ class Command(BaseCommand):
 
         self.stdout.write(self.style.SUCCESS("Генерация завершена!"))
 
-    def generate_users(self, count, role):
+    def generate_users(self, count: int, role: str) -> List[CustomUser]:
+        """
+        Creates a list of users with the specified role.
+
+        :param count: Number of users to create.
+        :param role: 'student' or 'teacher'.
+        :return: List of created CustomUser instances.
+        """
         users = []
         for _ in range(count):
             email = fake.unique.email()
@@ -66,7 +83,15 @@ class Command(BaseCommand):
             users.append(user)
         return users
 
-    def generate_courses(self, teachers, students, count):
+    def generate_courses(self, teachers: List[CustomUser], students: List[CustomUser], count: int) -> List[Course]:
+        """
+        Creates a list of courses, randomly assigning teachers and students.
+
+        :param teachers: List of available teacher users.
+        :param students: List of available student users.
+        :param count: Number of courses to create.
+        :return: List of created Course instances.
+        """
         courses = []
         for _ in range(count):
             language = random.choice(languages)
@@ -93,7 +118,13 @@ class Command(BaseCommand):
             courses.append(course)
         return courses
 
-    def generate_lessons(self, courses):
+    def generate_lessons(self, courses: List[Course]) -> List[Lesson]:
+        """
+        Creates a set of lessons for each course.
+
+        :param courses: List of Course instances.
+        :return: List of created Lesson instances.
+        """
         lessons = []
         for course in courses:
             for i in range(random.randint(8, 12)):
