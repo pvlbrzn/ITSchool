@@ -9,20 +9,20 @@ from main.models import FAQ
 
 class Command(BaseCommand):
     """
-    Django management команда для асинхронного парсинга FAQ с сайта TeachMeSkills.
+    Django management command for asynchronous parsing of FAQs from the TeachMeSkills website.
     """
     help = 'Парсит FAQ с сайта TeachMeSkills и сохраняет их в базу данных.'
 
     def handle(self, *args, **options) -> None:
         """
-        Запускает асинхронную функцию парсинга через asyncio.run().
+        Runs an asynchronous parsing function via asyncio.run().
         """
         asyncio.run(parse_and_save_faq())
 
 
 async def parse_and_save_faq() -> None:
     """
-    Асинхронно загружает страницу, парсит вопросы и ответы, сохраняет их в базу данных.
+    Asynchronously loads the page, parses questions and answers, and saves them to the database.
     """
     # Очистка старых записей
     await sync_to_async(FAQ.objects.all().delete)()
@@ -59,8 +59,3 @@ async def parse_and_save_faq() -> None:
         await browser.close()
 
     print(f"✅ Успешно добавлено {len(questions)} FAQ вопросов и ответов.")
-
-'''
-pip install playwright
-playwright install
-'''

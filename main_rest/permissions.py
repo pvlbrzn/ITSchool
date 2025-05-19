@@ -3,11 +3,14 @@ from rest_framework.permissions import BasePermission, SAFE_METHODS
 
 class IsManagerOrReadOnly(BasePermission):
     """
-    Разрешает безопасные методы (GET, HEAD, OPTIONS) всем,
-    а POST, PUT, DELETE — только суперпользователям или пользователям из группы 'managers'.
+    Permission class that allows read-only access to any user,
+    and write access only to superusers or users in the 'managers' group.
     """
 
     def has_permission(self, request, view):
+        """
+        Return True if request is read-only (safe) or user has manager rights.
+        """
         if request.method in SAFE_METHODS:
             return True
 
@@ -19,7 +22,14 @@ class IsManagerOrReadOnly(BasePermission):
 
 
 class IsManager(BasePermission):
+    """
+        Permission class that allows access only to superusers or users in the 'managers' group.
+    """
+
     def has_permission(self, request, view):
+        """
+        Return True if user is authenticated and has manager rights.
+        """
         user = request.user
         return (
                 user.is_authenticated and

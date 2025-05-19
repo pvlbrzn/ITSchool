@@ -11,7 +11,7 @@ from main.models import Blog
 
 class Command(BaseCommand):
     """
-    Django команда для парсинга блогов с сайта TeachMeSkills.
+    Django command for parsing blogs from the TeachMeSkills website.
     """
     help = 'Парсит блоги с сайта TeachMeSkills и сохраняет их в базу данных.'
 
@@ -21,11 +21,11 @@ class Command(BaseCommand):
 
 async def fetch_blog_html(url: str, page: Page) -> bool:
     """
-    Загружает страницу по URL и проверяет наличие заголовка h1.
+    Loads a page at a URL and checks for an h1 header.
 
-    :param url: Ссылка на блог.
-    :param page: Экземпляр страницы Playwright.
-    :return: Успешность загрузки.
+    :param url: Link to the blog.
+    :param page: Playwright page instance.
+    :return: Successful loading.
     """
     try:
         await page.goto(url, timeout=60000)
@@ -38,7 +38,7 @@ async def fetch_blog_html(url: str, page: Page) -> bool:
 
 async def parse_and_save_blogs() -> None:
     """
-    Основная функция: очищает базу, парсит блог-посты и сохраняет их.
+    Main function: cleans the database, parses blog posts and saves them.
     """
     await sync_to_async(Blog.objects.all().delete)()
     print("🧹 База очищена перед парсингом!")
@@ -117,15 +117,15 @@ async def save_blog(
     author: str
 ) -> bool:
     """
-    Сохраняет блог в базу, если он ещё не существует.
+    Saves the blog to the database if it does not exist yet.
 
-    :param title: Заголовок статьи.
-    :param annotation: Краткое описание.
-    :param content: Основной текст.
-    :param image_url: Ссылка на изображение.
-    :param publication_date: Дата публикации.
-    :param author: Автор статьи.
-    :return: True, если объект был создан, False — если уже существует.
+    :param title: Article title.
+    :param annotation: Brief description.
+    :param content: Main text.
+    :param image_url: Image URL.
+    :param publication_date: Publication date.
+    :param author: Article author.
+    :return: True if the object was created, False if it already exists.
     """
     obj, created = await sync_to_async(Blog.objects.get_or_create)(
         title=title,

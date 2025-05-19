@@ -1,8 +1,8 @@
 import os
-import requests
-import pytz
 from datetime import datetime
 
+import pytz
+import requests
 from django.utils.html import escape
 from dotenv import load_dotenv
 
@@ -13,6 +13,15 @@ CHAT_ID = os.getenv('TG_GROUP_CHAT_ID')
 
 
 def send_telegram_message(text: str):
+    """
+    Send a message to a Telegram group via bot.
+
+    Args:
+        text (str): The message content, formatted in HTML.
+
+    Returns:
+        bool: True if message was sent successfully, False otherwise.
+    """
     url = f'https://api.telegram.org/bot{TOKEN}/sendMessage'
     data = {
         'chat_id': CHAT_ID,
@@ -24,6 +33,13 @@ def send_telegram_message(text: str):
     return response.status_code == 200
 
 def notify_about_enrollment(request, enrollment):
+    """
+    Notify managers in Telegram about a new enrollment request.
+
+    Args:
+        request (HttpRequest): The current HTTP request object.
+        enrollment (EnrollmentRequest): The enrollment instance.
+    """
     site_url = request.build_absolute_uri('/')[:-1]
     manager_url = f'{site_url}/manager/manager/enrollments/'
 
